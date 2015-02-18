@@ -1,0 +1,4 @@
+*.o
+*.p
+Makefile.campus
+Makefile.mac
