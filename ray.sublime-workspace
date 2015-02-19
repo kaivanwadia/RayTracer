@@ -4,6 +4,30 @@
 		"selected_items":
 		[
 			[
+				"m_de",
+				"m_displayDebuggingInfo"
+			],
+			[
+				"m_d",
+				"m_displayDebuggingInfo"
+			],
+			[
+				"m_n",
+				"m_nThreshold"
+			],
+			[
+				"m_nth",
+				"m_nThreads"
+			],
+			[
+				"m_nb",
+				"m_nBlockSize"
+			],
+			[
+				"cb_th",
+				"cb_threadsSlides"
+			],
+			[
 				"class",
 				"classname"
 			],
@@ -72,10 +96,58 @@
 	"buffers":
 	[
 		{
-			"file": "ray.sublime-project",
+			"file": "src/RayTracer.cpp",
 			"settings":
 			{
-				"buffer_size": 343,
+				"buffer_size": 4323,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/RayTracer.h",
+			"settings":
+			{
+				"buffer_size": 1102,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/main.cpp",
+			"settings":
+			{
+				"buffer_size": 831,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/scene/ray.h",
+			"settings":
+			{
+				"buffer_size": 2923,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/ui/GraphicalUI.cpp",
+			"settings":
+			{
+				"buffer_size": 10820,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/ui/GraphicalUI.h",
+			"settings":
+			{
+				"buffer_size": 2981,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/ui/TraceUI.h",
+			"settings":
+			{
+				"buffer_size": 2456,
 				"line_ending": "Unix"
 			}
 		}
@@ -104,6 +176,10 @@
 	},
 	"file_history":
 	[
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/TraceUI.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/scenes/box.ray",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/Makefile",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/ray.sublime-project",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray.sublime-project",
 		"/u/kwadia/cs312/a2_clean/grade_a2.py",
 		"/u/kwadia/cs312/a2_clean/makefile",
@@ -194,6 +270,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"m_displayDebuggingInfo",
+			"m_shadows",
+			"cb_bfCheckButton",
+			"refreshInterval",
+			"cb_exit",
+			"cb_render",
 			"stringstream",
 			"itoa",
 			"(int)",
@@ -227,32 +309,202 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "ray.sublime-project",
+					"file": "src/RayTracer.cpp",
 					"settings":
 					{
-						"buffer_size": 343,
+						"buffer_size": 4323,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								57,
-								57
+								2872,
+								2872
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1326.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/RayTracer.h",
+					"settings":
+					{
+						"buffer_size": 1102,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								92,
+								92
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/main.cpp",
+					"settings":
+					{
+						"buffer_size": 831,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								720,
+								720
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/scene/ray.h",
+					"settings":
+					{
+						"buffer_size": 2923,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								496,
+								496
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/ui/GraphicalUI.cpp",
+					"settings":
+					{
+						"buffer_size": 10820,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8814,
+								8814
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 5253.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 5,
+					"file": "src/ui/GraphicalUI.h",
+					"settings":
+					{
+						"buffer_size": 2981,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								441,
+								441
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/ui/TraceUI.h",
+					"settings":
+					{
+						"buffer_size": 2456,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								699,
+								699
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 102.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -277,11 +529,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":
@@ -301,6 +560,14 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"trace",
+				"src/ui/TraceUI.h"
+			],
+			[
+				"ray.h",
+				"src/scene/ray.h"
+			]
 		],
 		"width": 0.0
 	},
@@ -316,6 +583,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 157.0,
+	"side_bar_width": 257.0,
 	"status_bar_visible": true
 }
