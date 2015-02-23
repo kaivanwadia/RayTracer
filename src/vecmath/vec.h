@@ -136,6 +136,8 @@ public:
 		{ n[0] = x; n[1] = y; }
 	Vec2( const Vec2<T>& v )
 		{ n[0] = v[0]; n[1] = v[1]; }
+	Vec2( const Vec3<T>& v )
+		{ n[0] = v[0]; n[1] = v[1]; }
 
 	//---[ Equal Operators ]---------------------
 

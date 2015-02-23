@@ -73,11 +73,26 @@ bool Trimesh::intersectLocal(ray& r, isect& i) const
 		if( !have_one || (cur.t < i.t) )
 		  {
 		    i = cur;
+            if (materials.size() > 0)
+            {
+                i.setMaterial(*materials[j - faces.begin()]);
+            }
+            else
+            {
+                i.setMaterial(this->getMaterial());
+            }
 		    have_one = true;
 		  }
 	      }
 	  }
-	if( !have_one ) i.setT(1000.0);
+	if( !have_one )
+    {
+        i.setT(1000.0);
+    }
+    else
+    {
+        i.setObject(this);
+    }
 	return have_one;
 }
 
@@ -95,8 +110,63 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
     const Vec3d& b = parent->vertices[ids[1]];
     const Vec3d& c = parent->vertices[ids[2]];
 
-    // YOUR CODE HERE
-
+    double dConstant = -(a*normal);
+    if (normal*r.d == 0)
+    {
+        return false;
+    }
+    double rayT = -(normal*r.p + dConstant)/(normal*r.d);
+    if (rayT < RAY_EPSILON)
+    {
+        return false;
+    }
+    Vec3d p = r.p + rayT*r.d;
+    Vec3d aUVCoord;
+    Vec3d bUVCoord;
+    Vec3d cUVCoord;
+    Vec3d pUVCoord;
+    int x,y;
+    if (normal[0] >= normal[1] && normal[0] >= normal[2])
+    {
+        x = 1;
+        y = 2;
+    }
+    else if (normal[1] >= normal[0] && normal[1] >= normal[2])
+    {
+        x = 0;
+        y = 2;
+    }
+    else
+    {
+        x = 0;
+        y = 1;
+    }
+    aUVCoord[0] = a[x];
+    aUVCoord[1] = a[y];
+    bUVCoord[0] = b[x];
+    bUVCoord[1] = b[y];
+    cUVCoord[0] = c[x];
+    cUVCoord[1] = c[y];
+    pUVCoord[0] = p[x];
+    pUVCoord[1] = p[y];
+    double ABCarea = ((bUVCoord - aUVCoord)^(cUVCoord - aUVCoord)).length()/2;
+    double PBCarea = ((bUVCoord - pUVCoord)^(cUVCoord - pUVCoord)).length()/2;
+    double APCarea = ((pUVCoord - aUVCoord)^(cUVCoord - aUVCoord)).length()/2;
+    double ABParea = ((bUVCoord - aUVCoord)^(pUVCoord - aUVCoord)).length()/2;
+    Vec3d baryCoord;
+    baryCoord[0] = PBCarea/ABCarea;
+    baryCoord[1] = APCarea/ABCarea;
+    baryCoord[2] = ABParea/ABCarea;
+    double total = baryCoord[0] + baryCoord[1] + baryCoord[2];
+    if (total<=(1+RAY_EPSILON) && total>=(1-RAY_EPSILON))
+    {
+        i.t = rayT;
+        i.setN(r.at(rayT));
+        i.N.normalize();
+        i.setBary(baryCoord);
+        i.setUVCoordinates(Vec2d(baryCoord));
+        return true;
+    }
     return false;
 }
 

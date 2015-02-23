@@ -4,6 +4,46 @@
 		"selected_items":
 		[
 			[
+				"Vec",
+				"Vec3d"
+			],
+			[
+				"getm",
+				"getMaxElement"
+			],
+			[
+				"Tri",
+				"TrimeshFace"
+			],
+			[
+				"bar",
+				"baryCoord"
+			],
+			[
+				"nor",
+				"normal"
+			],
+			[
+				"ray",
+				"rayT"
+			],
+			[
+				"m_aa",
+				"m_aaThreshSlider"
+			],
+			[
+				"de",
+				"deactivate"
+			],
+			[
+				"m_nth",
+				"m_nSupersampleThreshold"
+			],
+			[
+				"m_tr",
+				"m_treeDepthSlider"
+			],
+			[
 				"m_de",
 				"m_displayDebuggingInfo"
 			],
@@ -14,10 +54,6 @@
 			[
 				"m_n",
 				"m_nThreshold"
-			],
-			[
-				"m_nth",
-				"m_nThreads"
 			],
 			[
 				"m_nb",
@@ -112,6 +148,22 @@
 			}
 		},
 		{
+			"file": "src/SceneObjects/trimesh.cpp",
+			"settings":
+			{
+				"buffer_size": 5034,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/SceneObjects/trimesh.h",
+			"settings":
+			{
+				"buffer_size": 3721,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "src/main.cpp",
 			"settings":
 			{
@@ -125,30 +177,6 @@
 			{
 				"buffer_size": 2923,
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/ui/GraphicalUI.cpp",
-			"settings":
-			{
-				"buffer_size": 10820,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/ui/GraphicalUI.h",
-			"settings":
-			{
-				"buffer_size": 2981,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/ui/TraceUI.h",
-			"settings":
-			{
-				"buffer_size": 2456,
-				"line_ending": "Unix"
 			}
 		}
 	],
@@ -176,7 +204,19 @@
 	},
 	"file_history":
 	[
+		"/u/kwadia/Downloads/src/SceneObjects/trimesh.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/vecmath/vec.h",
+		"/u/kwadia/cs312/a3_clean/makefile",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/GraphicalUI.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/GraphicalUI.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/TraceUI.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/scene.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/scene.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/Box.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 1/impressionist/impressionistDoc.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/CubeMapChooser.cxx",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/CubeMapChooser.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/CubeMapChooser.fl",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/scenes/box.ray",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/Makefile",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/ray.sublime-project",
@@ -192,7 +232,6 @@
 		"/u/kwadia/CS384G - Computer Graphics/Project 1/impressionist/impressionistUI.cpp",
 		"/u/kwadia/.cache/.fr-3jK3s3/impressionist/Makefile.campus",
 		"/u/kwadia/CS384G - Computer Graphics/Project 1/impressionist/Makefile",
-		"/u/kwadia/CS384G - Computer Graphics/Project 1/impressionist/impressionistDoc.cpp",
 		"/v/filer4b/v20q001/kwadia/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap",
 		"/u/kwadia/CS384G - Computer Graphics/Project 1/impressionist campus/impBrush.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 1/impressionist/impBrush.h",
@@ -263,6 +302,7 @@
 		"height": 0.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -270,6 +310,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"vec",
+			"pUVCoord",
+			"struct isect",
+			"isect",
+			"m_cubeMapChooser",
+			"cb_load_sce",
+			"cube",
+			"m_filterSlider",
 			"m_displayDebuggingInfo",
 			"m_shadows",
 			"cb_bfCheckButton",
@@ -309,7 +357,7 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -369,6 +417,68 @@
 				},
 				{
 					"buffer": 2,
+					"file": "src/SceneObjects/trimesh.cpp",
+					"settings":
+					{
+						"buffer_size": 5034,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3185,
+								3185
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1933.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/SceneObjects/trimesh.h",
+					"settings":
+					{
+						"buffer_size": 3721,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2994,
+								2994
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1785.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 4,
 					"file": "src/main.cpp",
 					"settings":
 					{
@@ -379,8 +489,8 @@
 						"selection":
 						[
 							[
-								720,
-								720
+								243,
+								243
 							]
 						],
 						"settings":
@@ -395,7 +505,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 5,
 					"file": "src/scene/ray.h",
 					"settings":
 					{
@@ -418,93 +528,6 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/ui/GraphicalUI.cpp",
-					"settings":
-					{
-						"buffer_size": 10820,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8814,
-								8814
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 5253.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 1,
-			"sheets":
-			[
-				{
-					"buffer": 5,
-					"file": "src/ui/GraphicalUI.h",
-					"settings":
-					{
-						"buffer_size": 2981,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								441,
-								441
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/ui/TraceUI.h",
-					"settings":
-					{
-						"buffer_size": 2456,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								699,
-								699
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 102.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -560,6 +583,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"vec",
+				"src/vecmath/vec.h"
+			],
 			[
 				"trace",
 				"src/ui/TraceUI.h"
