@@ -105,7 +105,6 @@ bool TrimeshFace::intersect(ray& r, isect& i) const {
 // intersection in u (alpha) and v (beta).
 bool TrimeshFace::intersectLocal(ray& r, isect& i) const
 {
-
     const Vec3d& a = parent->vertices[ids[0]];
     const Vec3d& b = parent->vertices[ids[1]];
     const Vec3d& c = parent->vertices[ids[2]];
@@ -126,12 +125,13 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
     Vec3d cUVCoord;
     Vec3d pUVCoord;
     int x,y;
-    if (normal[0] >= normal[1] && normal[0] >= normal[2])
+    Vec3d normalAbs(abs(normal[0]),abs(normal[1]),abs(normal[2]));
+    if (normalAbs[0] >= normalAbs[1] && normalAbs[0] >= normalAbs[2])
     {
         x = 1;
         y = 2;
     }
-    else if (normal[1] >= normal[0] && normal[1] >= normal[2])
+    else if (normalAbs[1] >= normalAbs[0] && normalAbs[1] >= normalAbs[2])
     {
         x = 0;
         y = 2;
@@ -161,7 +161,18 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
     if (total<=(1+RAY_EPSILON) && total>=(1-RAY_EPSILON))
     {
         i.t = rayT;
-        i.setN(r.at(rayT));
+        if (parent->vertNorms)
+        {
+            Vec3d normalA = parent->normals[ids[0]];
+            Vec3d normalB = parent->normals[ids[1]];
+            Vec3d normalC = parent->normals[ids[2]];
+            Vec3d normalIntersect = (baryCoord[0]*normalA) + (baryCoord[1]*normalB) + (baryCoord[2]*normalC);
+            i.setN(normalIntersect);
+        }
+        else
+        {
+            i.setN(normal);
+        }
         i.N.normalize();
         i.setBary(baryCoord);
         i.setUVCoordinates(Vec2d(baryCoord));

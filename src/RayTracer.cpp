@@ -52,7 +52,6 @@ Vec3d RayTracer::tracePixel(int i, int j)
 	double y = double(j)/double(buffer_height);
 
 	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
-
 	col = trace(x, y);
 
 	pixel[0] = (int)( 255.0 * col[0]);
@@ -80,8 +79,50 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		// Instead of just returning the result of shade(), add some
 		// more steps: add in the contributions from reflected and refracted
 		// rays.
-	  const Material& m = i.getMaterial();
-	  colorC = m.shade(scene, r, i);
+		const Material& material = i.getMaterial();
+		if (depth == 0)
+		{
+			return material.shade(scene, r, i);
+			//return Vec3d(0.0, 0.0, 0.0);
+		}
+		Vec3d Qpoint = r.at(i.t);
+		// Light Ray
+		Vec3d intensity = material.shade(scene, r, i);
+		// Reflected Ray
+		Vec3d minusD = -1 * r.d;
+		Vec3d cosVector = i.N * (minusD * i.N);
+		cosVector.normalize();
+		Vec3d sinVector = cosVector + r.d;
+		Vec3d reflectedDirection = cosVector + sinVector;
+		reflectedDirection.normalize();
+		ray reflectedRay(Qpoint, reflectedDirection, ray::REFLECTION);
+		intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
+
+		//Refracted Ray
+		double cosineAngle = acos(-i.N * r.d) * 180/M_PI;
+		double n_i, n_r;
+		double criticalAngle = 360;
+		if (cosineAngle > 90)
+		{
+			n_i = 1;
+			n_r = material.index(i);
+		}
+		else
+		{
+			n_i = material.index(i);
+			n_r = 1;
+			criticalAngle = asin(n_i/n_r) * 180/M_PI;
+		}
+		Vec3d sinT = (n_i/n_r)*sinVector;
+		Vec3d cosT = (-1 * i.N) * sqrt(1 - sinT*sinT);
+		if (material.kt(i).iszero() && (180 - cosineAngle)<criticalAngle)
+		{
+			Vec3d refractedDirection = cosT + sinT;
+			refractedDirection.normalize();
+			ray refractedRay(Qpoint, refractedDirection, ray::REFRACTION);
+			intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
+		}
+	  	colorC = intensity;
 	} else {
 		// No intersection.  This ray travels to infinity, so we color
 		// it according to the background color, which in this (simple) case

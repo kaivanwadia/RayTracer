@@ -18,7 +18,7 @@ class RayTracer;
 
 class TraceUI {
 public:
-	TraceUI() : m_nDepth(0), m_nSize(512), m_displayDebuggingInfo(false),
+	TraceUI() : m_nDepth(1), m_nSize(512), m_displayDebuggingInfo(false),
 					m_shadows(true), m_smoothshade(true), raytracer(0),
                     m_nFilterWidth(1), m_nBlockSize(4), m_nThreshold(0),
                     m_nThreads(8), m_bfCulling(true), m_antiAlias(false),
@@ -26,7 +26,6 @@ public:
                     m_nMaxDepth(15), m_nLeafSize(10), m_nPixelSamples(3),
                     m_nSupersampleThreshold(100)
                     {}
-
 	virtual int	run() = 0;
 
 	// Send an alert to the user in some manner
