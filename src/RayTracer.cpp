@@ -52,6 +52,7 @@ Vec3d RayTracer::tracePixel(int i, int j)
 	double y = double(j)/double(buffer_height);
 
 	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
+
 	col = trace(x, y);
 
 	pixel[0] = (int)( 255.0 * col[0]);
@@ -83,7 +84,6 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		if (depth == 0)
 		{
 			return material.shade(scene, r, i);
-			//return Vec3d(0.0, 0.0, 0.0);
 		}
 		Vec3d Qpoint = r.at(i.t);
 		// Light Ray

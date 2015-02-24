@@ -37,6 +37,7 @@ double PointLight::distanceAttenuation(const Vec3d& P) const
   // You'll need to modify this method to attenuate the intensity 
   // of the light based on the distance between the source and the 
   // point P.  For now, we assume no attenuation and just return 1.0
+
   Vec3d direction = position - P;
   double distanceSq = direction.length2();
   double distance = sqrt(distanceSq);

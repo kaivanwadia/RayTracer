@@ -73,26 +73,20 @@ bool Trimesh::intersectLocal(ray& r, isect& i) const
 		if( !have_one || (cur.t < i.t) )
 		  {
 		    i = cur;
-            if (materials.size() > 0)
+            if(materials.size()>0)
             {
-                i.setMaterial(*materials[j - faces.begin()]);
+                i.setMaterial(*materials[distance(faces.begin(),j)]);
             }
             else
             {
                 i.setMaterial(this->getMaterial());
             }
+            i.setObject(this);
 		    have_one = true;
 		  }
 	      }
 	  }
-	if( !have_one )
-    {
-        i.setT(1000.0);
-    }
-    else
-    {
-        i.setObject(this);
-    }
+	if( !have_one ) i.setT(1000.0);
 	return have_one;
 }
 
@@ -105,6 +99,7 @@ bool TrimeshFace::intersect(ray& r, isect& i) const {
 // intersection in u (alpha) and v (beta).
 bool TrimeshFace::intersectLocal(ray& r, isect& i) const
 {
+
     const Vec3d& a = parent->vertices[ids[0]];
     const Vec3d& b = parent->vertices[ids[1]];
     const Vec3d& c = parent->vertices[ids[2]];

@@ -208,8 +208,6 @@ public:
 	Vec3() { n[0] = 0.0; n[1] = 0.0; n[2] = 0.0; }
 	Vec3( const T x, const T y, const T z )
 		{ n[0] = x; n[1] = y; n[2] = z; }
-	Vec3( const T x)
-		{ n[0] = x; n[1] = x; n[2] = x; }
 	Vec3( const Vec3<T>& v )
 		{ n[0] = v[0]; n[1] = v[1]; n[2] = v[2]; }
 	Vec3( int ) { n[0] = 0.0; n[1] = 0.0; n[2] = 0.0; }

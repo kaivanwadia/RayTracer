@@ -6,7 +6,6 @@ extern TraceUI* traceUI;
 
 #include "../fileio/bitmap.h"
 #include "../fileio/pngimage.h"
-#include <iostream>
 #include "../vecmath/vec.h"
 
 using namespace std;
@@ -17,26 +16,6 @@ extern bool debugMode;
 Vec3d Material::shade(Scene *scene, const ray& r, const isect& i) const
 {
   // YOUR CODE HERE
-  Vec3d Qpoint = r.at(i.t);
-  Vec3d intensity = ke(i) + prod(ka(i), scene->ambient());
-
-  for (vector<Light*>::const_iterator litr = scene->beginLights(); litr != scene->endLights(); ++litr)
-  {
-    Light* pLight = *litr;
-    // Diffuse Term
-    Vec3d directionToLight = pLight->getDirection(Qpoint);
-    directionToLight.normalize();
-    Vec3d lightIntensity = pLight->distanceAttenuation(Qpoint) * pLight->shadowAttenuation(r, Qpoint);
-    intensity = intensity + prod(kd(i), lightIntensity) * (i.N * directionToLight);
-    // Specular term
-    Vec3d viewingDirection = scene->getCamera().getEye() - Qpoint;
-    viewingDirection.normalize();
-    Vec3d cosVector = i.N * (directionToLight * i.N);
-    Vec3d sinVector = cosVector + directionToLight;
-    Vec3d reflectedDirection = cosVector + sinVector;
-    reflectedDirection.normalize();
-    intensity = intensity + prod(ks(i), lightIntensity) * pow((reflectedDirection*viewingDirection), shininess(i));
-  }
 
   // For now, this method just returns the diffuse color of the object.
   // This gives a single matte color for every distinct surface in the
@@ -59,11 +38,30 @@ Vec3d Material::shade(Scene *scene, const ray& r, const isect& i) const
   // 		.
   // 		.
   // }
-
   // You will need to call both the distanceAttenuation() and
   // shadowAttenuation() methods for each light source in order to
   // compute shadows and light falloff.
+  
+  Vec3d Qpoint = r.at(i.t);
+  Vec3d intensity = ke(i) + prod(ka(i), scene->ambient());
 
+  for (vector<Light*>::const_iterator litr = scene->beginLights(); litr != scene->endLights(); ++litr)
+  {
+    Light* pLight = *litr;
+    // Diffuse Term
+    Vec3d directionToLight = pLight->getDirection(Qpoint);
+    directionToLight.normalize();
+    Vec3d lightIntensity = pLight->distanceAttenuation(Qpoint) * pLight->shadowAttenuation(r, Qpoint);
+    intensity = intensity + prod(kd(i), lightIntensity) * (i.N * directionToLight);
+    // Specular term
+    Vec3d viewingDirection = scene->getCamera().getEye() - Qpoint;
+    viewingDirection.normalize();
+    Vec3d cosVector = i.N * (directionToLight * i.N);
+    Vec3d sinVector = cosVector + directionToLight;
+    Vec3d reflectedDirection = cosVector + sinVector;
+    reflectedDirection.normalize();
+    intensity = intensity + prod(ks(i), lightIntensity) * pow((reflectedDirection*viewingDirection), shininess(i));
+  }
   return intensity;
 }
 

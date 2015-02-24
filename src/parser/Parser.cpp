@@ -14,12 +14,6 @@ extern TraceUI* traceUI;
 
 using namespace std;
 
-template< typename T >
-auto_ptr<T> wrap_auto_ptr( T* pointer )
-{
-	return auto_ptr<T>( pointer );
-}
-
 Scene* Parser::parseScene()
 {
   _tokenizer.Read(SBT_RAYTRACER);

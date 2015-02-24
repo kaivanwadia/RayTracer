@@ -3,3 +3,5 @@
 Makefile.campus
 Makefile.mac
 ray
+bin/
+lib/

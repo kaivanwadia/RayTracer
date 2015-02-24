@@ -111,7 +111,7 @@ void CubeMapChooser::cb_ok(Fl_Widget* o, void* v) {
 		cm->setZnegMap(ch->cubeFace[5]);
 		ch->caller->setCubeMap(true);
 		ch->caller->useCubeMap(true);
-		ch->caller->m_filterWidthSlider->activate();
+		ch->caller->m_filterSlider->activate();
 		ch->caller->m_cubeMapCheckButton->activate();
 		ch->caller->m_cubeMapCheckButton->value(1);
 	}

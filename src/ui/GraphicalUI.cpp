@@ -210,11 +210,11 @@ void GraphicalUI::cb_cubeMapCheckButton(Fl_Widget* o, void* v)
 	pUI->m_usingCubeMap = (((Fl_Check_Button*)o)->value() == 1);
 	if (pUI->m_usingCubeMap)
 	{
-		pUI->m_filterWidthSlider->activate();
+		pUI->m_filterSlider->activate();
 	}
 	else
 	{
-		pUI->m_filterWidthSlider->deactivate();
+		pUI->m_filterSlider->deactivate();
 	}
 }
 
@@ -525,18 +525,18 @@ GraphicalUI::GraphicalUI() : refreshInterval(10) {
 	m_cubeMapCheckButton->value(m_usingCubeMap);
 
 	// install filter width slider
-	m_filterWidthSlider = new Fl_Value_Slider(110, 350, 180, 20, "Filter Width");
-	m_filterWidthSlider->user_data((void*)(this));	// record self to be used by static callback functions
-	m_filterWidthSlider->type(FL_HOR_NICE_SLIDER);
-	m_filterWidthSlider->labelfont(FL_COURIER);
-	m_filterWidthSlider->labelsize(12);
-	m_filterWidthSlider->minimum(1);
-	m_filterWidthSlider->maximum(32);
-	m_filterWidthSlider->step(1);
-	m_filterWidthSlider->value(m_nFilterWidth);
-	m_filterWidthSlider->align(FL_ALIGN_RIGHT);
-	m_filterWidthSlider->callback(cb_filterWidthSlides);
-	m_filterWidthSlider->deactivate();
+	m_filterSlider = new Fl_Value_Slider(110, 350, 180, 20, "Filter Width");
+	m_filterSlider->user_data((void*)(this));	// record self to be used by static callback functions
+	m_filterSlider->type(FL_HOR_NICE_SLIDER);
+	m_filterSlider->labelfont(FL_COURIER);
+	m_filterSlider->labelsize(12);
+	m_filterSlider->minimum(1);
+	m_filterSlider->maximum(32);
+	m_filterSlider->step(1);
+	m_filterSlider->value(m_nFilterWidth);
+	m_filterSlider->align(FL_ALIGN_RIGHT);
+	m_filterSlider->callback(cb_filterWidthSlides);
+	m_filterSlider->deactivate();
 
 	// set up smoothshade checkbox
 	m_ssCheckButton = new Fl_Check_Button(10, 400, 140, 20, "Smoothshade");
@@ -573,7 +573,6 @@ GraphicalUI::GraphicalUI() : refreshInterval(10) {
 
 	// debugging view
 	m_debuggingWindow = new DebuggingWindow();
-	m_cubeMapChooser = new CubeMapChooser();
 }
 
 #endif

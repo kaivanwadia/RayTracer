@@ -44,7 +44,7 @@ public:
 	Fl_Slider*			m_aaThreshSlider;
 	Fl_Slider*			m_treeDepthSlider;
 	Fl_Slider*			m_leafSizeSlider;
-	Fl_Slider*			m_filterWidthSlider;
+	Fl_Slider*			m_filterSlider;
 
 	Fl_Check_Button*	m_aaCheckButton;
 	Fl_Check_Button*	m_kdCheckButton;
