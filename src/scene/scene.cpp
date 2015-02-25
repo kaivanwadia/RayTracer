@@ -1,4 +1,5 @@
 #include <cmath>
+#include <limits>
 
 #include "scene.h"
 #include "light.h"
@@ -82,4 +83,120 @@ TextureMap* Scene::getTexture(string name) {
 	} else return (*itr).second;
 }
 
+void Scene::buildKdTree(int depth, int leafSize) {
+	this->kdtree = new KdTree<Geometry>(true);
+	for (auto objIter = beginBoundedObjects(); objIter != endBoundedObjects(); objIter++)
+	{
+		kdtree->addObject(*objIter);
+		kdtree->setBoundingBox(this->bounds());
+	}
+	buildMainKdTree(kdtree, depth-1, leafSize);
+}
 
+void Scene::buildMainKdTree(KdTree<Geometry>* kdtree, int depth, int leafSize)
+{
+	if (depth == 0)
+	{
+		return;
+	}
+	double minCost = numeric_limits<double>::max();
+	BoundingBox minBoundingBox;
+	int minAxis;
+	for (int i = 0; i<kdtree->noOfObjects(); i++)
+	{
+		Geometry* object = kdtree->getObject(i);
+		for (int planeNo = 0; planeNo < 6; planeNo++)
+		{
+			double leftVolume = 0;
+			double rightVolume = 0;
+			double boxVolume = kdtree->getBoundingBox().volume();
+			double noLeft = 0;
+			double noRight = 0;
+			Vec3d point;
+			if (planeNo > 2)
+			{
+				point = object->getBoundingBox().getMax();
+			}
+			else
+			{
+				point = object->getBoundingBox().getMin();
+			}
+			int axis = planeNo%3;
+			Vec3d plane(0,0,0);
+			plane[axis] = point[axis];
+			Vec3d bMax = kdtree->getBoundingBox().getMax();
+			Vec3d bMin = kdtree->getBoundingBox().getMin();
+			bMax[axis] = plane[axis];
+			bMin[axis] = plane[axis];
+			BoundingBox planeBB(bMin, bMax);
+			for (int k = 0; k<kdtree->noOfObjects(); k++)
+			{
+				Geometry* object2 = kdtree->getObject(k);
+				BoundingBox obj2bb = object2->getBoundingBox();
+				if (planeBB.intersects(obj2bb))
+				{
+					// Add cost to both sides
+					leftVolume += obj2bb.volume();
+					rightVolume += obj2bb.volume();
+					noLeft++;
+					noRight++;
+				}
+				else if (obj2bb.getMax()[axis] < planeBB.getMin()[axis])
+				{
+					// Add to left (a)
+					leftVolume += obj2bb.volume();
+					noLeft++;
+				}
+				else
+				{
+					// Add to right (b)
+					rightVolume += obj2bb.volume();
+					noRight++;
+				}
+			}
+			double pLeft = leftVolume/boxVolume;
+			double pRight = rightVolume/boxVolume;
+			double cost = 1 + pLeft*noLeft*(80) + pRight*noRight*(80);
+			if (cost < minCost)
+			{
+				minCost = cost;
+				minBoundingBox = planeBB;
+				minAxis = axis;
+			}
+		}
+	}
+	KdTree<Geometry>* left = new KdTree<Geometry>();
+	KdTree<Geometry>* right = new KdTree<Geometry>();
+	for (int i = 0; i<kdtree->noOfObjects(); i++)
+	{
+		Geometry* object = kdtree->getObject(i);
+		BoundingBox objBB = object->getBoundingBox();
+		if (minBoundingBox.intersects(objBB))
+		{
+			left->addObject(object);
+			left->getBoundingBox().merge(objBB);
+			right->addObject(object);
+			right->getBoundingBox().merge(objBB);
+		}
+		else if (objBB.getMax()[minAxis] < minBoundingBox.getMin()[minAxis])
+		{
+			left->addObject(object);
+			left->getBoundingBox().merge(objBB);
+		}
+		else
+		{
+			right->addObject(object);
+			right->getBoundingBox().merge(objBB);
+		}
+	}
+	kdtree->setLeft(left);
+	kdtree->setRight(right);
+	if (left->noOfObjects() > leafSize)
+	{
+		buildMainKdTree(left, depth-1, leafSize);
+	}
+	if (right->noOfObjects() > leafSize)
+	{
+		buildMainKdTree(right, depth-1, leafSize);
+	}
+}

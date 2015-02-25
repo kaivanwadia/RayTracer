@@ -42,6 +42,8 @@ public:
 	int getThreshold() const { return m_nThreshold; }
 	int	getSize() const { return m_nSize; }
 	int getThreads() const { return m_nThreads; }
+	int getKdMaxDepth() const { return m_nMaxDepth; }
+	int getKdLeafSize() const { return m_nLeafSize; }
 	
 	int	getFilterWidth() const { return m_nFilterWidth; }	
 

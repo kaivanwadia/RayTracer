@@ -43,7 +43,7 @@ public:
 	}
 
 	// Does this bounding box intersect the target?
-		bool intersects(const BoundingBox &target) const {
+	bool intersects(const BoundingBox &target) const {
 			return ((target.getMin()[0] - RAY_EPSILON <= bmax[0]) && (target.getMax()[0] + RAY_EPSILON >= bmin[0]) &&
 				(target.getMin()[1] - RAY_EPSILON <= bmax[1]) && (target.getMax()[1] + RAY_EPSILON >= bmin[1]) &&
 				(target.getMin()[2] - RAY_EPSILON <= bmax[2]) && (target.getMax()[2] + RAY_EPSILON >= bmin[2]));

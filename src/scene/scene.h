@@ -27,8 +27,70 @@
 class Light;
 class Scene;
 
-template <typename Obj>
-class KdTree;
+template <typename T>
+class KdTree {
+private:
+  KdTree<T>* left;
+  KdTree<T>* right;
+  bool isRoot;
+  std::vector<T*>objectsVector;
+  BoundingBox bb;
+public:
+  KdTree(){
+    isRoot = false;
+    left = nullptr;
+    right = nullptr;
+  }
+  KdTree(bool _isRoot){
+    isRoot = _isRoot;
+    left = nullptr;
+    right = nullptr;
+  }
+  void setBoundingBox(BoundingBox _bb)
+  {
+    bb = _bb;
+  }
+  BoundingBox getBoundingBox()
+  {
+    return bb;
+  }
+  void setRoot()
+  {
+    isRoot = true;
+  }
+  void setLeft(KdTree<T>* _left)
+  {
+    left = _left;
+  }
+  void setRight(KdTree<T>* _right)
+  {
+    right = _right;
+  }
+  void addObject(T* _obj)
+  {
+    objectsVector.push_back(_obj);
+  }
+  T* getObject(int i)
+  {
+    return objectsVector[i];
+  }
+  KdTree<T>* getLeft()
+  {
+    return left;
+  }
+  KdTree<T>* getRight()
+  {
+    return right;
+  }
+  bool isRootNode()
+  {
+    return isRoot;
+  }
+  int noOfObjects()
+  {
+    return objectsVector.size();
+  }
+};
 
 class SceneElement {
 
@@ -234,8 +296,12 @@ public:
 
   void add( Geometry* obj ) {
     obj->ComputeBoundingBox();
-	sceneBounds.merge(obj->getBoundingBox());
+    sceneBounds.merge(obj->getBoundingBox());
     objects.push_back(obj);
+    if (obj->hasBoundingBoxCapability())
+    {
+      boundedobjects.push_back(obj);
+    }
   }
   void add(Light* light) { lights.push_back(light); }
 
@@ -246,6 +312,8 @@ public:
 
   std::vector<Geometry*>::const_iterator beginObjects() const { return objects.begin(); }
   std::vector<Geometry*>::const_iterator endObjects() const { return objects.end(); }
+  std::vector<Geometry*>::const_iterator beginBoundedObjects() const { return boundedobjects.begin(); }
+  std::vector<Geometry*>::const_iterator endBoundedObjects() const { return boundedobjects.end(); }
         
   const Camera& getCamera() const { return camera; }
   Camera& getCamera() { return camera; }
@@ -265,7 +333,8 @@ public:
 
   const BoundingBox& bounds() const { return sceneBounds; }
 
-  void buildKdTree();
+  void buildKdTree(int depth, int leafSize);
+  void buildMainKdTree(KdTree<Geometry>* kdtree, int depth, int leafSize);
 
  private:
   std::vector<Geometry*> objects;

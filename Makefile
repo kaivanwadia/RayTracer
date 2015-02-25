@@ -4,7 +4,7 @@
 
 LIBS = -lfltk -lfltk_gl -lfltk_images -lGL -lGLU -ljpeg -lpng -lz
 
-CFLAGS = -g -w -std=c++0x
+CFLAGS = -g -w -std=c++11
 
 CC = g++
 

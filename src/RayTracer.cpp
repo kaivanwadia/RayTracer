@@ -120,7 +120,7 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		Vec3d cosT = (-1 * i.N) * sqrt(1 - sinT*sinT);
 		if (!material.kt(i).iszero() && (cosineAngle)<criticalAngle)
 		{
-			Vec3d refractedDirection = cosT + sinT;
+			Vec3d refractedDirection = cosT + iDirection * sinT;
 			refractedDirection.normalize();
 			ray refractedRay(Qpoint, iDirection * refractedDirection, ray::REFRACTION);
 			intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
@@ -195,7 +195,7 @@ bool RayTracer::loadScene( char* fn ) {
 		traceUI->alert( msg );
 		return false;
 	}
-
+	scene->buildKdTree(traceUI->getKdMaxDepth(), traceUI->getKdLeafSize());
 	if( !sceneLoaded() ) return false;
 
 	return true;
