@@ -15,6 +15,7 @@
 
 #include "GraphicalUI.h"
 #include "../RayTracer.h"
+#include <thread>
 
 #define MAX_INTERVAL 500
 
@@ -257,8 +258,20 @@ void GraphicalUI::cb_debuggingDisplayCheckButton(Fl_Widget* o, void* v)
 	  }
 }
 
-void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
+void GraphicalUI::renderThread(int threadNo, int width, int height, int noOfThreads, RayTracer* rayTracer)
+{
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = threadNo; x < width; x=x+noOfThreads)
+		{
+			if (stopTrace) break;
+			rayTracer->tracePixel(x, y);
+		}
+		if (stopTrace) break;
+	}
+}
 
+void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 	char buffer[256];
 
 	pUI = (GraphicalUI*)(o->user_data());
@@ -272,15 +285,20 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		pUI->m_traceGlWindow->show();
 		pUI->raytracer->traceSetup(width, height);
 
+		std::vector<std::thread> threads;
+		for (int i = 1; i < pUI->m_nThreads; i++)
+		{
+			threads.push_back(std::thread(renderThread, i, width, height, pUI->m_nThreads, pUI->getRayTracer()));
+		}
 		// Save the window label
-                const char *old_label = pUI->m_traceGlWindow->label();
+		const char *old_label = pUI->m_traceGlWindow->label();
 
 		clock_t now, prev;
 		now = prev = clock();
 		clock_t intervalMS = pUI->refreshInterval * 100;
 		for (int y = 0; y < height; y++)
 		  {
-		    for (int x = 0; x < width; x++)
+		    for (int x = 0; x < width; x=x+pUI->m_nThreads)
 		      {
 			if (stopTrace) break;
 			// check for input and refresh view every so often while tracing
@@ -305,6 +323,10 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		// Restore the window label
 		pUI->m_traceGlWindow->label(old_label);
 		pUI->m_traceGlWindow->refresh();
+		for (int i = 0; i < pUI->m_nThreads - 1; i++)
+		{
+			threads[i].join();
+		}
 	  }
 }
 
@@ -573,6 +595,7 @@ GraphicalUI::GraphicalUI() : refreshInterval(10) {
 
 	// debugging view
 	m_debuggingWindow = new DebuggingWindow();
+	m_cubeMapChooser = new CubeMapChooser();
 }
 
 #endif

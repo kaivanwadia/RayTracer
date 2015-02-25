@@ -99,6 +99,7 @@ private:
 	static void cb_threadsSlides(Fl_Widget* o, void* v);
 
 	static void cb_render(Fl_Widget* o, void* v);
+	static void renderThread(int threadNo, int width, int height, int noOfThreads, RayTracer* rayTracer);
 	static void cb_stop(Fl_Widget* o, void* v);
 	
 	static void cb_debuggingDisplayCheckButton(Fl_Widget* o, void* v);

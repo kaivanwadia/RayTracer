@@ -75,5 +75,5 @@ Vec3d PointLight::shadowAttenuation(const ray& r, const Vec3d& p) const
       return Vec3d(0,0,0);
     }
   }
-  return Vec3d(1,1,1);
+  return color;
 }

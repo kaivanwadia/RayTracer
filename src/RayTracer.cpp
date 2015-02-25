@@ -91,35 +91,38 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		// Reflected Ray
 		Vec3d minusD = -1 * r.d;
 		Vec3d cosVector = i.N * (minusD * i.N);
-		cosVector.normalize();
+		// cosVector.normalize();
 		Vec3d sinVector = cosVector + r.d;
+		// sinVector.normalize();
 		Vec3d reflectedDirection = cosVector + sinVector;
 		reflectedDirection.normalize();
 		ray reflectedRay(Qpoint, reflectedDirection, ray::REFLECTION);
 		intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
 
 		//Refracted Ray
-		double cosineAngle = acos(-i.N * r.d) * 180/M_PI;
+		double cosineAngle = acos(i.N * r.d) * 180/M_PI;
 		double n_i, n_r;
 		double criticalAngle = 360;
-		if (cosineAngle > 90)
+		double iDirection = 1;
+		if (cosineAngle > 90) // Coming into an object from air
 		{
 			n_i = 1;
 			n_r = material.index(i);
 		}
-		else
+		else // Going out from object to air
 		{
 			n_i = material.index(i);
 			n_r = 1;
-			criticalAngle = asin(n_i/n_r) * 180/M_PI;
+			criticalAngle = asin(n_r/n_i) * 180/M_PI;
+			iDirection = -1;
 		}
 		Vec3d sinT = (n_i/n_r)*sinVector;
 		Vec3d cosT = (-1 * i.N) * sqrt(1 - sinT*sinT);
-		if (material.kt(i).iszero() && (180 - cosineAngle)<criticalAngle)
+		if (!material.kt(i).iszero() && (cosineAngle)<criticalAngle)
 		{
 			Vec3d refractedDirection = cosT + sinT;
 			refractedDirection.normalize();
-			ray refractedRay(Qpoint, refractedDirection, ray::REFRACTION);
+			ray refractedRay(Qpoint, iDirection * refractedDirection, ray::REFRACTION);
 			intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
 		}
 	  	colorC = intensity;
