@@ -29,22 +29,41 @@ class Scene;
 
 template <typename T>
 class KdTree {
-private:
+public:
   KdTree<T>* left;
   KdTree<T>* right;
   bool isRoot;
   std::vector<T*>objectsVector;
   BoundingBox bb;
-public:
+  Vec3d splittingPlane;
+  BoundingBox splittingBB;
   KdTree(){
     isRoot = false;
     left = nullptr;
     right = nullptr;
+	splittingPlane = Vec3d(0.0, 0.0, 0.0);
   }
   KdTree(bool _isRoot){
     isRoot = _isRoot;
     left = nullptr;
     right = nullptr;
+	splittingPlane = Vec3d(0.0, 0.0, 0.0);
+  }
+  void setSplittingPlane(Vec3d _splitPlane)
+  {
+	  splittingPlane = new Vec3d(_splitPlane);
+  }
+  Vec3d getSplittingPlane()
+  {
+	  return splittingPlane;
+  }
+  void setSplittingBoundingBox(BoundingBox _splitBB)
+  {
+	  splittingBB = _splitBB;
+  }
+  BoundingBox getSplittingBoundingBox()
+  {
+	  return splittingBB;
   }
   void setBoundingBox(BoundingBox _bb)
   {
@@ -54,9 +73,9 @@ public:
   {
     return bb;
   }
-  void setRoot()
+  void setIsRoot(bool _root)
   {
-    isRoot = true;
+    isRoot = _root;
   }
   void setLeft(KdTree<T>* _left)
   {
@@ -335,6 +354,7 @@ public:
 
   void buildKdTree(int depth, int leafSize);
   void buildMainKdTree(KdTree<Geometry>* kdtree, int depth, int leafSize);
+  void printKdTree(KdTree<Geometry>* root);
 
  private:
   std::vector<Geometry*> objects;

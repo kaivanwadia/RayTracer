@@ -83,6 +83,37 @@ TextureMap* Scene::getTexture(string name) {
 	} else return (*itr).second;
 }
 
+void Scene::printKdTree(KdTree<Geometry>* root) {
+	vector<KdTree<Geometry>*> currentLevel;
+	vector<KdTree<Geometry>*> nextLevel;
+	nextLevel.push_back(root);
+	int levelNo = 0;
+	while (nextLevel.size() > 0)
+	{
+		cout << levelNo << "\n";
+		currentLevel = nextLevel;
+		nextLevel = vector<KdTree<Geometry>*>();
+		for (int i = 0; i < currentLevel.size(); i++)
+		{
+			cout << currentLevel[i]->noOfObjects()<<"\t";
+			if (i % 2 == 0)
+			{
+				cout << "\t\t";
+			}
+			if (currentLevel[i]->left != nullptr)
+			{
+				nextLevel.push_back(currentLevel[i]->left);
+			}
+			if (currentLevel[i]->right != nullptr)
+			{
+				nextLevel.push_back(currentLevel[i]->right);
+			}
+		}
+		levelNo++;
+		cout << "\n";
+	}
+}
+
 void Scene::buildKdTree(int depth, int leafSize) {
 	this->kdtree = new KdTree<Geometry>(true);
 	for (auto objIter = beginBoundedObjects(); objIter != endBoundedObjects(); objIter++)
@@ -91,6 +122,7 @@ void Scene::buildKdTree(int depth, int leafSize) {
 		kdtree->setBoundingBox(this->bounds());
 	}
 	buildMainKdTree(kdtree, depth-1, leafSize);
+	printKdTree(this->kdtree);
 }
 
 void Scene::buildMainKdTree(KdTree<Geometry>* kdtree, int depth, int leafSize)
