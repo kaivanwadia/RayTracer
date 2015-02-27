@@ -57,6 +57,9 @@ public:
 	bool	gotCubeMap() const { return m_gotCubeMap; }
 
 	static bool m_debug;
+	bool m_kdTree; // Using k-d Trees
+	int m_nMaxDepth; // The max depth of the K-d Tree
+	int m_nLeafSize; // Size of the leaves in K-d Tree
 
 protected:
 	RayTracer*	raytracer;
@@ -69,9 +72,6 @@ protected:
 	bool m_antiAlias; // Using anti aliasing
 	int m_nPixelSamples; // Pixel Samples for anti aliasing
 	int m_nSupersampleThreshold; // Supersample threshold for antialiasing
-	bool m_kdTree; // Using k-d Trees
-	int m_nMaxDepth; // The max depth of the K-d Tree
-	int m_nLeafSize; // Size of the leaves in K-d Tree
 
 	// Determines whether or not to show debugging information
 	// for individual rays.  Disabled by default for efficiency

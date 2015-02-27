@@ -73,15 +73,6 @@ bool Trimesh::intersectLocal(ray& r, isect& i) const
 		if( !have_one || (cur.t < i.t) )
 		  {
 		    i = cur;
-            if(materials.size()>0)
-            {
-                i.setMaterial(*materials[distance(faces.begin(),j)]);
-            }
-            else
-            {
-                i.setMaterial(this->getMaterial());
-            }
-            i.setObject(this);
 		    have_one = true;
 		  }
 	      }
@@ -171,6 +162,22 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
         i.N.normalize();
         i.setBary(baryCoord);
         i.setUVCoordinates(Vec2d(baryCoord));
+        if(parent->materials.size()>0)
+        {
+            Material aMaterial = *(parent->materials[ids[0]]);
+            Material bMaterial = *(parent->materials[ids[1]]);
+            Material cMaterial = *(parent->materials[ids[2]]);
+            Material pMaterial;
+            pMaterial += (baryCoord[0]*aMaterial);
+            pMaterial += (baryCoord[1]*bMaterial);
+            pMaterial += (baryCoord[2]*cMaterial);
+            i.setMaterial(pMaterial);
+        }
+        else
+        {
+            i.setMaterial(parent->getMaterial());
+        }
+        i.setObject(this);
         return true;
     }
     return false;

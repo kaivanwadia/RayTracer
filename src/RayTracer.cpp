@@ -195,7 +195,10 @@ bool RayTracer::loadScene( char* fn ) {
 		traceUI->alert( msg );
 		return false;
 	}
-	scene->buildKdTree(traceUI->getKdMaxDepth(), traceUI->getKdLeafSize());
+	if (traceUI->m_kdTree)
+	{
+		scene->buildKdTree(traceUI->getKdMaxDepth(), traceUI->getKdLeafSize());
+	}
 	if( !sceneLoaded() ) return false;
 
 	return true;

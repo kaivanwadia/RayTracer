@@ -4,6 +4,90 @@
 		"selected_items":
 		[
 			[
+				"trac",
+				"traceUI"
+			],
+			[
+				"kd",
+				"kdtree"
+			],
+			[
+				"bui",
+				"buildMainKdTree"
+			],
+			[
+				"obj",
+				"object"
+			],
+			[
+				"in",
+				"intersects"
+			],
+			[
+				"kdt",
+				"KdTree"
+			],
+			[
+				"plan",
+				"planeBB"
+			],
+			[
+				"min",
+				"minAxis"
+			],
+			[
+				"co",
+				"cost"
+			],
+			[
+				"box",
+				"boxVolume"
+			],
+			[
+				"left",
+				"leftVolume"
+			],
+			[
+				"lef",
+				"leftVolume"
+			],
+			[
+				"pla",
+				"planeBB"
+			],
+			[
+				"get",
+				"getMax"
+			],
+			[
+				"kdTr",
+				"kdtree"
+			],
+			[
+				"pl",
+				"planeBB"
+			],
+			[
+				"bM",
+				"bMax"
+			],
+			[
+				"kdtre",
+				"kdtree"
+			],
+			[
+				"kdtr",
+				"kdtree"
+			],
+			[
+				"boun",
+				"boundedobjects"
+			],
+			[
+				"is",
+				"isRoot"
+			],
+			[
 				"thre",
 				"threadNo"
 			],
@@ -86,10 +170,6 @@
 			[
 				"sin",
 				"sinT"
-			],
-			[
-				"in",
-				"index"
 			],
 			[
 				"lig",
@@ -236,6 +316,38 @@
 	"buffers":
 	[
 		{
+			"file": "src/scene/scene.cpp",
+			"settings":
+			{
+				"buffer_size": 5535,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/RayTracer.cpp",
+			"settings":
+			{
+				"buffer_size": 5774,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/RayTracer.h",
+			"settings":
+			{
+				"buffer_size": 1102,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/parser/Parser.cpp",
+			"settings":
+			{
+				"buffer_size": 27161,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "src/ui/GraphicalUI.cpp",
 			"settings":
 			{
@@ -244,34 +356,42 @@
 			}
 		},
 		{
-			"file": "src/scene/material.cpp",
+			"file": "src/scene/scene.h",
 			"settings":
 			{
-				"buffer_size": 4885,
+				"buffer_size": 10363,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/scene/bbox.h",
+			"settings":
+			{
+				"buffer_size": 3782,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/SceneObjects/Box.h",
+			"settings":
+			{
+				"buffer_size": 653,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/scene/light.cpp",
+			"file": "src/SceneObjects/Box.cpp",
 			"settings":
 			{
-				"buffer_size": 1838,
-				"line_ending": "Windows"
+				"buffer_size": 2078,
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "src/ui/TraceUI.h",
 			"settings":
 			{
-				"buffer_size": 2796,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/ui/GraphicalUI.h",
-			"settings":
-			{
-				"buffer_size": 3418,
+				"buffer_size": 2898,
 				"line_ending": "Unix"
 			}
 		}
@@ -300,20 +420,33 @@
 	},
 	"file_history":
 	[
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/Box.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/GraphicalUI.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/trimesh.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/Sphere.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/parser/Parser.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/Box.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/Cone.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/Cylinder.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/main.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/general.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/Square.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/GraphicalUI.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/TraceUI.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/material.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/scene.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/scene.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/light.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/RayTracer.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/Makefile",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/Makefile.campus",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/backup/GraphicalUI.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/Makefile new",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/Makefile",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/debuggingView.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/debuggingView.h",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/GraphicalUI.cpp",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/TraceUI.h",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/light.cpp",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/material.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/trimesh.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/RayTracer-master/src/ui/GraphicalUI.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/RayTracer-master/src/ui/TraceUI.h",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/GraphicalUI.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/RayTracer-master/src/ui/GraphicalUI.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/backup/light.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/backup/material.cpp",
@@ -326,22 +459,16 @@
 		"/u/kwadia/Downloads/Mark/trimesh.cpp",
 		"/u/kwadia/Downloads/Mark/RayTracer.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/RayTracer.h",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/trimesh.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/ray.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/ray.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/light.h",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/scene.cpp",
 		"/u/kwadia/Downloads/src/scene/material.cpp",
 		"/u/kwadia/Downloads/src/RayTracer.cpp",
 		"/u/kwadia/Downloads/teapot.obj",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/parser/Parser.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/parser/Token.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/material.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/scenes/polymesh/easy1.ray",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/scene.h",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/main.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/Sphere.cpp",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/Box.cpp",
 		"/u/kwadia/Downloads/src/SceneObjects/trimesh.cpp",
 		"/u/kwadia/cs312/a3_clean/makefile",
 		"/u/kwadia/CS384G - Computer Graphics/Project 1/impressionist/impressionistDoc.cpp",
@@ -428,7 +555,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 93.0,
 		"where_history":
 		[
 			""
@@ -439,6 +566,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"nonboundedobjects",
+			"boundedobjects",
+			"boundedobjects\nboundedobjects",
+			"tree",
 			"generateNormals",
 			"vertNorms",
 			"m_debug",
@@ -497,6 +628,116 @@
 			[
 				{
 					"buffer": 0,
+					"file": "src/scene/scene.cpp",
+					"settings":
+					{
+						"buffer_size": 5535,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2817,
+								2817
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1322.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/RayTracer.cpp",
+					"settings":
+					{
+						"buffer_size": 5774,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5173,
+								5173
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1632.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/RayTracer.h",
+					"settings":
+					{
+						"buffer_size": 1102,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/parser/Parser.cpp",
+					"settings":
+					{
+						"buffer_size": 27161,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8439,
+								8439
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6477.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
 					"file": "src/ui/GraphicalUI.cpp",
 					"settings":
 					{
@@ -507,8 +748,8 @@
 						"selection":
 						[
 							[
-								8301,
-								8301
+								1580,
+								1580
 							]
 						],
 						"settings":
@@ -517,63 +758,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5423.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/scene/material.cpp",
-					"settings":
-					{
-						"buffer_size": 4885,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
 						"translation.y": 459.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/scene/light.cpp",
-					"settings":
-					{
-						"buffer_size": 1838,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 612.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -581,50 +766,51 @@
 			]
 		},
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
-					"buffer": 3,
-					"file": "src/ui/TraceUI.h",
+					"buffer": 5,
+					"file": "src/scene/scene.h",
 					"settings":
 					{
-						"buffer_size": 2796,
+						"buffer_size": 10363,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								9502,
+								9502
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 510.0,
+						"translation.y": 5355.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "src/ui/GraphicalUI.h",
+					"buffer": 6,
+					"file": "src/scene/bbox.h",
 					"settings":
 					{
-						"buffer_size": 3418,
+						"buffer_size": 3782,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1025,
+								1025
 							]
 						],
 						"settings":
@@ -633,7 +819,88 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 714.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/SceneObjects/Box.h",
+					"settings":
+					{
+						"buffer_size": 653,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								191,
+								191
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/SceneObjects/Box.cpp",
+					"settings":
+					{
+						"buffer_size": 2078,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								255,
+								255
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 8,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/ui/TraceUI.h",
+					"settings":
+					{
+						"buffer_size": 2898,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1942,
+								1942
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 561.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -669,7 +936,7 @@
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.60302677532,
 			1.0
 		],
 		"rows":
@@ -679,6 +946,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 112.0
+	},
 	"replace":
 	{
 		"height": 0.0
@@ -689,6 +960,38 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"tra",
+				"src/ui/TraceUI.h"
+			],
+			[
+				"gra",
+				"src/ui/GraphicalUI.cpp"
+			],
+			[
+				"tri",
+				"src/SceneObjects/trimesh.h"
+			],
+			[
+				"sph",
+				"src/SceneObjects/Sphere.h"
+			],
+			[
+				"parse",
+				"src/parser/Parser.cpp"
+			],
+			[
+				"ray",
+				"src/RayTracer.cpp"
+			],
+			[
+				"cyl",
+				"src/SceneObjects/Cylinder.h"
+			],
+			[
+				"bb",
+				"src/scene/bbox.h"
+			],
 			[
 				"lig",
 				"src/scene/light.cpp"
@@ -702,24 +1005,8 @@
 				"src/scene/material.cpp"
 			],
 			[
-				"ray",
-				"src/RayTracer.cpp"
-			],
-			[
-				"gra",
-				"src/ui/GraphicalUI.cpp"
-			],
-			[
 				"trace",
 				"src/ui/TraceUI.h"
-			],
-			[
-				"tra",
-				"src/ui/TraceUI.h"
-			],
-			[
-				"tri",
-				"src/SceneObjects/trimesh.cpp"
 			],
 			[
 				"ligh",
@@ -758,10 +1045,6 @@
 				"src/SceneObjects/Box.cpp"
 			],
 			[
-				"sph",
-				"src/SceneObjects/Sphere.cpp"
-			],
-			[
 				"grap",
 				"src/ui/GraphicalUI.cpp"
 			],
@@ -796,6 +1079,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 274.0,
+	"side_bar_width": 202.0,
 	"status_bar_visible": true
 }
