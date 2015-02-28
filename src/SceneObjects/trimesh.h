@@ -19,12 +19,12 @@ class Trimesh : public MaterialSceneObject
     typedef std::vector<Material*> Materials;
 
     Vertices vertices;
-    Faces faces;
     Normals normals;
     Materials materials;
 	BoundingBox localBounds;
 
 public:
+    Faces faces;
     Trimesh( Scene *scene, Material *mat, TransformNode *transform )
         : MaterialSceneObject(scene, mat), 
 			displayListWithMaterials(0),

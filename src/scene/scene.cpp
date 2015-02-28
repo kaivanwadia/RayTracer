@@ -4,6 +4,7 @@
 #include "scene.h"
 #include "light.h"
 #include "../ui/TraceUI.h"
+#include "../SceneObjects/trimesh.h"
 
 using namespace std;
 
@@ -211,7 +212,7 @@ bool yzPlaneCompareFunction(Geometry* first, Geometry* second)
 	BoundingBox secondBB = second->getBoundingBox();
 	double firstX = firstBB.getMin()[0];
 	double secondX = secondBB.getMin()[0];
-	return (firstX <= secondX);
+	return (firstX < secondX);
 }
 
 bool xzPlaneCompareFunction(Geometry* first, Geometry* second)
@@ -220,7 +221,7 @@ bool xzPlaneCompareFunction(Geometry* first, Geometry* second)
 	BoundingBox secondBB = second->getBoundingBox();
 	double firstY = firstBB.getMin()[1];
 	double secondY = secondBB.getMin()[1];
-	return (firstY <= secondY);
+	return (firstY < secondY);
 }
 
 bool xyPlaneCompareFunction(Geometry* first, Geometry* second)
@@ -229,23 +230,35 @@ bool xyPlaneCompareFunction(Geometry* first, Geometry* second)
 	BoundingBox secondBB = second->getBoundingBox();
 	double firstZ = firstBB.getMin()[2];
 	double secondZ = secondBB.getMin()[2];
-	return (firstZ <= secondZ);
+	return (firstZ < secondZ);
 }
 
 void Scene::buildKdTree(int depth, int leafSize) {
 	this->kdtreeRoot = new KdTree<Geometry>(true);
-	for (auto objIter = beginBoundedObjects(); objIter != endBoundedObjects(); objIter++)
+	for (auto objIter = beginObjects(); objIter != endObjects(); objIter++)
 	{
-		kdtreeRoot->objectsVector.push_back(*objIter);
+		if (!(*objIter)->isTrimesh() && (*objIter)->hasBoundingBoxCapability())
+		{
+			kdtreeRoot->objectsVector.push_back(*objIter);
+		}
+		else if ((*objIter)->isTrimesh() && (*objIter)->hasBoundingBoxCapability())
+		{
+			Trimesh *triMesh = (Trimesh*)(*objIter);
+			for (int i = 0; i < triMesh->faces.size(); i++)
+			{
+				kdtreeRoot->objectsVector.push_back(triMesh->faces[i]);
+			}
+		}
 	}
+	cout<<"Number of Objects: "<<kdtreeRoot->noOfObjects()<<endl;
 	kdtreeRoot->bb = this->bounds();
     std::vector<Geometry*> yzPlaneOrder;
     std::vector<Geometry*> xzPlaneOrder;
     std::vector<Geometry*> xyPlaneOrder;
-    for(cgiter ii = beginBoundedObjects(); ii != endBoundedObjects(); ++ii) {
-        yzPlaneOrder.push_back(*ii);
-        xzPlaneOrder.push_back(*ii);
-        xyPlaneOrder.push_back(*ii);
+    for(int i = 0; i < kdtreeRoot->noOfObjects(); i++) {
+        yzPlaneOrder.push_back(kdtreeRoot->objectsVector[i]);
+        xzPlaneOrder.push_back(kdtreeRoot->objectsVector[i]);
+        xyPlaneOrder.push_back(kdtreeRoot->objectsVector[i]);
     }
     sort(yzPlaneOrder.begin(), yzPlaneOrder.end(), yzPlaneCompareFunction);
     sort(xzPlaneOrder.begin(), xzPlaneOrder.end(), xzPlaneCompareFunction);

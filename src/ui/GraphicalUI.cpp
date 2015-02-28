@@ -328,7 +328,7 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		}
 		tEnd = clock();
 		sprintf(buffer, "MS To RENDER", (tStart - tEnd)/CLOCKS_PER_SEC * 1000, old_label);
-		pUI->m_traceGlWindow->label(old_label);
+		pUI->m_traceGlWindow->label(buffer);
 		pUI->m_traceGlWindow->refresh();
 	  }
 }
