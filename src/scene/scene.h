@@ -393,4 +393,22 @@ public:
   mutable std::vector<std::pair<ray*, isect*> > intersectCache;
 };
 
+struct  StackElement
+{
+  KdTree<Geometry>* currNode;
+  double tMin;
+  double tMax;
+  StackElement () {
+    currNode = nullptr;
+    tMin = 0.0;
+    tMax = 0.0;
+  }
+  StackElement (KdTree<Geometry>* _currentNode, double _tMin, double _tMax)
+  {
+    currNode = _currentNode;
+    tMin = _tMin;
+    tMax = _tMax;
+  }
+};
+
 #endif // __SCENE_H__

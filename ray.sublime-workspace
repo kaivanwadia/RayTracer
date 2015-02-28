@@ -571,7 +571,7 @@
 			"file": "src/ui/GraphicalUI.cpp",
 			"settings":
 			{
-				"buffer_size": 18380,
+				"buffer_size": 18377,
 				"line_ending": "Unix"
 			}
 		}
@@ -600,6 +600,7 @@
 	},
 	"file_history":
 	[
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/cubeMap.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/trimesh.h",
 		"/u/kwadia/Downloads/RayTracer.cpp",
 		"/u/kwadia/Downloads/material.cpp",
@@ -726,8 +727,7 @@
 		"/u/kwadia/public_html/Resources/main.css",
 		"/u/kwadia/public_html/projects.html",
 		"/u/kwadia/public_html/index.html",
-		"/u/kwadia/public_html/interests.html",
-		"/u/kwadia/public_html/GAMBIT Lab/aquaticDash.html"
+		"/u/kwadia/public_html/interests.html"
 	],
 	"find":
 	{
@@ -807,7 +807,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -849,8 +849,8 @@
 						"selection":
 						[
 							[
-								6131,
-								6131
+								6345,
+								6345
 							]
 						],
 						"settings":
@@ -932,8 +932,8 @@
 						"selection":
 						[
 							[
-								7236,
-								7236
+								6021,
+								6021
 							]
 						],
 						"settings":
@@ -951,7 +951,7 @@
 			]
 		},
 		{
-			"selected": 0,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -1041,15 +1041,15 @@
 					"file": "src/ui/GraphicalUI.cpp",
 					"settings":
 					{
-						"buffer_size": 18380,
+						"buffer_size": 18377,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8464,
-								8464
+								8388,
+								8388
 							]
 						],
 						"settings":
@@ -1058,7 +1058,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4973.0,
+						"translation.y": 5075.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1094,7 +1094,7 @@
 		"cols":
 		[
 			0.0,
-			0.573827622602,
+			0.504411815042,
 			1.0
 		],
 		"rows":

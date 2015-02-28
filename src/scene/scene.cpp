@@ -1,5 +1,6 @@
 #include <cmath>
 #include <limits>
+#include <stack>
 
 #include "scene.h"
 #include "light.h"
@@ -57,74 +58,127 @@ Scene::~Scene() {
 
 void Scene::intersectKdTree(ray& r, isect& i, KdTree<Geometry>* currentNode, bool& have_one, double tMin, double tMax) const
 {
-	// cout<<"Here\n";
-	// double tMin, tMax;
-	// double tStarMin, tStarMax;
-	if ((currentNode->left == nullptr) || (currentNode->right == nullptr))
+	stack<StackElement> kdTreeStack;
+	struct StackElement rootElement = StackElement(currentNode, tMin, tMax);
+	kdTreeStack.push(rootElement);
+	while (!kdTreeStack.empty())
 	{
-		// cout<<"LEAF NODE REACHED\n";
-		for (cgiter obj = currentNode->objectsVector.begin(); obj != currentNode->objectsVector.end(); obj++)
+		struct StackElement currElem = kdTreeStack.top();
+		kdTreeStack.pop();
+		if ((currElem.currNode->left == nullptr) || (currElem.currNode->right == nullptr))
 		{
-			isect cur;
-			if ((*obj)->intersect(r,cur))
+			// cout<<"LEAF NODE REACHED\n";
+			for (cgiter obj = currElem.currNode->objectsVector.begin(); obj != currElem.currNode->objectsVector.end(); obj++)
 			{
-				if (!have_one || cur.t < i.t) {
-					have_one = true;
-					i = cur;
+				isect cur;
+				if ((*obj)->intersect(r,cur))
+				{
+					if (!have_one || cur.t < i.t) {
+						have_one = true;
+						i = cur;
+					}
 				}
 			}
 		}
-		if (have_one)
-		{
-			// cout<<"Object Intersected"<<endl;
-		}
 		else
 		{
-			// cout<<"Object Did Not Intersected"<<endl;
+			KdTree<Geometry> *nearNode,*farNode;
+			if (r.p[currElem.currNode->dimension] < currElem.currNode->splittingBB.getMin()[currElem.currNode->dimension])
+			{
+				nearNode = currElem.currNode->left;
+				farNode = currElem.currNode->right;
+			}
+			else
+			{
+				nearNode = currElem.currNode->right;
+				farNode = currElem.currNode->left;
+			}
+			double tStar = ((currElem.currNode->splittingBB.getMin()[currElem.currNode->dimension] - r.p[currElem.currNode->dimension])/r.d[currElem.currNode->dimension]);
+			if (tStar > currElem.tMax || tStar < 0)
+			{
+				kdTreeStack.push(StackElement(nearNode, tMin, tMax));
+				//intersectKdTree(r, i, nearNode, have_one, tMin, tMax);
+			}
+			else if (tStar < currElem.tMin)
+			{
+				kdTreeStack.push(StackElement(farNode, tMin, tMax));
+				// intersectKdTree(r, i, farNode, have_one, tMin, tMax);
+			}
+			else if (currElem.tMin <= tStar && tStar <= currElem.tMax)
+			{
+				kdTreeStack.push(StackElement(nearNode, tMin, tStar));
+				kdTreeStack.push(StackElement(farNode, tStar, tMax));
+				// intersectKdTree(r, i, nearNode, have_one, tMin, tStar);
+				// intersectKdTree(r, i, farNode, have_one, tStar, tMax);
+			}
 		}
-		return;
+
 	}
-	else
-	{
-		KdTree<Geometry> *nearNode,*farNode;
-		if (r.p[currentNode->dimension] < currentNode->splittingBB.getMin()[currentNode->dimension])
-		{
-			nearNode = currentNode->left;
-			farNode = currentNode->right;
-		}
-		else
-		{
-			nearNode = currentNode->right;
-			farNode = currentNode->left;	
-		}
-		double tStar = ((currentNode->splittingBB.getMin()[currentNode->dimension] - r.p[currentNode->dimension])/r.d[currentNode->dimension]);
-		if (tStar > tMax || tStar < 0)
-		{
-			intersectKdTree(r, i, nearNode, have_one, tMin, tMax);
-		}
-		else if (tStar < tMin)
-		{
-			intersectKdTree(r, i, farNode, have_one, tMin, tMax);
-		}
-		else if (tMin <= tStar && tStar <= tMax)
-		{
-			intersectKdTree(r, i, nearNode, have_one, tMin, tStar);
-			intersectKdTree(r, i, farNode, have_one, tStar, tMax);
-		}
-		// if (tMax <= tStar)
-		// {
-		// 	intersectKdTree(r, i, nearNode, have_one, tMin, tMax);
-		// }
-		// else if (tMin <= tStar && tStar <= tMax)
-		// {
-		// 	intersectKdTree(r, i, nearNode, have_one, tMin, tStar);
-		// 	intersectKdTree(r, i, farNode, have_one, tStar, tMax);
-		// }
-		// else
-		// {
-		// 	intersectKdTree(r, i, farNode, have_one, tMin, tMax);
-		// }
-	}
+	// if ((currentNode->left == nullptr) || (currentNode->right == nullptr))
+	// {
+	// 	// cout<<"LEAF NODE REACHED\n";
+	// 	for (cgiter obj = currentNode->objectsVector.begin(); obj != currentNode->objectsVector.end(); obj++)
+	// 	{
+	// 		isect cur;
+	// 		if ((*obj)->intersect(r,cur))
+	// 		{
+	// 			if (!have_one || cur.t < i.t) {
+	// 				have_one = true;
+	// 				i = cur;
+	// 			}
+	// 		}
+	// 	}
+	// 	if (have_one)
+	// 	{
+	// 		cout<<"Object Intersected"<<endl;
+	// 	}
+	// 	else
+	// 	{
+	// 		cout<<"Object Did Not Intersected"<<endl;
+	// 	}
+	// 	return;
+	// }
+	// else
+	// {
+	// 	KdTree<Geometry> *nearNode,*farNode;
+	// 	if (r.p[currentNode->dimension] < currentNode->splittingBB.getMin()[currentNode->dimension])
+	// 	{
+	// 		nearNode = currentNode->left;
+	// 		farNode = currentNode->right;
+	// 	}
+	// 	else
+	// 	{
+	// 		nearNode = currentNode->right;
+	// 		farNode = currentNode->left;	
+	// 	}
+	// 	double tStar = ((currentNode->splittingBB.getMin()[currentNode->dimension] - r.p[currentNode->dimension])/r.d[currentNode->dimension]);
+	// 	if (tStar > tMax || tStar < 0)
+	// 	{
+	// 		intersectKdTree(r, i, nearNode, have_one, tMin, tMax);
+	// 	}
+	// 	else if (tStar < tMin)
+	// 	{
+	// 		intersectKdTree(r, i, farNode, have_one, tMin, tMax);
+	// 	}
+	// 	else if (tMin <= tStar && tStar <= tMax)
+	// 	{
+	// 		intersectKdTree(r, i, nearNode, have_one, tMin, tStar);
+	// 		intersectKdTree(r, i, farNode, have_one, tStar, tMax);
+	// 	}
+	// 	if (tMax <= tStar)
+	// 	{
+	// 		intersectKdTree(r, i, nearNode, have_one, tMin, tMax);
+	// 	}
+	// 	else if (tMin <= tStar && tStar <= tMax)
+	// 	{
+	// 		intersectKdTree(r, i, nearNode, have_one, tMin, tStar);
+	// 		intersectKdTree(r, i, farNode, have_one, tStar, tMax);
+	// 	}
+	// 	else
+	// 	{
+	// 		intersectKdTree(r, i, farNode, have_one, tMin, tMax);
+	// 	}
+	// }
 	return;
 }
 
@@ -250,7 +304,7 @@ void Scene::buildKdTree(int depth, int leafSize) {
 			}
 		}
 	}
-	cout<<"Number of Objects: "<<kdtreeRoot->noOfObjects()<<endl;
+	// cout<<"Number of Objects: "<<kdtreeRoot->noOfObjects()<<endl;
 	kdtreeRoot->bb = this->bounds();
     std::vector<Geometry*> yzPlaneOrder;
     std::vector<Geometry*> xzPlaneOrder;
@@ -284,7 +338,7 @@ void Scene::buildKdTree(int depth, int leafSize) {
     //   cout << "Min: "<<ii->getBoundingBox().getMin() << "\n";
     //   cout << "Max: "<<ii->getBoundingBox().getMax() << "\n";
     // }
-    cout<<"Scene BB : "<<this->kdtreeRoot->bb.getMin() << "||" << this->kdtreeRoot->bb.getMax()<<endl;
+    // cout<<"Scene BB : "<<this->kdtreeRoot->bb.getMin() << "||" << this->kdtreeRoot->bb.getMax()<<endl;
 	buildMainKdTree(kdtreeRoot, depth, leafSize, orderedPlanes);
 	printKdTree(this->kdtreeRoot);
 }
