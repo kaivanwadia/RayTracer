@@ -37,17 +37,20 @@ public:
   BoundingBox bb;
   Vec3d splittingPlane;
   BoundingBox splittingBB;
+  int dimension;
   KdTree(){
     isRoot = false;
     left = nullptr;
     right = nullptr;
-	splittingPlane = Vec3d(0.0, 0.0, 0.0);
+    dimension = 4;
+    splittingPlane = Vec3d(0.0, 0.0, 0.0);
   }
   KdTree(bool _isRoot){
     isRoot = _isRoot;
     left = nullptr;
     right = nullptr;
-	splittingPlane = Vec3d(0.0, 0.0, 0.0);
+    dimension = 4;
+    splittingPlane = Vec3d(0.0, 0.0, 0.0);
   }
   void setSplittingPlane(Vec3d _splitPlane)
   {
@@ -199,6 +202,8 @@ protected:
   virtual bool intersectLocal(ray& r, isect& i ) const = 0;
 
 public:
+  static int idGen;
+  int objectID;
   // intersections performed in the global coordinate space.
   bool intersect(ray& r, isect& i) const;
 
@@ -252,7 +257,12 @@ public:
 
   void setTransform(TransformNode *transform) { this->transform = transform; };
     
- Geometry(Scene *scene) : SceneElement( scene ) {}
+ Geometry(Scene *scene) : SceneElement( scene ) {
+  objectID = idGen;
+  idGen++;
+ }
+
+ virtual bool isTrimesh() {return false;}
 
   // For debugging purposes, draws using OpenGL
   void glDraw(int quality, bool actualMaterials, bool actualTextures) const;
@@ -325,6 +335,8 @@ public:
   void add(Light* light) { lights.push_back(light); }
 
   bool intersect(ray& r, isect& i) const;
+  void intersectKdTree(ray& r, isect& i, KdTree<Geometry>* currentNode, bool& have_one, double tMin, double tMax) const;
+  bool intersectKdTreeMain(ray& r, isect& i) const;
 
   std::vector<Light*>::const_iterator beginLights() const { return lights.begin(); }
   std::vector<Light*>::const_iterator endLights() const { return lights.end(); }
@@ -353,7 +365,7 @@ public:
   const BoundingBox& bounds() const { return sceneBounds; }
 
   void buildKdTree(int depth, int leafSize);
-  void buildMainKdTree(KdTree<Geometry>* kdtree, int depth, int leafSize);
+  void buildMainKdTree(KdTree<Geometry>* kdtree, int depth, int leafSize, std::vector<std::vector<Geometry*>> orderedPlanes);
   void printKdTree(KdTree<Geometry>* root);
 
  private:
@@ -374,11 +386,10 @@ public:
   // must fall within this bounding box.  Objects that don't have hasBoundingBoxCapability()
   // are exempt from this requirement.
   BoundingBox sceneBounds;
-  
-  KdTree<Geometry>* kdtree;
 
  public:
   // This is used for debugging purposes only.
+  KdTree<Geometry>* kdtreeRoot;
   mutable std::vector<std::pair<ray*, isect*> > intersectCache;
 };
 

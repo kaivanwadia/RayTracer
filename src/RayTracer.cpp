@@ -68,69 +68,137 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 {
 	isect i;
 	Vec3d colorC;
+	if (traceUI->m_kdTree)
+	{
+		if(scene->intersectKdTreeMain(r, i)) {
+			// YOUR CODE HERE
 
-	if(scene->intersect(r, i)) {
-		// YOUR CODE HERE
+			// An intersection occurred!  We've got work to do.  For now,
+			// this code gets the material for the surface that was intersected,
+			// and asks that material to provide a color for the ray.  
 
-		// An intersection occurred!  We've got work to do.  For now,
-		// this code gets the material for the surface that was intersected,
-		// and asks that material to provide a color for the ray.  
+			// This is a great place to insert code for recursive ray tracing.
+			// Instead of just returning the result of shade(), add some
+			// more steps: add in the contributions from reflected and refracted
+			// rays.
+			const Material& material = i.getMaterial();
+			if (depth == 0)
+			{
+				return material.shade(scene, r, i);
+			}
+			Vec3d Qpoint = r.at(i.t);
+			// Light Ray
+			Vec3d intensity = material.shade(scene, r, i);
+			// Reflected Ray
+			Vec3d minusD = -1 * r.d;
+			Vec3d cosVector = i.N * (minusD * i.N);
+			// cosVector.normalize();
+			Vec3d sinVector = cosVector + r.d;
+			// sinVector.normalize();
+			Vec3d reflectedDirection = cosVector + sinVector;
+			reflectedDirection.normalize();
+			ray reflectedRay(Qpoint, reflectedDirection, ray::REFLECTION);
+			intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
 
-		// This is a great place to insert code for recursive ray tracing.
-		// Instead of just returning the result of shade(), add some
-		// more steps: add in the contributions from reflected and refracted
-		// rays.
-		const Material& material = i.getMaterial();
-		if (depth == 0)
-		{
-			return material.shade(scene, r, i);
+			//Refracted Ray
+			double cosineAngle = acos(i.N * r.d) * 180/M_PI;
+			double n_i, n_r;
+			double criticalAngle = 360;
+			double iDirection = 1;
+			if (cosineAngle > 90) // Coming into an object from air
+			{
+				n_i = 1;
+				n_r = material.index(i);
+			}
+			else // Going out from object to air
+			{
+				n_i = material.index(i);
+				n_r = 1;
+				criticalAngle = asin(n_r/n_i) * 180/M_PI;
+				iDirection = -1;
+			}
+			Vec3d sinT = (n_i/n_r)*sinVector;
+			Vec3d cosT = (-1 * i.N) * sqrt(1 - sinT*sinT);
+			if (!material.kt(i).iszero() && (cosineAngle)<criticalAngle)
+			{
+				Vec3d refractedDirection = cosT + iDirection * sinT;
+				refractedDirection.normalize();
+				ray refractedRay(Qpoint, iDirection * refractedDirection, ray::REFRACTION);
+				intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
+			}
+		  	colorC = intensity;
+		} else {
+			// No intersection.  This ray travels to infinity, so we color
+			// it according to the background color, which in this (simple) case
+			// is just black.
+			colorC = Vec3d(0.0, 0.0, 0.0);
 		}
-		Vec3d Qpoint = r.at(i.t);
-		// Light Ray
-		Vec3d intensity = material.shade(scene, r, i);
-		// Reflected Ray
-		Vec3d minusD = -1 * r.d;
-		Vec3d cosVector = i.N * (minusD * i.N);
-		// cosVector.normalize();
-		Vec3d sinVector = cosVector + r.d;
-		// sinVector.normalize();
-		Vec3d reflectedDirection = cosVector + sinVector;
-		reflectedDirection.normalize();
-		ray reflectedRay(Qpoint, reflectedDirection, ray::REFLECTION);
-		intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
+	}
+	else
+	{
+		if(scene->intersect(r, i)) {
+			// YOUR CODE HERE
 
-		//Refracted Ray
-		double cosineAngle = acos(i.N * r.d) * 180/M_PI;
-		double n_i, n_r;
-		double criticalAngle = 360;
-		double iDirection = 1;
-		if (cosineAngle > 90) // Coming into an object from air
-		{
-			n_i = 1;
-			n_r = material.index(i);
+			// An intersection occurred!  We've got work to do.  For now,
+			// this code gets the material for the surface that was intersected,
+			// and asks that material to provide a color for the ray.  
+
+			// This is a great place to insert code for recursive ray tracing.
+			// Instead of just returning the result of shade(), add some
+			// more steps: add in the contributions from reflected and refracted
+			// rays.
+			const Material& material = i.getMaterial();
+			if (depth == 0)
+			{
+				return material.shade(scene, r, i);
+			}
+			Vec3d Qpoint = r.at(i.t);
+			// Light Ray
+			Vec3d intensity = material.shade(scene, r, i);
+			// Reflected Ray
+			Vec3d minusD = -1 * r.d;
+			Vec3d cosVector = i.N * (minusD * i.N);
+			// cosVector.normalize();
+			Vec3d sinVector = cosVector + r.d;
+			// sinVector.normalize();
+			Vec3d reflectedDirection = cosVector + sinVector;
+			reflectedDirection.normalize();
+			ray reflectedRay(Qpoint, reflectedDirection, ray::REFLECTION);
+			intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
+
+			//Refracted Ray
+			double cosineAngle = acos(i.N * r.d) * 180/M_PI;
+			double n_i, n_r;
+			double criticalAngle = 360;
+			double iDirection = 1;
+			if (cosineAngle > 90) // Coming into an object from air
+			{
+				n_i = 1;
+				n_r = material.index(i);
+			}
+			else // Going out from object to air
+			{
+				n_i = material.index(i);
+				n_r = 1;
+				criticalAngle = asin(n_r/n_i) * 180/M_PI;
+				iDirection = -1;
+			}
+			Vec3d sinT = (n_i/n_r)*sinVector;
+			Vec3d cosT = (-1 * i.N) * sqrt(1 - sinT*sinT);
+			if (!material.kt(i).iszero() && (cosineAngle)<criticalAngle)
+			{
+				Vec3d refractedDirection = cosT + iDirection * sinT;
+				refractedDirection.normalize();
+				ray refractedRay(Qpoint, iDirection * refractedDirection, ray::REFRACTION);
+				intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
+			}
+		  	colorC = intensity;
+		} else {
+			// No intersection.  This ray travels to infinity, so we color
+			// it according to the background color, which in this (simple) case
+			// is just black.
+			colorC = Vec3d(0.0, 0.0, 0.0);
 		}
-		else // Going out from object to air
-		{
-			n_i = material.index(i);
-			n_r = 1;
-			criticalAngle = asin(n_r/n_i) * 180/M_PI;
-			iDirection = -1;
-		}
-		Vec3d sinT = (n_i/n_r)*sinVector;
-		Vec3d cosT = (-1 * i.N) * sqrt(1 - sinT*sinT);
-		if (!material.kt(i).iszero() && (cosineAngle)<criticalAngle)
-		{
-			Vec3d refractedDirection = cosT + iDirection * sinT;
-			refractedDirection.normalize();
-			ray refractedRay(Qpoint, iDirection * refractedDirection, ray::REFRACTION);
-			intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
-		}
-	  	colorC = intensity;
-	} else {
-		// No intersection.  This ray travels to infinity, so we color
-		// it according to the background color, which in this (simple) case
-		// is just black.
-		colorC = Vec3d(0.0, 0.0, 0.0);
 	}
 	return colorC;
 }

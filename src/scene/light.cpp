@@ -14,8 +14,16 @@ double DirectionalLight::distanceAttenuation(const Vec3d& P) const
 Vec3d DirectionalLight::shadowAttenuation(const ray& r, const Vec3d& p) const
 {
   // YOUR CODE HERE:
-  // You should implement shadow-handling code here.
-  return Vec3d(1,1,1);
+  Vec3d shadowDirection = getDirection(p);
+  shadowDirection.normalize();
+  isect i;
+  ray shadowRay(p, shadowDirection, ray::SHADOW);
+  if (this->getScene()->intersect(shadowRay, i))
+  {
+    Vec3d Qpoint = shadowRay.at(i.t);
+    return Vec3d(0,0,0);
+  }
+  return color;
 }
 
 Vec3d DirectionalLight::getColor() const

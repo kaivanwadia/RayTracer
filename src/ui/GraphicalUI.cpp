@@ -294,6 +294,7 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		const char *old_label = pUI->m_traceGlWindow->label();
 
 		clock_t now, prev;
+		clock_t tEnd, tStart = clock();
 		now = prev = clock();
 		clock_t intervalMS = pUI->refreshInterval * 100;
 		for (int y = 0; y < height; y++)
@@ -321,12 +322,14 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		doneTrace = true;
 		stopTrace = false;
 		// Restore the window label
-		pUI->m_traceGlWindow->label(old_label);
-		pUI->m_traceGlWindow->refresh();
 		for (int i = 0; i < pUI->m_nThreads - 1; i++)
 		{
 			threads[i].join();
 		}
+		tEnd = clock();
+		sprintf(buffer, "MS To RENDER", (tStart - tEnd)/CLOCKS_PER_SEC * 1000, old_label);
+		pUI->m_traceGlWindow->label(old_label);
+		pUI->m_traceGlWindow->refresh();
 	  }
 }
 

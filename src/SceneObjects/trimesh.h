@@ -38,6 +38,8 @@ public:
 
     bool intersectLocal(ray& r, isect& i) const;
 
+    virtual bool isTrimesh() {return true;}
+
     ~Trimesh();
     
     // must add vertices, normals, and materials IN ORDER

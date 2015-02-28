@@ -52,15 +52,15 @@ Vec3d Material::shade(Scene *scene, const ray& r, const isect& i) const
     Vec3d directionToLight = pLight->getDirection(Qpoint);
     directionToLight.normalize();
     Vec3d lightIntensity = pLight->distanceAttenuation(Qpoint) * pLight->shadowAttenuation(r, Qpoint);
-    intensity = intensity + prod(kd(i), lightIntensity) * (i.N * directionToLight);
+    intensity = intensity + prod(kd(i), lightIntensity) * max((i.N * directionToLight),0.0);
     // Specular term
     Vec3d viewingDirection = scene->getCamera().getEye() - Qpoint;
     viewingDirection.normalize();
     Vec3d cosVector = i.N * (directionToLight * i.N);
-    Vec3d sinVector = cosVector + directionToLight;
+    Vec3d sinVector = cosVector - directionToLight;
     Vec3d reflectedDirection = cosVector + sinVector;
     reflectedDirection.normalize();
-    intensity = intensity + prod(ks(i), lightIntensity) * pow((reflectedDirection*viewingDirection), shininess(i));
+    intensity = intensity + prod(ks(i), lightIntensity) * pow(max(reflectedDirection*viewingDirection,0.0), shininess(i));
   }
   return intensity;
 }
