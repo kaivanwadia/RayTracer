@@ -319,8 +319,17 @@ public:
   typedef std::vector<Geometry*>::const_iterator cgiter;
 
   TransformRoot transformRoot;
+  int kdTreeDepth;
+  int kdTreeLeafSize;
+  bool useKdTree;
+  KdTree<Geometry>* kdtreeRoot;
 
-  Scene() : transformRoot(), objects(), lights() {}
+  Scene() : transformRoot(), objects(), lights() {
+    kdTreeDepth = 0;
+    kdTreeLeafSize = 0;
+    useKdTree = false;
+    kdtreeRoot = nullptr;
+  }
   virtual ~Scene();
 
   void add( Geometry* obj ) {
@@ -365,6 +374,7 @@ public:
   const BoundingBox& bounds() const { return sceneBounds; }
 
   void buildKdTree(int depth, int leafSize);
+  void buildTrimeshKdTree(Geometry* triMesh, int depth, int leafSize);
   void buildMainKdTree(KdTree<Geometry>* kdtree, int depth, int leafSize, std::vector<std::vector<Geometry*>> orderedPlanes);
   void printKdTree(KdTree<Geometry>* root);
 
@@ -389,7 +399,6 @@ public:
 
  public:
   // This is used for debugging purposes only.
-  KdTree<Geometry>* kdtreeRoot;
   mutable std::vector<std::pair<ray*, isect*> > intersectCache;
 };
 

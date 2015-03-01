@@ -32,10 +32,13 @@ public:
     {
       this->transform = transform;
       vertNorms = false;
+      kdtreeRoot = nullptr;
     }
 
     bool vertNorms;
+    KdTree<Geometry>* kdtreeRoot;
 
+    bool kdTreeBuilt() {return kdtreeRoot != nullptr;}
     bool intersectLocal(ray& r, isect& i) const;
 
     virtual bool isTrimesh() {return true;}
