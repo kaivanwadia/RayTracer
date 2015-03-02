@@ -2,9 +2,11 @@
 #  Makefile for fltk applications
 #
 
-LIBS = -lfltk -lfltk_gl -lfltk_images -lGL -lGLU -ljpeg -lpng -lz
+INCLUDE = -I/lusr/opt/fltk1.3-1.3.0/include
+LIBS = -L/lusr/opt/fltk1.3-1.3.0/lib -lfltk -lfltk_gl -lfltk_images -lGL -lGLU -ljpeg -lpng -lz
 
-CFLAGS = -g -w -std=c++11
+CFLAGS = -g -w -std=c++11 -O3 $(INCLUDE) $(LIBS) 
+#CFLAGS = -O1 -std=c++11 $(INCLUDE) $(LIBS) 
 
 CC = g++
 
@@ -39,4 +41,3 @@ clean:
 
 clean_all:
 	rm -f $(ALL.O) ray
-

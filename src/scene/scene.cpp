@@ -65,17 +65,28 @@ void Scene::intersectKdTree(ray& r, isect& i, KdTree<Geometry>* currentNode, boo
 	{
 		struct StackElement currElem = kdTreeStack.top();
 		kdTreeStack.pop();
-		if ((currElem.currNode->left == nullptr) || (currElem.currNode->right == nullptr))
+		if ((currElem.currNode->left == nullptr) && (currElem.currNode->right == nullptr))
 		{
 			// cout<<"LEAF NODE REACHED\n";
 			for (cgiter obj = currElem.currNode->objectsVector.begin(); obj != currElem.currNode->objectsVector.end(); obj++)
 			{
 				isect cur;
-				if ((*obj)->intersect(r,cur))
+				if ((*obj)->isTrimesh())
 				{
-					if (!have_one || cur.t < i.t) {
-						i = cur;
-						have_one = true;
+					Trimesh* triMesh = (Trimesh*)(*obj);
+					double tTriMin,tTriMax;
+					tTriMin = tTriMax = 0.0;
+					bool triMeshHit = triMesh->kdtreeRoot->bb.intersect(r, tTriMin, tTriMax);
+					intersectKdTree(r, i, triMesh->kdtreeRoot, have_one, tTriMin, tTriMax);
+				}
+				else
+				{
+					if ((*obj)->intersect(r,cur))
+					{
+						if (!have_one || cur.t < i.t) {
+							i = cur;
+							have_one = true;
+						}
 					}
 				}
 			}
@@ -236,18 +247,19 @@ void Scene::buildKdTree(int depth, int leafSize) {
 	this->kdtreeRoot = new KdTree<Geometry>(true);
 	for (auto objIter = beginObjects(); objIter != endObjects(); objIter++)
 	{
-		if (!(*objIter)->isTrimesh() && (*objIter)->hasBoundingBoxCapability())
+		// !(*objIter)->isTrimesh() && 
+		if ((*objIter)->hasBoundingBoxCapability())
 		{
 			kdtreeRoot->objectsVector.push_back(*objIter);
 		}
-		else if ((*objIter)->isTrimesh() && (*objIter)->hasBoundingBoxCapability())
-		{
-			Trimesh *triMesh = (Trimesh*)(*objIter);
-			for (int i = 0; i < triMesh->faces.size(); i++)
-			{
-				kdtreeRoot->objectsVector.push_back(triMesh->faces[i]);
-			}
-		}
+		// else if ((*objIter)->isTrimesh() && (*objIter)->hasBoundingBoxCapability())
+		// {
+		// 	Trimesh *triMesh = (Trimesh*)(*objIter);
+		// 	for (int i = 0; i < triMesh->faces.size(); i++)
+		// 	{
+		// 		kdtreeRoot->objectsVector.push_back(triMesh->faces[i]);
+		// 	}
+		// }
 	}
 	// cout<<"Number of Objects: "<<kdtreeRoot->noOfObjects()<<endl;
 	kdtreeRoot->bb = this->bounds();
@@ -296,20 +308,20 @@ void Scene::buildMainKdTree(KdTree<Geometry>* kdNode, int depth, int leafSize, v
 	{
 		return;
 	}
-	// else
-	// {
-	// 	for (int i = 0; i<kdNode->noOfObjects(); i++)
-	// 	{
-	// 		if (kdNode->objectsVector[i]->isTrimesh())
-	// 		{
-	// 			Trimesh *triMesh = (Trimesh*)(kdNode->objectsVector[i]);
-	// 			if (!triMesh->kdTreeBuilt())
-	// 			{
-	// 				buildTrimeshKdTree(triMesh, this->kdTreeDepth, this->kdTreeLeafSize);
-	// 			}
-	// 		}
-	// 	}
-	// }
+	else
+	{
+		for (int i = 0; i<kdNode->noOfObjects(); i++)
+		{
+			if (kdNode->objectsVector[i]->isTrimesh())
+			{
+				Trimesh *triMesh = (Trimesh*)(kdNode->objectsVector[i]);
+				if (!triMesh->kdTreeBuilt())
+				{
+					buildTrimeshKdTree(triMesh, this->kdTreeDepth, this->kdTreeLeafSize);
+				}
+			}
+		}
+	}
 	// cout<<"SIZE X: "<<orderedPlanes[0].size()<<endl;
 	// cout<<"SIZE Y: "<<orderedPlanes[1].size()<<endl;
 	// cout<<"SIZE Z: "<<orderedPlanes[2].size()<<endl;
@@ -487,38 +499,38 @@ void Scene::buildMainKdTree(KdTree<Geometry>* kdNode, int depth, int leafSize, v
 	{
 		buildMainKdTree(kdNode->left, depth-1, leafSize, leftOrderedPlanes);
 	}
-	// else
-	// {
-	// 	for (int i = 0; i<kdNode->getLeft->noOfObjects(); i++)
-	// 	{
-	// 		if (kdNode->getLeft()->objectsVector[i]->isTrimesh())
-	// 		{
-	// 			Trimesh *triMesh = (Trimesh*)(kdNode->getLeft()->objectsVector[i]);
-	// 			if (!triMesh->kdTreeBuilt())
-	// 			{
-	// 				buildTrimeshKdTree(triMesh, this->kdTreeDepth, this->kdTreeLeafSize);
-	// 			}
-	// 		}
-	// 	}
-	// }
+	else
+	{
+		for (int i = 0; i<kdNode->getLeft()->noOfObjects(); i++)
+		{
+			if (kdNode->getLeft()->objectsVector[i]->isTrimesh())
+			{
+				Trimesh *triMesh = (Trimesh*)(kdNode->getLeft()->objectsVector[i]);
+				if (!triMesh->kdTreeBuilt())
+				{
+					buildTrimeshKdTree(triMesh, this->kdTreeDepth, this->kdTreeLeafSize);
+				}
+			}
+		}
+	}
 	if (kdNode->getRight()->noOfObjects() > leafSize)
 	{
 		buildMainKdTree(kdNode->right, depth-1, leafSize, rightOrderedPlanes);
 	}
-	// else
-	// {
-	// 	for (int i = 0; i<kdNode->getRight->noOfObjects(); i++)
-	// 	{
-	// 		if (kdNode->getRight()->objectsVector[i]->isTrimesh())
-	// 		{
-	// 			Trimesh *triMesh = (Trimesh*)(kdNode->getRight()->objectsVector[i]);
-	// 			if (!triMesh->kdTreeBuilt())
-	// 			{
-	// 				buildTrimeshKdTree(triMesh, this->kdTreeDepth, this->kdTreeLeafSize);
-	// 			}
-	// 		}
-	// 	}
-	// }
+	else
+	{
+		for (int i = 0; i<kdNode->getRight()->noOfObjects(); i++)
+		{
+			if (kdNode->getRight()->objectsVector[i]->isTrimesh())
+			{
+				Trimesh *triMesh = (Trimesh*)(kdNode->getRight()->objectsVector[i]);
+				if (!triMesh->kdTreeBuilt())
+				{
+					buildTrimeshKdTree(triMesh, this->kdTreeDepth, this->kdTreeLeafSize);
+				}
+			}
+		}
+	}
 }
 
 void Scene::buildTrimeshKdTree(Geometry* triM, int depth, int leafSize)

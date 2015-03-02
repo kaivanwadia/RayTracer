@@ -122,8 +122,9 @@ Vec3d TextureMap::getPixelAt( int x, int y ) const
     // This keeps it from crashing if it can't load
     // the texture, but the person tries to render anyway.
     if (0 == data)
+    {
       return Vec3d(1.0, 1.0, 1.0);
-
+    }
     if( x >= width )
        x = width - 1;
     if( y >= height )

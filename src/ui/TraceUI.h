@@ -31,7 +31,7 @@ public:
 	// Send an alert to the user in some manner
 	virtual void alert(const string& msg) = 0;
 
-	// setters
+	// settersCubeMap
 	virtual void setRayTracer( RayTracer* r ) { raytracer = r; }
 	void setCubeMap(bool b) { m_gotCubeMap = b; }
 	void useCubeMap(bool b) { m_usingCubeMap = b; }
@@ -60,6 +60,8 @@ public:
 	bool m_kdTree; // Using k-d Trees
 	int m_nMaxDepth; // The max depth of the K-d Tree
 	int m_nLeafSize; // Size of the leaves in K-d Tree
+	bool m_usingCubeMap;  // render with cubemap
+	bool m_gotCubeMap;  // cubemap defined
 
 protected:
 	RayTracer*	raytracer;
@@ -80,8 +82,6 @@ protected:
 	bool m_shadows;  // compute shadows?
 	bool m_smoothshade;  // turn on/off smoothshading?
 	bool m_bfCulling;	// Using backface culling
-	bool m_usingCubeMap;  // render with cubemap
-	bool m_gotCubeMap;  // cubemap defined
 	int m_nFilterWidth;  // width of cubemap filter
 };
 

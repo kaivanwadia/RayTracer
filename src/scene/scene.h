@@ -377,6 +377,9 @@ public:
   void buildTrimeshKdTree(Geometry* triMesh, int depth, int leafSize);
   void buildMainKdTree(KdTree<Geometry>* kdtree, int depth, int leafSize, std::vector<std::vector<Geometry*>> orderedPlanes);
   void printKdTree(KdTree<Geometry>* root);
+  void setUseKdTree(bool kdTree) {
+    this->useKdTree = kdTree;
+  }
 
  private:
   std::vector<Geometry*> objects;

@@ -61,6 +61,14 @@ Vec3d RayTracer::tracePixel(int i, int j)
 	return col;
 }
 
+void RayTracer::setUseKdTree(bool kdTree)
+{
+    if (this->scene != nullptr)
+    {
+        this->scene->useKdTree = kdTree;
+    }
+}
+
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here
 // (or places called from here) to handle reflection, refraction, etc etc.
@@ -68,7 +76,7 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 {
 	isect i;
 	Vec3d colorC;
-	scene->useKdTree = traceUI->m_kdTree;
+	//scene->useKdTree = traceUI->m_kdTree;
 	// cout<<scene->useKdTree<<endl;
 	if(scene->intersect(r, i)) {
 		// YOUR CODE HERE
@@ -82,13 +90,18 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		// more steps: add in the contributions from reflected and refracted
 		// rays.
 		const Material& material = i.getMaterial();
+		Vec3d intensity = material.shade(scene, r, i);
 		if (depth == 0)
 		{
-			return material.shade(scene, r, i);
+			if (traceUI->m_usingCubeMap && this->haveCubeMap())
+			{
+				Vec3d color1 = this->getCubeMap()->getColor(r);
+				intensity = prod(intensity , color1);
+			}
+			return intensity;
 		}
 		Vec3d Qpoint = r.at(i.t);
 		// Light Ray
-		Vec3d intensity = material.shade(scene, r, i);
 		// Reflected Ray
 		Vec3d minusD = -1 * r.d;
 		Vec3d cosVector = i.N * (minusD * i.N);
@@ -98,33 +111,44 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		Vec3d reflectedDirection = cosVector + sinVector;
 		reflectedDirection.normalize();
 		ray reflectedRay(Qpoint, reflectedDirection, ray::REFLECTION);
-		intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
-
-		//Refracted Ray
-		double cosineAngle = acos(i.N * r.d) * 180/M_PI;
-		double n_i, n_r;
-		double criticalAngle = 360;
-		double iDirection = 1;
-		if (cosineAngle > 90) // Coming into an object from air
+		// cout<<"In traceRay"<<endl;
+		// cout<<"Bool : "<<this->getCubeMap()<<endl;
+		// cout<<"Bool2 : "<<std::boolalpha<<this->haveCubeMap()<<endl;
+		if (traceUI->m_usingCubeMap && this->haveCubeMap())
 		{
-			n_i = 1;
-			n_r = material.index(i);
+			Vec3d color = this->getCubeMap()->getColor(r);
+			intensity = prod(intensity , color);
 		}
-		else // Going out from object to air
+		else
 		{
-			n_i = material.index(i);
-			n_r = 1;
-			criticalAngle = asin(n_r/n_i) * 180/M_PI;
-			iDirection = -1;
-		}
-		Vec3d sinT = (n_i/n_r)*sinVector;
-		Vec3d cosT = (-1 * i.N) * sqrt(1 - sinT*sinT);
-		if (!material.kt(i).iszero() && (cosineAngle)<criticalAngle)
-		{
-			Vec3d refractedDirection = cosT + iDirection * sinT;
-			refractedDirection.normalize();
-			ray refractedRay(Qpoint, iDirection * refractedDirection, ray::REFRACTION);
-			intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
+			// Reflected Ray
+			intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
+			//Refracted Ray
+			double cosineAngle = acos(i.N * r.d) * 180/M_PI;
+			double n_i, n_r;
+			double criticalAngle = 360;
+			double iDirection = 1;
+			if (cosineAngle > 90) // Coming into an object from air
+			{
+				n_i = 1;
+				n_r = material.index(i);
+			}
+			else // Going out from object to air
+			{
+				n_i = material.index(i);
+				n_r = 1;
+				criticalAngle = asin(n_r/n_i) * 180/M_PI;
+				iDirection = -1;
+			}
+			Vec3d sinT = (n_i/n_r)*sinVector;
+			Vec3d cosT = (-1 * i.N) * sqrt(1 - sinT*sinT);
+			if (!material.kt(i).iszero() && (cosineAngle)<criticalAngle)
+			{
+				Vec3d refractedDirection = cosT + iDirection * sinT;
+				refractedDirection.normalize();
+				ray refractedRay(Qpoint, iDirection * refractedDirection, ray::REFRACTION);
+				intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
+			}
 		}
 	  	colorC = intensity;
 	} else {
@@ -199,6 +223,7 @@ bool RayTracer::loadScene( char* fn ) {
 	if (traceUI->m_kdTree)
 	{
 		scene->buildKdTree(traceUI->getKdMaxDepth(), traceUI->getKdLeafSize());
+		scene->useKdTree = traceUI->m_kdTree;
 	}
 	if( !sceneLoaded() ) return false;
 

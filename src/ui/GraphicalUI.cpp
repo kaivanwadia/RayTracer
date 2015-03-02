@@ -7,6 +7,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdarg.h>
+#include <iostream>
 
 #ifndef COMMAND_LINE_ONLY
 
@@ -66,8 +67,6 @@ void GraphicalUI::cb_load_scene(Fl_Menu_* o, void* v)
 void GraphicalUI::cb_load_cubemap(Fl_Menu_* o, void* v) 
 {
 	pUI = whoami(o);
-
-	printf("Here\n");
 	if (pUI->m_cubeMapChooser != NULL)
 	{
 		pUI->m_cubeMapChooser->show();
@@ -183,6 +182,7 @@ void GraphicalUI::cb_kdTreeCheckButton(Fl_Widget* o, void* v)
 {
 	pUI=(GraphicalUI*)(o->user_data());
 	pUI->m_kdTree = (((Fl_Check_Button*)o)->value() == 1);
+	pUI->getRayTracer()->setUseKdTree(pUI->m_kdTree);
 	if (pUI->m_kdTree)
 	{
 		pUI->m_treeDepthSlider->activate();
@@ -355,7 +355,10 @@ void GraphicalUI::alert( const string& msg )
 
 void GraphicalUI::setRayTracer(RayTracer *tracer)
 {
+	// printf("In setRayTracer()\n");
 	TraceUI::setRayTracer(tracer);
+	this->raytracer = tracer;
+	// std::cout<<this->raytracer<<std::endl;
 	m_traceGlWindow->setRayTracer(tracer);
 	m_debuggingWindow->m_debuggingView->setRayTracer(tracer);
 }
@@ -599,6 +602,7 @@ GraphicalUI::GraphicalUI() : refreshInterval(10) {
 	// debugging view
 	m_debuggingWindow = new DebuggingWindow();
 	m_cubeMapChooser = new CubeMapChooser();
+	m_cubeMapChooser->setCaller(this);
 }
 
 #endif

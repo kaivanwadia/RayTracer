@@ -2,7 +2,6 @@
 #include "../scene/cubeMap.h"
 #include "../scene/material.h"
 #include "../ui/GraphicalUI.h"
-#include <iostream>
 
 #ifdef WIN32
     #include <direct.h>
@@ -94,7 +93,12 @@ void CubeMapChooser::cb_cancel(Fl_Widget* o, void* v) {
 void CubeMapChooser::cb_ok(Fl_Widget* o, void* v) {
 	CubeMapChooser* ch = (CubeMapChooser*)(o->parent()->user_data());
 	int allGreen = 0;
-	while (ch->fb[allGreen]->selection_color() == FL_GREEN) allGreen++;
+	//while (ch->fb[allGreen]->selection_color() == FL_GREEN) allGreen++;
+	for (int i = 0; i < 6; i++)
+	{
+		if (ch->fb[i]->selection_color() == FL_GREEN)
+			allGreen++;
+	}
 	if (allGreen == 6) {
 		CubeMap* cm = 0;
 		if (ch->caller->getRayTracer()->haveCubeMap())
@@ -114,6 +118,7 @@ void CubeMapChooser::cb_ok(Fl_Widget* o, void* v) {
 		ch->caller->m_filterSlider->activate();
 		ch->caller->m_cubeMapCheckButton->activate();
 		ch->caller->m_cubeMapCheckButton->value(1);
+		ch->caller->m_gotCubeMap = true;
 	}
 	o->parent()->hide();
 }

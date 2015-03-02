@@ -31,6 +31,8 @@ public:
 	void setReady(bool ready) { m_bBufferReady = ready; }
 	bool isReady() const { return m_bBufferReady; }
 
+    void setUseKdTree(bool kdTree);
+
 	const Scene& getScene() { return *scene; }
 
         void setCubeMap(CubeMap* m) {
@@ -38,7 +40,7 @@ public:
             cubemap = m;
         }
         CubeMap *getCubeMap() {return cubemap;}
-        bool haveCubeMap() { return cubemap != 0; }
+        bool haveCubeMap() { return cubemap != nullptr; }
 
 public:
         unsigned char *buffer;
