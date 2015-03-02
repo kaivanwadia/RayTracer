@@ -117,6 +117,8 @@ void TraceGLWindow::saveImage(char *iname)
 	unsigned char* buf;
 
 	raytracer->getBuffer(buf, m_nDrawWidth, m_nDrawHeight);
+	// raytracer->setBuffer();
+	// this->refresh();
 	if (buf)
 		writeBMP(iname, m_nDrawWidth, m_nDrawHeight, buf); 
 }

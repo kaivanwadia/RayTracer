@@ -61,6 +61,38 @@ Vec3d RayTracer::tracePixel(int i, int j)
 	return col;
 }
 
+Vec3d RayTracer::tracePixelAntiAlias(int i, int j)
+{
+	Vec3d col(0,0,0);
+
+	if( ! sceneLoaded() ) return col;
+
+	double x = double(i)/double(buffer_width);
+	double y = double(j)/double(buffer_height);
+
+	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
+
+    double deltaX = (1.0/double(buffer_width))/traceUI->m_nPixelSamples;
+    double deltaY = (1.0/double(buffer_height))/traceUI->m_nPixelSamples;
+
+    int count = 0;
+	for(int pi = 0; pi < traceUI->m_nPixelSamples; pi++)
+	{
+		for(int pj = 0; pj < traceUI->m_nPixelSamples; pj++)
+		{
+			col += trace(x + pi*deltaX , y + pj*deltaY);
+			count++;
+		}
+	}
+
+	cout << "COUNT : " << count << "\n";
+	col = col/(traceUI->m_nPixelSamples*traceUI->m_nPixelSamples);
+	pixel[0] = (int)( 255.0 * col[0]);
+	pixel[1] = (int)( 255.0 * col[1]);
+	pixel[2] = (int)( 255.0 * col[2]);
+	return col;
+}
+
 void RayTracer::setUseKdTree(bool kdTree)
 {
     if (this->scene != nullptr)
@@ -175,6 +207,24 @@ void RayTracer::getBuffer( unsigned char *&buf, int &w, int &h )
 	buf = buffer;
 	w = buffer_width;
 	h = buffer_height;
+}
+
+void RayTracer::setBuffer ()
+{
+	// for (int i = 0; i < 20; i++)
+	// {
+	// 	for (int j = 0; j < 20; j++)
+	// 	{
+	// 		double x = double(i)/double(buffer_width);
+	// 		double y = double(j)/double(buffer_height);
+
+	// 		unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
+
+	// 		pixel[0] = (int)( 255.0 * 1);
+	// 		pixel[1] = (int)( 255.0 * 1);
+	// 		pixel[2] = (int)( 255.0 * 1);
+	// 	}
+	// }
 }
 
 double RayTracer::aspectRatio()

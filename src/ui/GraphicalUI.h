@@ -116,6 +116,11 @@ private:
 	static void cb_cubeMapCheckButton(Fl_Widget* o, void* v);
 	static void cb_filterWidthSlides(Fl_Widget* o, void* v);
 
+	static void doAntiAliasing(GraphicalUI* pUI);
+	static void applyFilter(const unsigned char* sourceBuffer,
+		int srcBufferWidth, int srcBufferHeight,
+		unsigned char* destBuffer);
+
 	static bool stopTrace;
 	static bool doneTrace;
 	static GraphicalUI* pUI;

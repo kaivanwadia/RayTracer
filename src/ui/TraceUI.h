@@ -62,6 +62,8 @@ public:
 	int m_nLeafSize; // Size of the leaves in K-d Tree
 	bool m_usingCubeMap;  // render with cubemap
 	bool m_gotCubeMap;  // cubemap defined
+	int m_nPixelSamples; // Pixel Samples for anti aliasing
+	int m_nSupersampleThreshold; // Supersample threshold for antialiasing
 
 protected:
 	RayTracer*	raytracer;
@@ -72,8 +74,6 @@ protected:
 	int m_nThreshold; // Normal Threshold
 	int m_nThreads; // Number of threads
 	bool m_antiAlias; // Using anti aliasing
-	int m_nPixelSamples; // Pixel Samples for anti aliasing
-	int m_nSupersampleThreshold; // Supersample threshold for antialiasing
 
 	// Determines whether or not to show debugging information
 	// for individual rays.  Disabled by default for efficiency

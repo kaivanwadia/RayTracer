@@ -326,11 +326,106 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		{
 			threads[i].join();
 		}
+		if(pUI->m_antiAlias)
+		{
+			doAntiAliasing(pUI);
+		}
 		tEnd = clock();
 		sprintf(buffer, "%d MS To RENDER ", (tEnd - tStart)/CLOCKS_PER_SEC * 1000);
 		pUI->m_traceGlWindow->label(buffer);
 		pUI->m_traceGlWindow->refresh();
 	  }
+}
+
+void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
+{
+	clock_t now, prev;
+	clock_t tEnd, tStart = clock();
+	now = prev = clock();
+	clock_t intervalMS = pUI->refreshInterval * 100;
+	doneTrace = stopTrace = false;
+	unsigned char* buf;
+
+	int width, height;
+
+	pUI->raytracer->getBuffer(buf, width, height);
+	unsigned char* filteredBuf = new unsigned char[width * height];
+	applyFilter(buf, width, height, filteredBuf);
+	// Do edge detection on filteredBuf
+	for (int pixelRow = 0; pixelRow < height; pixelRow++)
+	{
+		for (int pixelColumn = 0; pixelColumn < width; pixelColumn++)
+		{
+			if(filteredBuf[(pixelRow*width + pixelColumn)] == 255)
+			{
+				if (stopTrace) break;
+				pUI->raytracer->tracePixelAntiAlias(pixelColumn, pixelRow);
+				now = clock();
+			if ((now - prev)/CLOCKS_PER_SEC * 1000 >= intervalMS)
+			  {
+			    prev = now;
+			    pUI->m_traceGlWindow->refresh();
+			    Fl::check();
+			    if (Fl::damage()) { Fl::flush(); }
+			  }
+			}
+
+		}
+		if (stopTrace) break;
+	}
+	doneTrace = true;
+	stopTrace = false;
+}
+
+void GraphicalUI::applyFilter( const unsigned char* sourceBuffer,
+		int srcBufferWidth, int srcBufferHeight,
+		unsigned char* destBuffer)
+{
+	unsigned char*	grayImage;
+	grayImage = new unsigned char[srcBufferWidth*srcBufferHeight];
+	for (int imageRow = 0; imageRow < srcBufferHeight; imageRow++)
+	{
+		for (int imageCol = 0; imageCol < srcBufferWidth; imageCol++)
+		{
+			double gray = 0.299*sourceBuffer[3 * (imageRow*srcBufferWidth + imageCol) + 0] + 0.587*sourceBuffer[3 * (imageRow*srcBufferWidth + imageCol) + 1] + 0.114*sourceBuffer[3 * (imageRow*srcBufferWidth + imageCol) + 2];
+			grayImage[imageRow*srcBufferWidth + imageCol] = gray;
+		}
+	}
+
+	int knlWidth, knlHeight;
+	knlWidth = knlHeight = 3;
+	int offset = 128;
+	int filterKernel[9] = { 0, 1, 0, 1, -4, 1, 0, 1, 0 };
+	for (int pixelRow = 0; pixelRow < srcBufferHeight; pixelRow++)
+	{
+		for (int pixelColumn = 0; pixelColumn < srcBufferWidth; pixelColumn++)
+		{
+			double sum = 0;
+			for (int filterRow = 0; filterRow < knlWidth; filterRow++)
+			{
+				for (int filterColumn = 0; filterColumn < knlHeight; filterColumn++)
+				{
+					int tempPixelRow = pixelRow - knlHeight/2 + filterRow;
+					int tempPixelColumn = pixelColumn - knlWidth/2 + filterColumn;
+					if (tempPixelRow < 0 || tempPixelColumn < 0 || tempPixelRow>srcBufferHeight || tempPixelColumn>srcBufferWidth)
+					{
+						continue;
+					}
+					sum = sum + filterKernel[knlWidth * filterRow + filterColumn] * grayImage[(tempPixelRow*srcBufferWidth + tempPixelColumn)];
+				}
+			}
+			sum = sum / 1 + offset;
+			if (sum > 230)
+			{
+				sum = 255;
+			}
+			else
+			{
+				sum = 0;
+			}
+			destBuffer[(pixelRow*srcBufferWidth + pixelColumn)] = sum;
+		}
+	}
 }
 
 void GraphicalUI::cb_stop(Fl_Widget* o, void* v)
@@ -487,13 +582,13 @@ GraphicalUI::GraphicalUI() : refreshInterval(10) {
 	m_aaCheckButton->value(m_antiAlias);
 
 	// install Pixel Samples slider
-	m_aaSamplesSlider = new Fl_Value_Slider(110, 210, 180, 20, "Pixel Samples");
+	m_aaSamplesSlider = new Fl_Value_Slider(110, 210, 180, 20, "Pixel Samples Width");
 	m_aaSamplesSlider->user_data((void*)(this));	// record self to be used by static callback functions
 	m_aaSamplesSlider->type(FL_HOR_NICE_SLIDER);
 	m_aaSamplesSlider->labelfont(FL_COURIER);
 	m_aaSamplesSlider->labelsize(12);
 	m_aaSamplesSlider->minimum(1);
-	m_aaSamplesSlider->maximum(8);
+	m_aaSamplesSlider->maximum(4);
 	m_aaSamplesSlider->step(1);
 	m_aaSamplesSlider->value(m_nPixelSamples);
 	m_aaSamplesSlider->align(FL_ALIGN_RIGHT);
