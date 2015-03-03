@@ -53,6 +53,7 @@ public:
 	Fl_Check_Button*	m_shCheckButton;
 	Fl_Check_Button*	m_bfCheckButton;
 	Fl_Check_Button*	m_debuggingDisplayCheckButton;
+	Fl_Check_Button*	m_bgEnabledCheckButton;
 
 	Fl_Button*			m_renderButton;
 	Fl_Button*			m_stopButton;
@@ -84,6 +85,7 @@ private:
 
 	static void cb_load_scene(Fl_Menu_* o, void* v);
 	static void cb_load_cubemap(Fl_Menu_* o, void* v);
+	static void cb_load_bg(Fl_Menu_* o, void* v);
 	static void cb_save_image(Fl_Menu_* o, void* v);
 	static void cb_exit(Fl_Menu_* o, void* v);
 	static void cb_about(Fl_Menu_* o, void* v);
@@ -103,6 +105,7 @@ private:
 	static void cb_stop(Fl_Widget* o, void* v);
 	
 	static void cb_debuggingDisplayCheckButton(Fl_Widget* o, void* v);
+	static void cb_bgEnableCheckButton(Fl_Widget* o, void* v);
 	static void cb_ssCheckButton(Fl_Widget* o, void* v);
 	static void cb_shCheckButton(Fl_Widget* o, void* v);
 	static void cb_bfCheckButton(Fl_Widget* o, void* v);

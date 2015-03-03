@@ -24,7 +24,7 @@ public:
                     m_nThreads(8), m_bfCulling(true), m_antiAlias(false),
                     m_kdTree(true), m_usingCubeMap(false), m_gotCubeMap(false),
                     m_nMaxDepth(15), m_nLeafSize(10), m_nPixelSamples(3),
-                    m_nSupersampleThreshold(100)
+                    m_nSupersampleThreshold(100), m_bgEnabled(false)
                     {}
 	virtual int	run() = 0;
 
@@ -55,6 +55,7 @@ public:
 	bool	displayDebugInfo() const { return m_displayDebuggingInfo; }
 	bool	usingCubeMap() const { return m_usingCubeMap; }
 	bool	gotCubeMap() const { return m_gotCubeMap; }
+	bool	getBgEnabled() const { return m_bgEnabled; }
 
 	static bool m_debug;
 	bool m_kdTree; // Using k-d Trees
@@ -74,6 +75,7 @@ protected:
 	int m_nThreshold; // Normal Threshold
 	int m_nThreads; // Number of threads
 	bool m_antiAlias; // Using anti aliasing
+	bool m_bgEnabled;
 
 	// Determines whether or not to show debugging information
 	// for individual rays.  Disabled by default for efficiency

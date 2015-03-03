@@ -73,6 +73,20 @@ void GraphicalUI::cb_load_cubemap(Fl_Menu_* o, void* v)
 	}
 }
 
+void GraphicalUI::cb_load_bg(Fl_Menu_* o, void* v) 
+{
+	pUI = whoami(o);
+
+	char* newfile = fl_file_chooser("Open Scene?", "*.bmp", NULL);
+	if(newfile != NULL)
+	{
+		if (!pUI->raytracer->loadBMP(newfile))
+		{
+			fl_alert("Can't load bitmap file");
+		}
+	}
+}
+
 void GraphicalUI::cb_save_image(Fl_Menu_* o, void* v) 
 {
 	pUI = whoami(o);
@@ -228,6 +242,7 @@ void GraphicalUI::cb_ssCheckButton(Fl_Widget* o, void* v)
 {
 	pUI=(GraphicalUI*)(o->user_data());
 	pUI->m_smoothshade = (((Fl_Check_Button*)o)->value() == 1);
+	pUI->getRayTracer()->setSmoothShading(pUI->m_kdTree);
 }
 
 void GraphicalUI::cb_shCheckButton(Fl_Widget* o, void* v)
@@ -257,6 +272,12 @@ void GraphicalUI::cb_debuggingDisplayCheckButton(Fl_Widget* o, void* v)
 	    pUI->m_debuggingWindow->hide();
 	    pUI->m_debug = false;
 	  }
+}
+
+void GraphicalUI::cb_bgEnableCheckButton(Fl_Widget* o, void* v)
+{
+	pUI=(GraphicalUI*)(o->user_data());
+	pUI->m_bgEnabled = (((Fl_Check_Button*)o)->value() == 1);
 }
 
 void GraphicalUI::renderThread(int threadNo, int width, int height, int noOfThreads, RayTracer* rayTracer)
@@ -468,6 +489,7 @@ Fl_Menu_Item GraphicalUI::menuitems[] = {
 	{ "&File", 0, 0, 0, FL_SUBMENU },
 	{ "&Load Scene...",	FL_ALT + 'l', (Fl_Callback *)GraphicalUI::cb_load_scene },
 	{ "&Load Cube Map...",	FL_ALT + 'c', (Fl_Callback *)GraphicalUI::cb_load_cubemap },
+	{ "&Load Background...",	FL_ALT + 'b', (Fl_Callback *)GraphicalUI::cb_load_bg },
 	{ "&Save Image...", FL_ALT + 's', (Fl_Callback *)GraphicalUI::cb_save_image },
 	{ "&Exit", FL_ALT + 'e', (Fl_Callback *)GraphicalUI::cb_exit },
 	{ 0 },
@@ -689,6 +711,11 @@ GraphicalUI::GraphicalUI() : refreshInterval(10) {
 	m_debuggingDisplayCheckButton->user_data((void*)(this));
 	m_debuggingDisplayCheckButton->callback(cb_debuggingDisplayCheckButton);
 	m_debuggingDisplayCheckButton->value(m_displayDebuggingInfo);
+
+	m_debuggingDisplayCheckButton = new Fl_Check_Button(160, 429, 140, 20, "Enable Background");
+	m_debuggingDisplayCheckButton->user_data((void*)(this));
+	m_debuggingDisplayCheckButton->callback(cb_bgEnableCheckButton);
+	m_debuggingDisplayCheckButton->value(m_bgEnabled);
 
 	m_mainWindow->callback(cb_exit2);
 	m_mainWindow->when(FL_HIDE);
