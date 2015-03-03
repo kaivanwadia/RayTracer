@@ -80,16 +80,22 @@ Vec3d RayTracer::tracePixelAntiAlias(int i, int j)
 	{
 		for(int pj = 0; pj < traceUI->m_nPixelSamples; pj++)
 		{
-			col += trace(x + pi*deltaX , y + pj*deltaY);
+			Vec3d tCol = trace(x + pi*deltaX , y + pj*deltaY);
+			cout<<"COl : "<<tCol<<endl;
+			col += tCol;
 			count++;
 		}
 	}
 
 	cout << "COUNT : " << count << "\n";
 	col = col/(traceUI->m_nPixelSamples*traceUI->m_nPixelSamples);
-	pixel[0] = (int)( 255.0 * col[0]);
-	pixel[1] = (int)( 255.0 * col[1]);
-	pixel[2] = (int)( 255.0 * col[2]);
+	cout<<"COLOR : "<<col<<endl;
+	// pixel[0] = (int)( 255.0 * col[0]);
+	// pixel[1] = (int)( 255.0 * col[1]);
+	// pixel[2] = (int)( 255.0 * col[2]);
+	pixel[0] = (int)( 255.0 * 1);
+	pixel[1] = (int)( 255.0 * 1);
+	pixel[2] = (int)( 255.0 * 1);
 	return col;
 }
 
@@ -125,11 +131,6 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		Vec3d intensity = material.shade(scene, r, i);
 		if (depth == 0)
 		{
-			if (traceUI->m_usingCubeMap && this->haveCubeMap())
-			{
-				Vec3d color1 = this->getCubeMap()->getColor(r);
-				intensity = prod(intensity , color1);
-			}
 			return intensity;
 		}
 		Vec3d Qpoint = r.at(i.t);
@@ -142,20 +143,12 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		// sinVector.normalize();
 		Vec3d reflectedDirection = cosVector + sinVector;
 		reflectedDirection.normalize();
-		ray reflectedRay(Qpoint, reflectedDirection, ray::REFLECTION);
-		// cout<<"In traceRay"<<endl;
-		// cout<<"Bool : "<<this->getCubeMap()<<endl;
-		// cout<<"Bool2 : "<<std::boolalpha<<this->haveCubeMap()<<endl;
-		if (traceUI->m_usingCubeMap && this->haveCubeMap())
+		ray reflectedRay(Qpoint, reflectedDirection, ray::VISIBILITY);
+		// Reflected Ray
+		intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
+		//Refracted Ray
+		if (!material.kt(i).iszero())
 		{
-			Vec3d color = this->getCubeMap()->getColor(r);
-			intensity = prod(intensity , color);
-		}
-		else
-		{
-			// Reflected Ray
-			intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
-			//Refracted Ray
 			double cosineAngle = acos(i.N * r.d) * 180/M_PI;
 			double n_i, n_r;
 			double criticalAngle = 360;
@@ -174,20 +167,26 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 			}
 			Vec3d sinT = (n_i/n_r)*sinVector;
 			Vec3d cosT = (-1 * i.N) * sqrt(1 - sinT*sinT);
-			if (!material.kt(i).iszero() && (cosineAngle)<criticalAngle)
+			if (cosineAngle<criticalAngle)
 			{
 				Vec3d refractedDirection = cosT + iDirection * sinT;
 				refractedDirection.normalize();
-				ray refractedRay(Qpoint, iDirection * refractedDirection, ray::REFRACTION);
+				ray refractedRay(Qpoint, iDirection * refractedDirection, ray::VISIBILITY);
 				intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
 			}
 		}
 	  	colorC = intensity;
 	} else {
+		Vec3d intensity(0.0, 0.0, 0.0);
+		if (traceUI->m_usingCubeMap && this->haveCubeMap())
+		{
+			intensity = this->getCubeMap()->getColor(r);
+			colorC = intensity;
+		}
 		// No intersection.  This ray travels to infinity, so we color
 		// it according to the background color, which in this (simple) case
 		// is just black.
-		colorC = Vec3d(0.0, 0.0, 0.0);
+		colorC = intensity;
 	}
 	return colorC;
 }

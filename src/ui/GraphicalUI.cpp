@@ -415,7 +415,7 @@ void GraphicalUI::applyFilter( const unsigned char* sourceBuffer,
 				}
 			}
 			sum = sum / 1 + offset;
-			if (sum > 230)
+			if (sum > 128)
 			{
 				sum = 255;
 			}
