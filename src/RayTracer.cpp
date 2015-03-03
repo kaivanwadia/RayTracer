@@ -107,6 +107,14 @@ void RayTracer::setUseKdTree(bool kdTree)
     }
 }
 
+void RayTracer::setBackFaceCulling(bool _backFace)
+{
+    if (this->scene != nullptr)
+    {
+        this->scene->backFaceCulling = _backFace;
+    }
+}
+
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here
 // (or places called from here) to handle reflection, refraction, etc etc.
@@ -143,7 +151,7 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		// sinVector.normalize();
 		Vec3d reflectedDirection = cosVector + sinVector;
 		reflectedDirection.normalize();
-		ray reflectedRay(Qpoint, reflectedDirection, ray::VISIBILITY);
+		ray reflectedRay(Qpoint, reflectedDirection, ray::REFLECTION);
 		// Reflected Ray
 		intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
 		//Refracted Ray
@@ -171,7 +179,7 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 			{
 				Vec3d refractedDirection = cosT + iDirection * sinT;
 				refractedDirection.normalize();
-				ray refractedRay(Qpoint, iDirection * refractedDirection, ray::VISIBILITY);
+				ray refractedRay(Qpoint, iDirection * refractedDirection, ray::REFRACTION);
 				intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
 			}
 		}

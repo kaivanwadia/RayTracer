@@ -322,6 +322,7 @@ public:
   int kdTreeDepth;
   int kdTreeLeafSize;
   bool useKdTree;
+  bool backFaceCulling;
   KdTree<Geometry>* kdtreeRoot;
 
   Scene() : transformRoot(), objects(), lights() {
@@ -329,6 +330,7 @@ public:
     kdTreeLeafSize = 0;
     useKdTree = false;
     kdtreeRoot = nullptr;
+    backFaceCulling = false;
   }
   virtual ~Scene();
 

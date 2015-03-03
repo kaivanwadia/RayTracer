@@ -90,7 +90,20 @@ bool TrimeshFace::intersect(ray& r, isect& i) const {
 // intersection in u (alpha) and v (beta).
 bool TrimeshFace::intersectLocal(ray& r, isect& i) const
 {
-    
+    if (this->getScene()->backFaceCulling)
+    {
+        // cout<<"backFaceCulling"<<endl;
+        if (r.type() != ray::REFRACTION)
+        {
+            double cosineAngle = acos(normal * r.d) * 180/M_PI;
+            // cout<<"Angle : "<<cosineAngle<<endl;
+            if (cosineAngle <= 90) // Coming into an object from air
+            {
+                // cout<<"Culling"<<endl;
+                return false;
+            }
+        }
+    }
     const Vec3d& a = parent->vertices[ids[0]];
     const Vec3d& b = parent->vertices[ids[1]];
     const Vec3d& c = parent->vertices[ids[2]];

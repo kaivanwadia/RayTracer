@@ -240,6 +240,7 @@ void GraphicalUI::cb_bfCheckButton(Fl_Widget* o, void* v)
 {
 	pUI=(GraphicalUI*)(o->user_data());
 	pUI->m_bfCulling = (((Fl_Check_Button*)o)->value() == 1);
+	pUI->getRayTracer()->setBackFaceCulling(pUI->m_bfCulling);
 }
 
 void GraphicalUI::cb_debuggingDisplayCheckButton(Fl_Widget* o, void* v)
@@ -293,6 +294,9 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		// Save the window label
 		const char *old_label = pUI->m_traceGlWindow->label();
 
+		std::chrono::time_point<std::chrono::system_clock> start, end;
+		start = std::chrono::system_clock::now();
+
 		clock_t now, prev;
 		clock_t tEnd, tStart = clock();
 		now = prev = clock();
@@ -307,8 +311,8 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 			if ((now - prev)/CLOCKS_PER_SEC * 1000 >= intervalMS)
 			  {
 			    prev = now;
-			    sprintf(buffer, "(%d%%) %s", (int)((double)y / (double)height * 100.0), old_label);
-			    pUI->m_traceGlWindow->label(buffer);
+			    // sprintf(buffer, "(%d%%) %s", (int)((double)y / (double)height * 100.0), old_label);
+			    // pUI->m_traceGlWindow->label(buffer);
 			    pUI->m_traceGlWindow->refresh();
 			    Fl::check();
 			    if (Fl::damage()) { Fl::flush(); }
@@ -330,8 +334,9 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		{
 			doAntiAliasing(pUI);
 		}
-		tEnd = clock();
-		sprintf(buffer, "%d MS To RENDER ", (tEnd - tStart)/CLOCKS_PER_SEC * 1000);
+		end = std::chrono::system_clock::now();
+		std::chrono::duration<double> elapsed_seconds = end-start;
+		sprintf(buffer, "%f MS To RENDER ", elapsed_seconds.count() * 1000);
 		pUI->m_traceGlWindow->label(buffer);
 		pUI->m_traceGlWindow->refresh();
 	  }

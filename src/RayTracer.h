@@ -34,6 +34,7 @@ public:
 	bool isReady() const { return m_bBufferReady; }
 
     void setUseKdTree(bool kdTree);
+    void setBackFaceCulling(bool _backFace);
 
 	const Scene& getScene() { return *scene; }
 
