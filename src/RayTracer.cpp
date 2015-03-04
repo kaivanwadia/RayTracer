@@ -72,24 +72,29 @@ Vec3d RayTracer::tracePixelAntiAlias(int i, int j)
 
 	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
 
-    double deltaX = (1.0/double(buffer_width))/traceUI->m_nPixelSamples;
-    double deltaY = (1.0/double(buffer_height))/traceUI->m_nPixelSamples;
+    double deltaX = (1.0/double(buffer_width))/double(traceUI->m_nPixelSamples);
+    double deltaY = (1.0/double(buffer_height))/double(traceUI->m_nPixelSamples);
 
-    int count = 0;
+    // int count = 0;
+    // cout<<"---------------"<<endl;
 	for(int pi = 0; pi < traceUI->m_nPixelSamples; pi++)
 	{
 		for(int pj = 0; pj < traceUI->m_nPixelSamples; pj++)
 		{
+			double xTemp = x + pi*deltaX;
+			double yTemp = y + pj*deltaY;
+			// cout<< xTemp << " : " << yTemp<<endl;
 			Vec3d tCol = trace(x + pi*deltaX , y + pj*deltaY);
 			// cout<<"COl : "<<tCol<<endl;
 			col += tCol;
-			count++;
+			//count++;
 		}
 	}
 
 	// cout << "COUNT : " << count << "\n";
-	col = col/(traceUI->m_nPixelSamples*traceUI->m_nPixelSamples);
 	// cout<<"COLOR : "<<col<<endl;
+	col = col/double(traceUI->m_nPixelSamples*traceUI->m_nPixelSamples);
+	// cout<<"COLOR AVG : "<<col<<endl;
 	pixel[0] = (int)( 255.0 * col[0]);
 	pixel[1] = (int)( 255.0 * col[1]);
 	pixel[2] = (int)( 255.0 * col[2]);

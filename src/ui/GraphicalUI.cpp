@@ -282,7 +282,7 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 	pUI = (GraphicalUI*)(o->user_data());
 	doneTrace = stopTrace = false;
 	if (pUI->raytracer->sceneLoaded())
-	  {
+	{
 		int width = pUI->getSize();
 		int height = (int)(width / pUI->raytracer->aspectRatio() + 0.5);
 		int origPixels = width * height;
@@ -308,27 +308,27 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		now = prev = clock();
 		clock_t intervalMS = pUI->refreshInterval * 100;
 		for (int y = 0; y < height; y++)
-		  {
+		{
 		    for (int x = 0; x < noOfCols; x++)
-		      {
-			if (stopTrace) break;
-			// check for input and refresh view every so often while tracing
-			now = clock();
-			if ((now - prev)/CLOCKS_PER_SEC * 1000 >= intervalMS)
-			  {
-			    prev = now;
-			    // sprintf(buffer, "(%d%%) %s", (int)((double)y / (double)height * 100.0), old_label);
-			    // pUI->m_traceGlWindow->label(buffer);
-			    pUI->m_traceGlWindow->refresh();
-			    Fl::check();
-			    if (Fl::damage()) { Fl::flush(); }
-			  }
-			// look for input and refresh window
-			pUI->raytracer->tracePixel(x, y);
-			pUI->m_debuggingWindow->m_debuggingView->setDirty();
-		      }
+		    {
+		    	if (stopTrace) break;
+				// check for input and refresh view every so often while tracing
+				now = clock();
+				if ((now - prev)/CLOCKS_PER_SEC * 1000 >= intervalMS)
+				{
+				    prev = now;
+				    // sprintf(buffer, "(%d%%) %s", (int)((double)y / (double)height * 100.0), old_label);
+				    // pUI->m_traceGlWindow->label(buffer);
+				    pUI->m_traceGlWindow->refresh();
+				    Fl::check();
+				    if (Fl::damage()) { Fl::flush(); }
+				}
+				// look for input and refresh window
+				pUI->raytracer->tracePixel(x, y);
+				pUI->m_debuggingWindow->m_debuggingView->setDirty();
+			}
 		    if (stopTrace) break;
-		  }
+		}
 		doneTrace = true;
 		stopTrace = false;
 		// Restore the window label
@@ -336,32 +336,41 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		{
 			threads[i].join();
 		}
-		pUI->m_traceGlWindow->refresh();
-		if(pUI->m_antiAlias)
-		{
-			doAntiAliasing(pUI);
-		}
 		end = std::chrono::system_clock::now();
 		std::chrono::duration<double> elapsed_seconds = end-start;
 		sprintf(buffer, "%f MS To RENDER ", elapsed_seconds.count() * 1000);
 		pUI->m_traceGlWindow->label(buffer);
 		pUI->m_traceGlWindow->refresh();
-	  }
+		if(pUI->m_antiAlias)
+		{
+			doAntiAliasing(pUI);
+		}
+	}
 }
 
-void GraphicalUI::antiAliasRenderThread(int threadNo, int width, int height, int noOfRows, RayTracer* rayTracer)
+void GraphicalUI::antiAliasRenderThread(int threadNo, int width, int height, int noOfCols, RayTracer* rayTracer)
 {
-	int start = threadNo*noOfRows;
-	int end = start + noOfRows;
-	for (int y = start; y < end; y++)
+	int start = threadNo*noOfCols;
+	int end = start + noOfCols;
+	int count = 0;
+	int antialiased = 0;
+	for (int y = 0; y < height; y++)
 	{
-		for (int x = 0; x < width; x++)
+		for (int x = start; x < end; x++)
 		{
 			if (stopTrace) break;
+			if(pUI->raytracer->filteredBuf[(x*width + y)] == 255)
+			{
+				pUI->raytracer->tracePixelAntiAlias(y, x);
+				antialiased++;
+			}
+			if (stopTrace) break;
 			rayTracer->tracePixel(x, y);
+			count++;
 		}
 		if (stopTrace) break;
 	}
+	printf("End %d : %d : %d\n",threadNo, count, antialiased);
 }
 
 void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
@@ -373,42 +382,62 @@ void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
 	doneTrace = stopTrace = false;
 	unsigned char* buf;
 
+	char buffer[256];
+	const char *old_label = pUI->m_traceGlWindow->label();
+	sprintf(buffer, "ANTI ALIASING START %s ", old_label);
+	pUI->m_traceGlWindow->label(buffer);
+	pUI->m_traceGlWindow->refresh();
+
+
 	int width, height;
 
 	pUI->raytracer->getBuffer(buf, width, height);
 	pUI->raytracer->filteredBuf = new unsigned char[width * height];
 	applyFilter(buf, width, height, pUI->raytracer->filteredBuf, pUI->m_nSupersampleThreshold);
 
-	std::vector<std::thread> threads;
-	int noOfRows = ceil((double)height/(double)pUI->m_nThreads);
-	// for (int i = 1; i < pUI->m_nThreads; i++)
-	// {
-	// 	threads.push_back(std::thread(antiAliasRenderThread, i, width, height, noOfRows, pUI->getRayTracer()));
-	// }
-	// Do edge detection on filteredBuf
-	for (int x = 0; x < height; x++)
+	std::vector<std::thread> aaThreads;
+	int noOfCols = ceil((double)height/(double)pUI->m_nThreads);
+	for (int i = 1; i < pUI->m_nThreads; i++)
 	{
-		for (int y = 0; y < width; y++)
+		aaThreads.push_back(std::thread(antiAliasRenderThread, i, width, height, noOfCols, pUI->getRayTracer()));
+	}
+	int count = 0;
+	int antialiased = 0;
+	// Do edge detection on filteredBuf
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < noOfCols; x++)
 		{
-			if(pUI->raytracer->filteredBuf[(x*width + y)] == 255)
+			count++;
+			if (stopTrace) break;
+			if(pUI->raytracer->filteredBuf[(y*width + x)] == 255)
 			{
-				if (stopTrace) break;
-				pUI->raytracer->tracePixelAntiAlias(y, x);
+				pUI->raytracer->tracePixelAntiAlias(x, y);
+				antialiased++;
 				now = clock();
-			if ((now - prev)/CLOCKS_PER_SEC * 1000 >= intervalMS)
-			  {
-			    prev = now;
-			    pUI->m_traceGlWindow->refresh();
-			    Fl::check();
-			    if (Fl::damage()) { Fl::flush(); }
-			  }
+				if ((now - prev)/CLOCKS_PER_SEC * 1000 >= intervalMS)
+			  	{
+				    prev = now;
+				    pUI->m_traceGlWindow->refresh();
+				    Fl::check();
+				    if (Fl::damage()) { Fl::flush(); }
+			  	}
 			}
 
 		}
 		if (stopTrace) break;
 	}
+	printf("End 0 : %d : %d\n",count, antialiased);
+	for (int i = 0; i < pUI->m_nThreads - 1; i++)
+	{
+		aaThreads[i].join();
+	}
 	doneTrace = true;
 	stopTrace = false;
+	sprintf(buffer, "ANTI ALIASING DONE %s ", old_label);
+	pUI->m_traceGlWindow->label(buffer);
+	pUI->m_traceGlWindow->refresh();
+	printf("Anti aliasing done\n");
 }
 
 void GraphicalUI::applyFilter( const unsigned char* sourceBuffer,
