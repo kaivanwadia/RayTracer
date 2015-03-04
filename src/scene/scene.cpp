@@ -128,18 +128,6 @@ void Scene::intersectKdTree(ray& r, isect& i, KdTree<Geometry>* currentNode, boo
 	return;
 }
 
-// bool Scene::intersectKdTreeMain(ray& r, isect& i) const {
-// 	bool have_one = false;
-// 	double tMin,tMax;
-// 	tMin = tMax = 0.0;
-// 	bool sceneHit = this->kdtreeRoot->bb.intersect(r, tMin, tMax);
-// 	intersectKdTree(r, i, this->kdtreeRoot, have_one, tMin, tMax);
-// 	if(!have_one) i.setT(1000.0);
-// 	// if debugging,
-// 	if (TraceUI::m_debug) intersectCache.push_back(std::make_pair(new ray(r), new isect(i)));
-// 	return have_one;
-// }
-
 // Get any intersection with an object.  Return information about the 
 // intersection through the reference parameter.
 bool Scene::intersect(ray& r, isect& i) const {

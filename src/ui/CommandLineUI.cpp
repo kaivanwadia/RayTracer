@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <time.h>
-#include <threads>
+#include <thread>
 #include <stdarg.h>
 
 #include <assert.h>
@@ -60,10 +60,8 @@ void CommandLineUI::renderThread(int threadNo, int width, int height, int noOfCo
 	{
 		for (int x = start; x < end; x++)
 		{
-			if (stopTrace) break;
 			rayTracer->tracePixel(x, y);
 		}
-		if (stopTrace) break;
 	}
 }
 
@@ -87,7 +85,7 @@ int CommandLineUI::run()
 		// cout<<"No Of Cols : "<<noOfCols<<endl;
 		for (int i = 1; i < this->m_nThreads; i++)
 		{
-			threads.push_back(std::thread(renderThread, i, width, height, noOfCols, this->getRayTracer()));
+			threads.push_back(std::thread(renderThread, i, width, height, noOfCols, raytracer));
 		}
 		for( int y = 0; y < height; ++y )
 		{
@@ -111,8 +109,9 @@ int CommandLineUI::run()
 			writeBMP(imgName, width, height, buf);
 
 		double t=(double)(end-start)/CLOCKS_PER_SEC;
-		int totalRays = TraceUI::resetCount();
-		std::cout << "total time = " << t << " seconds, rays traced = " << totalRays << std::endl;
+//		int totalRays = TraceUI::resetCount();
+//		std::cout << "total time = " << t << " seconds, rays traced = " << totalRays << std::endl;
+		std::cout << "total time = " << t << std::endl;
 		return 0;
 	}
 	else
