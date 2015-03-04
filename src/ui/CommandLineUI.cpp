@@ -51,6 +51,22 @@ CommandLineUI::CommandLineUI( int argc, char* const* argv )
 	imgName = argv[optind+1];
 }
 
+void CommandLineUI::renderThread(int threadNo, int width, int height, int noOfCols, RayTracer* rayTracer)
+{
+	int start = threadNo*noOfCols;
+	int end = start + noOfCols;
+	int count = 0;
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = start; x < end; x++)
+		{
+			if (stopTrace) break;
+			rayTracer->tracePixel(x, y);
+		}
+		if (stopTrace) break;
+	}
+}
+
 int CommandLineUI::run()
 {
 	assert( raytracer != 0 );
@@ -67,11 +83,11 @@ int CommandLineUI::run()
 		start = clock();
 
 		std::vector<std::thread> threads;
-		int noOfCols = ceil((double)width/(double)pUI->m_nThreads);
+		int noOfCols = ceil((double)width/(double)this->m_nThreads);
 		// cout<<"No Of Cols : "<<noOfCols<<endl;
-		for (int i = 1; i < pUI->m_nThreads; i++)
+		for (int i = 1; i < this->m_nThreads; i++)
 		{
-			threads.push_back(std::thread(renderThread, i, width, height, noOfCols, pUI->getRayTracer()));
+			threads.push_back(std::thread(renderThread, i, width, height, noOfCols, this->getRayTracer()));
 		}
 		for( int y = 0; y < height; ++y )
 		{
@@ -97,7 +113,7 @@ int CommandLineUI::run()
 		double t=(double)(end-start)/CLOCKS_PER_SEC;
 		int totalRays = TraceUI::resetCount();
 		std::cout << "total time = " << t << " seconds, rays traced = " << totalRays << std::endl;
-	        return 0;
+		return 0;
 	}
 	else
 	{

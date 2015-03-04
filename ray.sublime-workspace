@@ -519,30 +519,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "src/scene/scene.cpp",
-			"settings":
-			{
-				"buffer_size": 18839,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/ui/CommandLineUI.cpp",
-			"settings":
-			{
-				"buffer_size": 2469,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/ui/GraphicalUI.cpp",
-			"settings":
-			{
-				"buffer_size": 23698,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -568,6 +544,9 @@
 	},
 	"file_history":
 	[
+		"/E/Kaivan Wadia/Desktop/CS 384G Computer Graphics/Project 2/RayTracer/src/scene/scene.cpp",
+		"/E/Kaivan Wadia/Desktop/CS 384G Computer Graphics/Project 2/RayTracer/src/ui/CommandLineUI.cpp",
+		"/E/Kaivan Wadia/Desktop/CS 384G Computer Graphics/Project 2/RayTracer/src/ui/GraphicalUI.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/cubeMap.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/CommandLineUI.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/RayTracer.cpp",
@@ -692,10 +671,7 @@
 		"/u/kwadia/untitled.java",
 		"/u/kwadia/CS394n/hw3/Teams/Final Q-Learning Team.txt",
 		"/u/kwadia/PhysicalSimCS395T/Virtual Catwalk Milestone 1/VirtualCatwalkMilestone1/.gitignore",
-		"/u/kwadia/PhysicalSimCS395T/BirdsMilestone2/birds-reference/resources/bunny.sdf",
-		"/u/kwadia/PhysicalSimCS395T/BirdsMilestone2/FuriousBirdsMilestone2/resources/2by4.sdf",
-		"/u/kwadia/PhysicalSimCS395T/BirdsMilestone2/FuriousBirdsMilestone2/resources/bunny.sdf",
-		"/u/kwadia/PhysicalSimCS395T/BirdsMilestone2/FuriousBirdsMilestone2/resources/sphere.sdf"
+		"/u/kwadia/PhysicalSimCS395T/BirdsMilestone2/birds-reference/resources/bunny.sdf"
 	],
 	"find":
 	{
@@ -818,90 +794,8 @@
 	"groups":
 	[
 		{
-			"selected": 2,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "src/scene/scene.cpp",
-					"settings":
-					{
-						"buffer_size": 18839,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 64.0,
-						"translation.y": 7518.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/ui/CommandLineUI.cpp",
-					"settings":
-					{
-						"buffer_size": 2469,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1604,
-								1604
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 751.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/ui/GraphicalUI.cpp",
-					"settings":
-					{
-						"buffer_size": 23698,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8674,
-								8674
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 5068.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],

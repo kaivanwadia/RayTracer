@@ -30,6 +30,7 @@ public:
 
 private:
 	void		usage();
+	static void renderThread(int threadNo, int width, int height, int noOfCols, RayTracer* rayTracer);
 
 	char*	rayName;
 	char*	imgName;

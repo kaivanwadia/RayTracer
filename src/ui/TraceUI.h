@@ -20,7 +20,7 @@ class TraceUI {
 public:
 	TraceUI() : m_nDepth(2), m_nSize(512), m_displayDebuggingInfo(false),
 					m_shadows(true), m_smoothshade(true), raytracer(0),
-                    m_nFilterWidth(2), m_nBlockSize(4), m_nThreshold(0),
+                    m_nFilterWidth(1), m_nBlockSize(4), m_nThreshold(0),
                     m_nThreads(8), m_bfCulling(true), m_antiAlias(false),
                     m_kdTree(true), m_usingCubeMap(false), m_gotCubeMap(false),
                     m_nMaxDepth(15), m_nLeafSize(10), m_nPixelSamples(3),
