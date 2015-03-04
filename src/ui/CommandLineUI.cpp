@@ -1,5 +1,7 @@
+
 #include <iostream>
 #include <time.h>
+#include <threads>
 #include <stdarg.h>
 
 #include <assert.h>
@@ -64,10 +66,24 @@ int CommandLineUI::run()
 		clock_t start, end;
 		start = clock();
 
-		for( int j = 0; j < height; ++j )
-			for( int i = 0; i < width; ++i )
-//				raytracer->tracePixel(i,j);
-
+		std::vector<std::thread> threads;
+		int noOfCols = ceil((double)width/(double)pUI->m_nThreads);
+		// cout<<"No Of Cols : "<<noOfCols<<endl;
+		for (int i = 1; i < pUI->m_nThreads; i++)
+		{
+			threads.push_back(std::thread(renderThread, i, width, height, noOfCols, pUI->getRayTracer()));
+		}
+		for( int y = 0; y < height; ++y )
+		{
+			for( int x = 0; x < noOfCols; ++x )
+			{
+				raytracer->tracePixel(x,y);
+			}
+		}
+		for (int i = 0; i < this->m_nThreads - 1; i++)
+		{
+			threads[i].join();
+		}
 		end=clock();
 
 		// save image
@@ -79,9 +95,9 @@ int CommandLineUI::run()
 			writeBMP(imgName, width, height, buf);
 
 		double t=(double)(end-start)/CLOCKS_PER_SEC;
-//		int totalRays = TraceUI::resetCount();
-//		std::cout << "total time = " << t << " seconds, rays traced = " << totalRays << std::endl;
-        return 0;
+		int totalRays = TraceUI::resetCount();
+		std::cout << "total time = " << t << " seconds, rays traced = " << totalRays << std::endl;
+	        return 0;
 	}
 	else
 	{
