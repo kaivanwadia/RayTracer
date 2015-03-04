@@ -62,6 +62,7 @@ private:
     // Parse lights
 	PointLight* parsePointLight( Scene* scene );
 	DirectionalLight* parseDirectionalLight( Scene* scene );
+    SpotLight* parseSpotLight( Scene* scene );
 	void parseAmbientLight( Scene* scene );
 
     // Parse geometry

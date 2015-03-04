@@ -44,6 +44,7 @@ enum SYMBOL {
   CAMERA,					// camera primitive
   POINT_LIGHT,				// lights
   DIRECTIONAL_LIGHT,
+  SPOT_LIGHT,
   AMBIENT_LIGHT,
 
   CONSTANT_ATTENUATION_COEFF,	// Terms affecting the intensity dropoff
@@ -62,6 +63,8 @@ enum SYMBOL {
   FOV,
   COLOR,
   DIRECTION,
+  ATTEN_ANGLE,
+  FALL_RATE,
   CAPPED,
   HEIGHT,
   BOTTOM_RADIUS,

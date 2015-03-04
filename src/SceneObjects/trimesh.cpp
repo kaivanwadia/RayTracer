@@ -92,11 +92,14 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
 {
     if (this->getScene()->backFaceCulling)
     {
+        // cout<<"backFaceCulling"<<endl;
         if (r.type() != ray::REFRACTION)
         {
-            double dotProduct = normal * r.d;
-            if (dotProduct >= 0) // Coming into an object from air
+            double cosineAngle = acos(normal * r.d) * 180/M_PI;
+            // cout<<"Angle : "<<cosineAngle<<endl;
+            if (cosineAngle <= 90) // Coming into an object from air
             {
+                // cout<<"Culling"<<endl;
                 return false;
             }
         }
@@ -157,7 +160,7 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
     if (total<=(1+RAY_EPSILON) && total>=(1-RAY_EPSILON))
     {
         i.t = rayT;
-        if (parent->vertNorms && this->getScene()->smoothShading)
+        if (parent->vertNorms)
         {
             Vec3d normalA = parent->normals[ids[0]];
             Vec3d normalB = parent->normals[ids[1]];
@@ -172,7 +175,7 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
         i.N.normalize();
         i.setBary(baryCoord);
         i.setUVCoordinates(Vec2d(baryCoord));
-        if(parent->materials.size()>0 && this->getScene()->smoothShading)
+        if(parent->materials.size()>0)
         {
             Material aMaterial = *(parent->materials[ids[0]]);
             Material bMaterial = *(parent->materials[ids[1]]);

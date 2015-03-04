@@ -115,14 +115,6 @@ void RayTracer::setBackFaceCulling(bool _backFace)
     }
 }
 
-void RayTracer::setSmoothShading(bool _smoothShading)
-{
-	if (this->scene != nullptr)
-	{
-		this->scene->smoothShading = _smoothShading;
-	}
-}
-
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here
 // (or places called from here) to handle reflection, refraction, etc etc.
@@ -198,23 +190,6 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		{
 			intensity = this->getCubeMap()->getColor(r);
 			colorC = intensity;
-		}
-		else if (traceUI->getBgEnabled() && bgBuffer != nullptr)
-		{
-			int size = buffer_width*buffer_height*3;
-			int bgSize = bg_buffer_width*bg_buffer_height*3;
-			if (size <= bgSize && r.type == ray::VISIBILITY)
-			{
-
-			}
-			// int xScale = floor(bg_buffer_width/buffer_width);
-			// int yScale = floor(bg_buffer_height/buffer_height);
-			// int xCoord = x*xScale;
-			// int yCoord = y*yScale;
-			// buffer[3*(y*buffer_width + x) + 0] = bgBuffer[3*(yCoord*bg_buffer_width + xCoord) + 0];
-			// buffer[3*(y*buffer_width + x) + 1] = bgBuffer[3*(yCoord*bg_buffer_width + xCoord) + 1];
-			// buffer[3*(y*buffer_width + x) + 2] = bgBuffer[3*(yCoord*bg_buffer_width + xCoord) + 2];
-			// cout<<"Here : "<<count<<endl;
 		}
 		// No intersection.  This ray travels to infinity, so we color
 		// it according to the background color, which in this (simple) case
@@ -308,45 +283,9 @@ bool RayTracer::loadScene( char* fn ) {
 		scene->useKdTree = traceUI->m_kdTree;
 	}
 	this->setBackFaceCulling(traceUI->bfCulling());
-	this->setSmoothShading(traceUI->smShadSw());
 	if( !sceneLoaded() ) return false;
 
 	return true;
-}
-
-void RayTracer::enableBackground()
-{
-	if (!traceUI->getBgEnabled())
-	{
-		return;
-	}
-	if (bgBuffer == nullptr)
-	{
-		return;
-	}
-	int size = buffer_width*buffer_height*3;
-	int bgSize = bg_buffer_width*bg_buffer_height*3;
-	if (size > bgSize)
-	{
-		return;
-	}
-	int xScale = floor(bg_buffer_width/buffer_width);
-	int yScale = floor(bg_buffer_height/buffer_height);
-	unsigned char *bgTempBuffer = new unsigned char[size];
-	int count = 0;
-	for (int x = 0; x < buffer_width; x++)
-	{
-		for (int y = 0; y < buffer_height; y++)
-		{
-			int xCoord = x*xScale;
-			int yCoord = y*yScale;
-			count++;
-			buffer[3*(y*buffer_width + x) + 0] = bgBuffer[3*(yCoord*bg_buffer_width + xCoord) + 0];
-			buffer[3*(y*buffer_width + x) + 1] = bgBuffer[3*(yCoord*bg_buffer_width + xCoord) + 1];
-			buffer[3*(y*buffer_width + x) + 2] = bgBuffer[3*(yCoord*bg_buffer_width + xCoord) + 2];
-		}
-	}
-	cout<<"Here : "<<count<<endl;
 }
 
 void RayTracer::traceSetup(int w, int h)
@@ -360,19 +299,6 @@ void RayTracer::traceSetup(int w, int h)
 		buffer = new unsigned char[bufferSize];
 	}
 	memset(buffer, 0, w*h*3);
-	this->enableBackground();
 	m_bBufferReady = true;
 }
 
-int RayTracer::loadBMP(char *bmp_name)
-{
-	int	width, height;
-	if ((bgBuffer=readBMP(bmp_name, width, height))==NULL) 
-	{
-		return 0;
-	}
-	// reflect the fact of loading the new image
-	bg_buffer_width = width;
-	bg_buffer_height = height;
-	return 1;
-}

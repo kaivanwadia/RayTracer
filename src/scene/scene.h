@@ -323,7 +323,6 @@ public:
   int kdTreeLeafSize;
   bool useKdTree;
   bool backFaceCulling;
-  bool smoothShading;
   KdTree<Geometry>* kdtreeRoot;
 
   Scene() : transformRoot(), objects(), lights() {
@@ -332,7 +331,6 @@ public:
     useKdTree = false;
     kdtreeRoot = nullptr;
     backFaceCulling = false;
-    smoothShading = false;
   }
   virtual ~Scene();
 

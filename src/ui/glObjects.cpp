@@ -643,3 +643,127 @@ void DirectionalLight::glDraw() const
 
 }
 
+void SpotLight::glDraw(GLenum lightID) const
+{
+	GLfloat fColor[4];
+	fColor[0] = GLfloat(color[0]);
+	fColor[1] = GLfloat(color[1]);
+	fColor[2] = GLfloat(color[2]);
+	fColor[3] = 1.0f;
+	glLightfv( lightID, GL_DIFFUSE, fColor );
+	glLightfv( lightID, GL_SPECULAR, fColor );
+
+	GLfloat pos[4];
+	pos[0] = GLfloat(-orientation[0]);
+	pos[1] = GLfloat(-orientation[1]);
+	pos[2] = GLfloat(-orientation[2]);
+	pos[3] = 0.0f;
+	glLightfv( lightID, GL_POSITION, pos );
+
+	glLightf( lightID, GL_CONSTANT_ATTENUATION, 1.0f );
+	glLightf( lightID, GL_LINEAR_ATTENUATION, 0.0f );
+	glLightf( lightID, GL_QUADRATIC_ATTENUATION, 0.0f );
+}
+
+void SpotLight::glDraw() const
+{
+	GLfloat fColor[4];
+	fColor[0] = GLfloat(color[0]);
+	fColor[1] = GLfloat(color[1]);
+	fColor[2] = GLfloat(color[2]);
+	fColor[3] = 1.0f;
+
+	glPushMatrix();
+
+		double maxDist;
+
+		// We essentially want to find the spherical bounding volume for
+		// the scene so we can put our directional lights just outside it.
+		Vec3d maxVec = maximum( scene->bounds().getMax(), scene->bounds().getMin() );
+		maxVec = maximum( scene->getCamera().getEye(), maxVec );
+		maxVec = maximum( scene->getCamera().getEye() + scene->getCamera().getLook(), maxVec );
+		maxDist = max( max( maxVec[0], maxVec[1] ), maxVec[2] );
+
+		Vec3d uAxis = orientation;
+		uAxis.normalize();
+
+		// The first thing we need is the light's coordinate system (u,v,w).  To do this,
+		// we will cross the light's orientation vector with the three coordinate
+		// axes and find the 'best conditioned' one -- that is, the cross product
+		// with the largest length (so we can normalize it w/o numerical error).
+		Vec3d vAxis = uAxis ^ Vec3d(1.0,0.0,0.0);
+		{
+			Vec3d test = uAxis ^ Vec3d(0.0,1.0,0.0);
+			if( test.length2() > vAxis.length2() )
+				vAxis = test;
+
+			test = uAxis ^ Vec3d(0.0,0.0,1.0);
+			if( test.length2() > vAxis.length2() )
+				vAxis = test;
+		}
+		vAxis.normalize();
+
+		Vec3d wAxis = uAxis ^ vAxis;
+		wAxis.normalize();
+
+		// Now, we have a coordinate system.  We want to rotate our coordinate
+		// system to line up with this one. To do this, we place the three vectors
+		// in a matrix -- transposed (because this is the same as inverse for
+		// an orthonormal basis).
+		{
+			GLdouble rotMat[16];
+			rotMat[0] = uAxis[0];
+			rotMat[1] = uAxis[1];
+			rotMat[2] = uAxis[2];
+			rotMat[3] = 0.0;
+			rotMat[4] = vAxis[0];
+			rotMat[5] = vAxis[1];
+			rotMat[6] = vAxis[2];
+			rotMat[7] = 0.0;
+			rotMat[8] = wAxis[0];
+			rotMat[9] = wAxis[1];
+			rotMat[10] = wAxis[2];
+			rotMat[11] = 0.0;
+			rotMat[12] = 0.0;
+			rotMat[13] = 0.0;
+			rotMat[14] = 0.0;
+			rotMat[15] = 1.0;
+			glMultMatrixd( rotMat );
+		}
+
+		glScaled( maxDist, maxDist, maxDist );
+		glTranslated( -1.3, 0.0, 0.0 );
+		
+		glScaled( 0.2, 0.2, 0.2 );
+
+		// Now, draw the light.  It will be a group of arrows.
+		glDisable( GL_LIGHTING );
+		glColor3fv( fColor );
+
+		glPushMatrix();
+			glTranslated( 0.0, 0.0, 0.5 );
+			arrow();
+		glPopMatrix();
+
+		glPushMatrix();
+			glRotated( 90.0, 1.0, 0.0, 0.0 );
+			glTranslated( 0.0, 0.0, 0.5 );
+			arrow();
+		glPopMatrix();
+
+		glPushMatrix();
+			glRotated( 180.0, 1.0, 0.0, 0.0 );
+			glTranslated( 0.0, 0.0, 0.5 );
+			arrow();
+		glPopMatrix();
+
+		glPushMatrix();
+			glRotated( 270.0, 1.0, 0.0, 0.0 );
+			glTranslated( 0.0, 0.0, 0.5 );
+			arrow();
+		glPopMatrix();
+
+		glEnable( GL_LIGHTING );
+	glPopMatrix();
+
+}

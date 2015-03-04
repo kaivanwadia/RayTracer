@@ -56,6 +56,9 @@ Scene* Parser::parseScene()
       case DIRECTIONAL_LIGHT:
          scene->add( parseDirectionalLight( scene ) );
          break;
+      case SPOT_LIGHT:
+         scene->add( parseSpotLight( scene ) );
+         break;
       case AMBIENT_LIGHT:
          parseAmbientLight( scene );
          break;
@@ -776,6 +779,77 @@ PointLight* Parser::parsePointLight( Scene* scene )
         default:
           throw SyntaxErrorException( 
 			  "expecting 'position' or 'color' attribute, or 'constant_attenuation_coeff', 'linear_attenuation_coeff', or 'quadratic_attenuation_coeff'", 
+            _tokenizer );
+     }
+  }
+}
+
+SpotLight* Parser::parseSpotLight( Scene* scene )
+{
+  Vec3d direction;
+  Vec3d color;
+  double atten_angle;
+  double fallRate;
+  Vec3d position;
+
+  bool hasDirection( false ), hasColor( false ), hasPosition( false ), hasAngle( false ), hasFallRate ( false );
+
+  _tokenizer.Read( SPOT_LIGHT );
+  _tokenizer.Read( LBRACE );
+
+  for( ;; )
+  {
+     const Token* t = _tokenizer.Peek();
+     switch( t->kind() )
+     {
+       case DIRECTION:
+         if( hasDirection )
+           throw SyntaxErrorException( "Repeated 'direction' attribute", _tokenizer );
+         direction = parseVec3dExpression();
+         hasDirection = true;
+         break;
+       case POSITION:
+         if( hasPosition )
+           throw SyntaxErrorException( "Repeated 'position' attribute", _tokenizer );
+         position = parseVec3dExpression();
+         hasPosition = true;
+         break;
+       case ATTEN_ANGLE:
+         if( hasAngle )
+           throw SyntaxErrorException( "Repeated 'angle' attribute", _tokenizer );
+         atten_angle = parseScalarExpression();
+         hasAngle = true;
+         break;
+       case FALL_RATE:
+         if( hasFallRate )
+           throw SyntaxErrorException( "Repeated 'fall_rate' attribute", _tokenizer );
+         fallRate = parseScalarExpression();
+         hasFallRate = true;
+         break;
+
+       case COLOR:
+         if( hasColor )
+            throw SyntaxErrorException( "Repeated 'color' attribute", _tokenizer );
+         color = parseVec3dExpression();
+         hasColor = true;
+         break;
+
+        case RBRACE:
+          if( !hasColor )
+            throw SyntaxErrorException( "Expected: 'color'", _tokenizer );
+          if( !hasDirection )
+            throw SyntaxErrorException( "Expected: 'direction'", _tokenizer );
+          if( !hasAngle )
+            throw SyntaxErrorException( "Expected: 'angle'", _tokenizer );
+          if( !hasPosition )
+            throw SyntaxErrorException( "Expected: 'position'", _tokenizer );
+          if( !hasFallRate )
+            throw SyntaxErrorException( "Expected: 'fall_rate'", _tokenizer );
+          _tokenizer.Read( RBRACE );
+          return new SpotLight( scene, direction, color, atten_angle, position, fallRate );
+
+        default:
+          throw SyntaxErrorException( "expecting 'position' or 'color' attribute", 
             _tokenizer );
      }
   }

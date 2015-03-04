@@ -7,7 +7,6 @@
 #include "scene/cubeMap.h"
 #include <time.h>
 #include <queue>
-#include "fileio/bitmap.h"
 
 class Scene;
 
@@ -36,10 +35,6 @@ public:
 
     void setUseKdTree(bool kdTree);
     void setBackFaceCulling(bool _backFace);
-    void setSmoothShading(bool _smoothShading);
-
-    void enableBackground();
-    int loadBMP(char *bmp_name);
 
 	const Scene& getScene() { return *scene; }
 
@@ -52,9 +47,7 @@ public:
 
 public:
         unsigned char *buffer;
-        unsigned char *bgBuffer;
         int buffer_width, buffer_height;
-        int bg_buffer_width, bg_buffer_height;
         int bufferSize;
         Scene* scene;
         CubeMap* cubemap;

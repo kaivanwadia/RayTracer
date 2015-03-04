@@ -46,6 +46,7 @@ string getNameForToken( const SYMBOL kind )
     tokenNames[ CAMERA ]            = "camera";
 	tokenNames[ AMBIENT_LIGHT ]     = "ambient_light";
     tokenNames[ POINT_LIGHT ]       = "point_light";
+    tokenNames[ SPOT_LIGHT ]       = "spot_light";
     tokenNames[ DIRECTIONAL_LIGHT ] = "directional_light";
     tokenNames[ CONSTANT_ATTENUATION_COEFF ] = "constant_attenuation_coeff";
     tokenNames[ LINEAR_ATTENUATION_COEFF ] = "linear_attenuation_coeff";
@@ -61,13 +62,15 @@ string getNameForToken( const SYMBOL kind )
     tokenNames[ UPDIR ]             = "updir";
     tokenNames[ ASPECTRATIO ]       = "aspectratio";
     tokenNames[ COLOR ]             = "color";
+    tokenNames[ ATTEN_ANGLE ]       = "atten_angle";
+    tokenNames[ FALL_RATE ]         = "fall_rate";
     tokenNames[ DIRECTION ]         = "direction";
     tokenNames[ CAPPED ]            = "capped";
     tokenNames[ HEIGHT ]            = "height";
     tokenNames[ BOTTOM_RADIUS ]     = "bottom_radius";
     tokenNames[ TOP_RADIUS ]        = "top_radius";
     tokenNames[ QUATERNIAN ]        = "quaternian";
-    tokenNames[ POLYPOINTS ]            = "points";
+    tokenNames[ POLYPOINTS ]        = "points";
     tokenNames[ HEIGHT ]            = "height";
     tokenNames[ NORMALS ]           = "normals";
     tokenNames[ MATERIALS ]         = "materials";
@@ -118,6 +121,7 @@ SYMBOL lookupReservedWord(const string& ident) {
     reservedWords["ambient_light"] = AMBIENT_LIGHT;
     reservedWords["ambient"] = AMBIENT;
     reservedWords["aspectratio"] = ASPECTRATIO;
+    reservedWords["atten_angle"] = ATTEN_ANGLE;
     reservedWords["bottom_radius"] = BOTTOM_RADIUS;
     reservedWords["box"] = BOX;
     reservedWords["camera"] = CAMERA;
@@ -133,6 +137,7 @@ SYMBOL lookupReservedWord(const string& ident) {
     reservedWords["emissive"] = EMISSIVE;
     reservedWords["faces"] = FACES;
     reservedWords["false"] = SYMFALSE;
+    reservedWords["fall_rate"] = FALL_RATE;
     reservedWords["fov"] = FOV;
     reservedWords["gennormals"] = GENNORMALS;
     reservedWords["height"] = HEIGHT;
@@ -156,6 +161,7 @@ SYMBOL lookupReservedWord(const string& ident) {
     reservedWords["shininess"] = SHININESS;
     reservedWords["specular"] = SPECULAR;
     reservedWords["sphere"] = SPHERE;
+    reservedWords["spot_light"] = SPOT_LIGHT;
     reservedWords["square"] = SQUARE;
     reservedWords["top_radius"] = TOP_RADIUS;
     reservedWords["transform"] = TRANSFORM;
