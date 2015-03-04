@@ -168,6 +168,12 @@ void GraphicalUI::cb_aaCheckButton(Fl_Widget* o, void* v)
 	}
 }
 
+void GraphicalUI::cb_aaWhiteCheckButton(Fl_Widget* o, void* v)
+{
+	pUI=(GraphicalUI*)(o->user_data());
+	pUI->m_antiAliasWhite = (((Fl_Check_Button*)o)->value() == 1);
+}
+
 void GraphicalUI::cb_aaSamplesSlides(Fl_Widget* o, void* v)
 {
 	((GraphicalUI*)(o->user_data()))->m_nPixelSamples=int( ((Fl_Slider *)o)->value() );
@@ -352,25 +358,25 @@ void GraphicalUI::antiAliasRenderThread(int threadNo, int width, int height, int
 {
 	int start = threadNo*noOfCols;
 	int end = start + noOfCols;
-	// int count = 0;
-	// int antialiased = 0;
+	int count = 0;
+	int antialiased = 0;
 	for (int y = 0; y < height; y++)
 	{
 		for (int x = start; x < end; x++)
 		{
 			if (stopTrace) break;
-			if(pUI->raytracer->filteredBuf[(x*width + y)] == 255)
+			if(pUI->raytracer->filteredBuf[(y*width + x)] == 255)
 			{
-				pUI->raytracer->tracePixelAntiAlias(y, x);
-				// antialiased++;
+				// cout<<"Here"<<endl;
+				pUI->raytracer->tracePixelAntiAlias(x, y);
+				antialiased++;
 			}
 			if (stopTrace) break;
-			rayTracer->tracePixel(x, y);
-			// count++;
+			count++;
 		}
 		if (stopTrace) break;
 	}
-	// printf("End %d : %d : %d\n",threadNo, count, antialiased);
+	printf("End %d : %d : %d\n",threadNo, count, antialiased);
 }
 
 void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
@@ -396,24 +402,24 @@ void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
 	applyFilter(buf, width, height, pUI->raytracer->filteredBuf, pUI->m_nSupersampleThreshold);
 
 	std::vector<std::thread> aaThreads;
-	int noOfCols = ceil((double)height/(double)pUI->m_nThreads);
+	int noOfCols = ceil((double)width/(double)pUI->m_nThreads);
 	for (int i = 1; i < pUI->m_nThreads; i++)
 	{
 		aaThreads.push_back(std::thread(antiAliasRenderThread, i, width, height, noOfCols, pUI->getRayTracer()));
 	}
-	// int count = 0;
-	// int antialiased = 0;
+	int count = 0;
+	int antialiased = 0;
 	// Do edge detection on filteredBuf
 	for (int y = 0; y < height; y++)
 	{
 		for (int x = 0; x < noOfCols; x++)
 		{
-			// count++;
+			count++;
 			if (stopTrace) break;
 			if(pUI->raytracer->filteredBuf[(y*width + x)] == 255)
 			{
 				pUI->raytracer->tracePixelAntiAlias(x, y);
-				// antialiased++;
+				antialiased++;
 				now = clock();
 				if ((now - prev)/CLOCKS_PER_SEC * 1000 >= intervalMS)
 			  	{
@@ -427,7 +433,7 @@ void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
 		}
 		if (stopTrace) break;
 	}
-	// printf("End 0 : %d : %d\n",count, antialiased);
+	printf("End 0 : %d : %d\n",count, antialiased);
 	for (int i = 0; i < pUI->m_nThreads - 1; i++)
 	{
 		aaThreads[i].join();
@@ -477,7 +483,7 @@ void GraphicalUI::applyFilter( const unsigned char* sourceBuffer,
 					sum = sum + filterKernel[knlWidth * filterRow + filterColumn] * grayImage[(tempPixelRow*srcBufferWidth + tempPixelColumn)];
 				}
 			}
-			sum = sum / 1 + offset;
+			// sum = sum / 1 + offset;
 			if (sum > cutOff)
 			{
 				sum = 255;
@@ -644,14 +650,20 @@ GraphicalUI::GraphicalUI() : refreshInterval(10) {
 	m_aaCheckButton->callback(cb_aaCheckButton);
 	m_aaCheckButton->value(m_antiAlias);
 
+	// set up antialias white checkbox
+	m_aaWhiteCheckButton = new Fl_Check_Button(10, 250, 100, 20, "AA Edges");
+	m_aaWhiteCheckButton->user_data((void*)(this));
+	m_aaWhiteCheckButton->callback(cb_aaWhiteCheckButton);
+	m_aaWhiteCheckButton->value(m_antiAliasWhite);
+
 	// install Pixel Samples slider
-	m_aaSamplesSlider = new Fl_Value_Slider(110, 210, 180, 20, "Pixel Samples Width");
+	m_aaSamplesSlider = new Fl_Value_Slider(110, 210, 180, 20, "Pixel Samples(Squared)");
 	m_aaSamplesSlider->user_data((void*)(this));	// record self to be used by static callback functions
 	m_aaSamplesSlider->type(FL_HOR_NICE_SLIDER);
 	m_aaSamplesSlider->labelfont(FL_COURIER);
 	m_aaSamplesSlider->labelsize(12);
 	m_aaSamplesSlider->minimum(1);
-	m_aaSamplesSlider->maximum(4);
+	m_aaSamplesSlider->maximum(5);
 	m_aaSamplesSlider->step(1);
 	m_aaSamplesSlider->value(m_nPixelSamples);
 	m_aaSamplesSlider->align(FL_ALIGN_RIGHT);

@@ -47,6 +47,7 @@ public:
 	Fl_Slider*			m_filterSlider;
 
 	Fl_Check_Button*	m_aaCheckButton;
+	Fl_Check_Button*	m_aaWhiteCheckButton;
 	Fl_Check_Button*	m_kdCheckButton;
 	Fl_Check_Button*	m_cubeMapCheckButton;
 	Fl_Check_Button*	m_ssCheckButton;
@@ -108,6 +109,7 @@ private:
 	static void cb_bfCheckButton(Fl_Widget* o, void* v);
 
 	static void cb_aaCheckButton(Fl_Widget* o, void* v);
+	static void cb_aaWhiteCheckButton(Fl_Widget* o, void* v);
 	static void cb_aaSamplesSlides(Fl_Widget* o, void* v);
 	static void cb_aaThresholdSlides(Fl_Widget* o, void* v);
 	static void cb_kdTreeCheckButton(Fl_Widget* o, void* v);

@@ -18,7 +18,6 @@ public:
 
 	Vec3d tracePixel(int i, int j);
     Vec3d tracePixelAntiAlias(int i, int j);
-    Vec3d tracePixelAntiAliasWhite(int i, int j);
 	Vec3d trace(double x, double y);
 	Vec3d traceRay(ray& r, int depth);
 
