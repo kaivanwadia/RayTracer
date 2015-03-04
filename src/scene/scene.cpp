@@ -271,9 +271,9 @@ void Scene::buildKdTree(int depth, int leafSize) {
         xzPlaneOrder.push_back(kdtreeRoot->objectsVector[i]);
         xyPlaneOrder.push_back(kdtreeRoot->objectsVector[i]);
     }
-    sort(yzPlaneOrder.begin(), yzPlaneOrder.end(), yzPlaneCompareFunction);
-    sort(xzPlaneOrder.begin(), xzPlaneOrder.end(), xzPlaneCompareFunction);
-    sort(xyPlaneOrder.begin(), xyPlaneOrder.end(), xyPlaneCompareFunction);
+    // sort(yzPlaneOrder.begin(), yzPlaneOrder.end(), yzPlaneCompareFunction);
+    // sort(xzPlaneOrder.begin(), xzPlaneOrder.end(), xzPlaneCompareFunction);
+    // sort(xyPlaneOrder.begin(), xyPlaneOrder.end(), xyPlaneCompareFunction);
 
     vector<vector<Geometry*>> orderedPlanes;
     orderedPlanes.push_back(yzPlaneOrder);
@@ -304,6 +304,9 @@ void Scene::buildKdTree(int depth, int leafSize) {
 
 void Scene::buildMainKdTree(KdTree<Geometry>* kdNode, int depth, int leafSize, vector<vector<Geometry*>> orderedPlanes)
 {
+	sort(orderedPlanes[0].begin(), orderedPlanes[0].end(), yzPlaneCompareFunction);
+	sort(orderedPlanes[1].begin(), orderedPlanes[1].end(), xzPlaneCompareFunction);
+	sort(orderedPlanes[2].begin(), orderedPlanes[2].end(), xyPlaneCompareFunction);
 	if (depth == 0)
 	{
 		return;
@@ -439,58 +442,56 @@ void Scene::buildMainKdTree(KdTree<Geometry>* kdNode, int depth, int leafSize, v
 	minPoint[finalDimension] = finalPoint[finalDimension];
 	maxPoint[finalDimension] = finalPoint[finalDimension];
 	kdNode->splittingBB = BoundingBox(minPoint, maxPoint);
-	for (int dimen = 0; dimen < 3; dimen++)
+	// for (int dimen = 0; dimen < 1; dimen++)
+	// {
+	for (vector<Geometry*>::const_iterator ii = kdNode->objectsVector.begin(); ii != kdNode->objectsVector.end(); ii++)
 	{
-		for (vector<Geometry*>::const_iterator ii = orderedPlanes[dimen].begin(); ii != orderedPlanes[dimen].end(); ii++)
+		BoundingBox iBoundingBox = (*ii)->getBoundingBox();
+		// if (*ii == finalObject)
+		// {
+		// 	if (!finalMinMax)
+		// 	{
+		// 		leftChild->objectsVector.push_back(*ii);
+		// 		leftChild->bb.merge(iBoundingBox);
+		// 		leftOrderedPlanes[dimen].push_back(*ii);
+		// 	}
+		// 	else
+		// 	{
+		// 		rightChild->objectsVector.push_back(*ii);
+		// 		rightChild->bb.merge(iBoundingBox);
+		// 		rightOrderedPlanes[dimen].push_back(*ii);
+		// 	}
+		// 	cout<<"Here\n";
+		// 	continue;
+		// }
+		if (iBoundingBox.getMin()[finalDimension] < finalPoint[finalDimension] && iBoundingBox.getMax()[finalDimension] < finalPoint[finalDimension])
 		{
-			BoundingBox iBoundingBox = (*ii)->getBoundingBox();
-			// if (*ii == finalObject)
-			// {
-			// 	if (!finalMinMax)
-			// 	{
-			// 		leftChild->objectsVector.push_back(*ii);
-			// 		leftChild->bb.merge(iBoundingBox);
-			// 		leftOrderedPlanes[dimen].push_back(*ii);
-			// 	}
-			// 	else
-			// 	{
-			// 		rightChild->objectsVector.push_back(*ii);
-			// 		rightChild->bb.merge(iBoundingBox);
-			// 		rightOrderedPlanes[dimen].push_back(*ii);
-			// 	}
-			// 	cout<<"Here\n";
-			// 	continue;
-			// }
-			if (iBoundingBox.getMin()[finalDimension] < finalPoint[finalDimension] && iBoundingBox.getMax()[finalDimension] <= finalPoint[finalDimension])
-			{
-				if (dimen == finalDimension)
-				{
-					leftChild->objectsVector.push_back(*ii);
-					leftChild->bb.merge(iBoundingBox);
-				}
-				leftOrderedPlanes[dimen].push_back(*ii);
-			}
-			else if (iBoundingBox.getMin()[finalDimension] > finalPoint[finalDimension])
-			{
-				if (dimen == finalDimension)
-				{
-					rightChild->objectsVector.push_back(*ii);
-					rightChild->bb.merge(iBoundingBox);
-				}
-				rightOrderedPlanes[dimen].push_back(*ii);
-			}
-			else
-			{
-				if (dimen == finalDimension)
-				{
-					leftChild->objectsVector.push_back(*ii);
-					leftChild->bb.merge(iBoundingBox);
-					rightChild->objectsVector.push_back(*ii);
-					rightChild->bb.merge(iBoundingBox);
-				}
-				leftOrderedPlanes[dimen].push_back(*ii);
-				rightOrderedPlanes[dimen].push_back(*ii);
-			}
+			leftChild->objectsVector.push_back(*ii);
+			leftChild->bb.merge(iBoundingBox);
+			leftOrderedPlanes[0].push_back(*ii);
+			leftOrderedPlanes[1].push_back(*ii);
+			leftOrderedPlanes[2].push_back(*ii);
+		}
+		else if (iBoundingBox.getMin()[finalDimension] > finalPoint[finalDimension])
+		{
+			rightChild->objectsVector.push_back(*ii);
+			rightChild->bb.merge(iBoundingBox);
+			rightOrderedPlanes[0].push_back(*ii);
+			rightOrderedPlanes[1].push_back(*ii);
+			rightOrderedPlanes[2].push_back(*ii);
+		}
+		else
+		{
+			leftChild->objectsVector.push_back(*ii);
+			leftChild->bb.merge(iBoundingBox);
+			rightChild->objectsVector.push_back(*ii);
+			rightChild->bb.merge(iBoundingBox);
+			leftOrderedPlanes[0].push_back(*ii);
+			leftOrderedPlanes[1].push_back(*ii);
+			leftOrderedPlanes[2].push_back(*ii);
+			rightOrderedPlanes[0].push_back(*ii);
+			rightOrderedPlanes[1].push_back(*ii);
+			rightOrderedPlanes[2].push_back(*ii);
 		}
 	}
 	kdNode->setLeft(leftChild);
