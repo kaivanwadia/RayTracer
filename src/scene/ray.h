@@ -27,6 +27,7 @@ public:
 		VISIBILITY,
 		REFLECTION,
 		REFRACTION,
+        REFRACTIONOUT,
 		SHADOW
 	};
 

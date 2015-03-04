@@ -81,21 +81,21 @@ Vec3d RayTracer::tracePixelAntiAlias(int i, int j)
 		for(int pj = 0; pj < traceUI->m_nPixelSamples; pj++)
 		{
 			Vec3d tCol = trace(x + pi*deltaX , y + pj*deltaY);
-			cout<<"COl : "<<tCol<<endl;
+			// cout<<"COl : "<<tCol<<endl;
 			col += tCol;
 			count++;
 		}
 	}
 
-	cout << "COUNT : " << count << "\n";
+	// cout << "COUNT : " << count << "\n";
 	col = col/(traceUI->m_nPixelSamples*traceUI->m_nPixelSamples);
-	cout<<"COLOR : "<<col<<endl;
-	// pixel[0] = (int)( 255.0 * col[0]);
-	// pixel[1] = (int)( 255.0 * col[1]);
-	// pixel[2] = (int)( 255.0 * col[2]);
-	pixel[0] = (int)( 255.0 * 1);
-	pixel[1] = (int)( 255.0 * 1);
-	pixel[2] = (int)( 255.0 * 1);
+	// cout<<"COLOR : "<<col<<endl;
+	pixel[0] = (int)( 255.0 * col[0]);
+	pixel[1] = (int)( 255.0 * col[1]);
+	pixel[2] = (int)( 255.0 * col[2]);
+	// pixel[0] = (int)( 255.0 * 1);
+	// pixel[1] = (int)( 255.0 * 1);
+	// pixel[2] = (int)( 255.0 * 1);
 	return col;
 }
 
@@ -112,6 +112,14 @@ void RayTracer::setBackFaceCulling(bool _backFace)
     if (this->scene != nullptr)
     {
         this->scene->backFaceCulling = _backFace;
+    }
+}
+
+void RayTracer::setSmoothShading(bool _smoothShade)
+{
+	if (this->scene != nullptr)
+    {
+        this->scene->smoothShading = _smoothShade;
     }
 }
 
@@ -157,29 +165,32 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		//Refracted Ray
 		if (!material.kt(i).iszero())
 		{
-			double cosineAngle = acos(i.N * r.d) * 180/M_PI;
+			double cosineAngle = i.N * r.d;
 			double n_i, n_r;
-			double criticalAngle = 360;
-			double iDirection = 1;
-			if (cosineAngle > 90) // Coming into an object from air
+			bool goingIn = true;
+			double cosThetaI = 0;
+			if (cosineAngle <= 0) // Coming into an object from air
 			{
 				n_i = 1;
 				n_r = material.index(i);
+				cosThetaI = i.N * -1 * r.d;
 			}
 			else // Going out from object to air
 			{
 				n_i = material.index(i);
 				n_r = 1;
-				criticalAngle = asin(n_r/n_i) * 180/M_PI;
-				iDirection = -1;
+				goingIn = false;
+				cosThetaI = i.N * r.d;
+				// iDirection = 1;
 			}
-			Vec3d sinT = (n_i/n_r)*sinVector;
-			Vec3d cosT = (-1 * i.N) * sqrt(1 - sinT*sinT);
-			if (cosineAngle<criticalAngle)
+			double n = n_i/n_r;
+			double sqrtTerm = 1 - (n*n)*(1 - cosThetaI*cosThetaI);
+			if (sqrtTerm > 0)
 			{
-				Vec3d refractedDirection = cosT + iDirection * sinT;
+				double cosThetaT = sqrt(sqrtTerm);
+				Vec3d refractedDirection = (n*cosThetaI - cosThetaT)*i.N - n*-1*r.d;
 				refractedDirection.normalize();
-				ray refractedRay(Qpoint, iDirection * refractedDirection, ray::REFRACTION);
+				ray refractedRay(Qpoint, refractedDirection, ray::REFRACTION);
 				intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
 			}
 		}
@@ -283,6 +294,7 @@ bool RayTracer::loadScene( char* fn ) {
 		scene->useKdTree = traceUI->m_kdTree;
 	}
 	this->setBackFaceCulling(traceUI->bfCulling());
+	this->setSmoothShading(traceUI->smShadSw());
 	if( !sceneLoaded() ) return false;
 
 	return true;

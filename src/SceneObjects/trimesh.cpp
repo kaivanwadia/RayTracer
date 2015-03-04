@@ -95,14 +95,29 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
         // cout<<"backFaceCulling"<<endl;
         if (r.type() != ray::REFRACTION)
         {
-            double cosineAngle = acos(normal * r.d) * 180/M_PI;
-            // cout<<"Angle : "<<cosineAngle<<endl;
-            if (cosineAngle <= 90) // Coming into an object from air
+            double cosineAngle = normal * r.d;
+            // double cosineAngle = acos(normal * r.d) * 180/M_PI;
+            if (TraceUI::m_debug)
             {
-                // cout<<"Culling"<<endl;
+                cout<<"Culling for Non Refraction : "<<r.type()<<endl;
+            }
+            if (cosineAngle > 0) // Coming into an object from air
+            {
                 return false;
             }
         }
+        // else if (r.type() == ray::REFRACTION)
+        // {
+        //     double cosineAngle = acos(normal * r.d) * 180/M_PI;
+        //     if (TraceUI::m_debug)
+        //     {
+        //         cout<<"Culling Refraction : "<<r.type()<<endl;
+        //     }
+        //     if (cosineAngle > 90)
+        //     {
+        //         return false;
+        //     }
+        // }
     }
     const Vec3d& a = parent->vertices[ids[0]];
     const Vec3d& b = parent->vertices[ids[1]];
@@ -160,7 +175,7 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
     if (total<=(1+RAY_EPSILON) && total>=(1-RAY_EPSILON))
     {
         i.t = rayT;
-        if (parent->vertNorms)
+        if (this->scene->smoothShading && parent->vertNorms)
         {
             Vec3d normalA = parent->normals[ids[0]];
             Vec3d normalB = parent->normals[ids[1]];
@@ -175,7 +190,7 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
         i.N.normalize();
         i.setBary(baryCoord);
         i.setUVCoordinates(Vec2d(baryCoord));
-        if(parent->materials.size()>0)
+        if(this->scene->smoothShading && parent->materials.size()>0)
         {
             Material aMaterial = *(parent->materials[ids[0]]);
             Material bMaterial = *(parent->materials[ids[1]]);

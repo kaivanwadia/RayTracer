@@ -35,6 +35,7 @@ public:
 
     void setUseKdTree(bool kdTree);
     void setBackFaceCulling(bool _backFace);
+    void setSmoothShading(bool _smoothShade);
 
 	const Scene& getScene() { return *scene; }
 
@@ -47,6 +48,7 @@ public:
 
 public:
         unsigned char *buffer;
+        unsigned char *filteredBuf;
         int buffer_width, buffer_height;
         int bufferSize;
         Scene* scene;

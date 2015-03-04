@@ -99,7 +99,7 @@ private:
 	static void cb_threadsSlides(Fl_Widget* o, void* v);
 
 	static void cb_render(Fl_Widget* o, void* v);
-	static void renderThread(int threadNo, int width, int height, int noOfThreads, RayTracer* rayTracer);
+	static void renderThread(int threadNo, int width, int height, int noOfCols, RayTracer* rayTracer);
 	static void cb_stop(Fl_Widget* o, void* v);
 	
 	static void cb_debuggingDisplayCheckButton(Fl_Widget* o, void* v);
@@ -117,9 +117,10 @@ private:
 	static void cb_filterWidthSlides(Fl_Widget* o, void* v);
 
 	static void doAntiAliasing(GraphicalUI* pUI);
+	static void antiAliasRenderThread(int threadNo, int width, int height, int noOfCols, RayTracer* rayTracer);
 	static void applyFilter(const unsigned char* sourceBuffer,
 		int srcBufferWidth, int srcBufferHeight,
-		unsigned char* destBuffer);
+		unsigned char* destBuffer, int cutOff);
 
 	static bool stopTrace;
 	static bool doneTrace;

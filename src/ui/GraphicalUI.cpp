@@ -228,6 +228,7 @@ void GraphicalUI::cb_ssCheckButton(Fl_Widget* o, void* v)
 {
 	pUI=(GraphicalUI*)(o->user_data());
 	pUI->m_smoothshade = (((Fl_Check_Button*)o)->value() == 1);
+	pUI->raytracer->setSmoothShading(pUI->m_smoothshade);
 }
 
 void GraphicalUI::cb_shCheckButton(Fl_Widget* o, void* v)
@@ -259,11 +260,14 @@ void GraphicalUI::cb_debuggingDisplayCheckButton(Fl_Widget* o, void* v)
 	  }
 }
 
-void GraphicalUI::renderThread(int threadNo, int width, int height, int noOfThreads, RayTracer* rayTracer)
+void GraphicalUI::renderThread(int threadNo, int width, int height, int noOfCols, RayTracer* rayTracer)
 {
+	int start = threadNo*noOfCols;
+	int end = start + noOfCols;
+	int count = 0;
 	for (int y = 0; y < height; y++)
 	{
-		for (int x = threadNo; x < width; x=x+noOfThreads)
+		for (int x = start; x < end; x++)
 		{
 			if (stopTrace) break;
 			rayTracer->tracePixel(x, y);
@@ -287,9 +291,11 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		pUI->raytracer->traceSetup(width, height);
 
 		std::vector<std::thread> threads;
+		int noOfCols = ceil((double)width/(double)pUI->m_nThreads);
+		// cout<<"No Of Cols : "<<noOfCols<<endl;
 		for (int i = 1; i < pUI->m_nThreads; i++)
 		{
-			threads.push_back(std::thread(renderThread, i, width, height, pUI->m_nThreads, pUI->getRayTracer()));
+			threads.push_back(std::thread(renderThread, i, width, height, noOfCols, pUI->getRayTracer()));
 		}
 		// Save the window label
 		const char *old_label = pUI->m_traceGlWindow->label();
@@ -303,7 +309,7 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		clock_t intervalMS = pUI->refreshInterval * 100;
 		for (int y = 0; y < height; y++)
 		  {
-		    for (int x = 0; x < width; x=x+pUI->m_nThreads)
+		    for (int x = 0; x < noOfCols; x++)
 		      {
 			if (stopTrace) break;
 			// check for input and refresh view every so often while tracing
@@ -330,6 +336,7 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		{
 			threads[i].join();
 		}
+		pUI->m_traceGlWindow->refresh();
 		if(pUI->m_antiAlias)
 		{
 			doAntiAliasing(pUI);
@@ -340,6 +347,21 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		pUI->m_traceGlWindow->label(buffer);
 		pUI->m_traceGlWindow->refresh();
 	  }
+}
+
+void GraphicalUI::antiAliasRenderThread(int threadNo, int width, int height, int noOfRows, RayTracer* rayTracer)
+{
+	int start = threadNo*noOfRows;
+	int end = start + noOfRows;
+	for (int y = start; y < end; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			if (stopTrace) break;
+			rayTracer->tracePixel(x, y);
+		}
+		if (stopTrace) break;
+	}
 }
 
 void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
@@ -354,17 +376,24 @@ void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
 	int width, height;
 
 	pUI->raytracer->getBuffer(buf, width, height);
-	unsigned char* filteredBuf = new unsigned char[width * height];
-	applyFilter(buf, width, height, filteredBuf);
+	pUI->raytracer->filteredBuf = new unsigned char[width * height];
+	applyFilter(buf, width, height, pUI->raytracer->filteredBuf, pUI->m_nSupersampleThreshold);
+
+	std::vector<std::thread> threads;
+	int noOfRows = ceil((double)height/(double)pUI->m_nThreads);
+	// for (int i = 1; i < pUI->m_nThreads; i++)
+	// {
+	// 	threads.push_back(std::thread(antiAliasRenderThread, i, width, height, noOfRows, pUI->getRayTracer()));
+	// }
 	// Do edge detection on filteredBuf
-	for (int pixelRow = 0; pixelRow < height; pixelRow++)
+	for (int x = 0; x < height; x++)
 	{
-		for (int pixelColumn = 0; pixelColumn < width; pixelColumn++)
+		for (int y = 0; y < width; y++)
 		{
-			if(filteredBuf[(pixelRow*width + pixelColumn)] == 255)
+			if(pUI->raytracer->filteredBuf[(x*width + y)] == 255)
 			{
 				if (stopTrace) break;
-				pUI->raytracer->tracePixelAntiAlias(pixelColumn, pixelRow);
+				pUI->raytracer->tracePixelAntiAlias(y, x);
 				now = clock();
 			if ((now - prev)/CLOCKS_PER_SEC * 1000 >= intervalMS)
 			  {
@@ -384,7 +413,7 @@ void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
 
 void GraphicalUI::applyFilter( const unsigned char* sourceBuffer,
 		int srcBufferWidth, int srcBufferHeight,
-		unsigned char* destBuffer)
+		unsigned char* destBuffer, int cutOff)
 {
 	unsigned char*	grayImage;
 	grayImage = new unsigned char[srcBufferWidth*srcBufferHeight];
@@ -420,7 +449,7 @@ void GraphicalUI::applyFilter( const unsigned char* sourceBuffer,
 				}
 			}
 			sum = sum / 1 + offset;
-			if (sum > 128)
+			if (sum > cutOff)
 			{
 				sum = 255;
 			}
@@ -601,13 +630,13 @@ GraphicalUI::GraphicalUI() : refreshInterval(10) {
 	m_aaSamplesSlider->deactivate();
 
 	// install Super sample threshold slider
-	m_aaThreshSlider = new Fl_Value_Slider(110, 240, 180, 20, "Supersample Threshold (x0.001)");
+	m_aaThreshSlider = new Fl_Value_Slider(110, 240, 180, 20, "Supersample Threshold");
 	m_aaThreshSlider->user_data((void*)(this));	// record self to be used by static callback functions
 	m_aaThreshSlider->type(FL_HOR_NICE_SLIDER);
 	m_aaThreshSlider->labelfont(FL_COURIER);
 	m_aaThreshSlider->labelsize(12);
-	m_aaThreshSlider->minimum(0);
-	m_aaThreshSlider->maximum(1000);
+	m_aaThreshSlider->minimum(1);
+	m_aaThreshSlider->maximum(255);
 	m_aaThreshSlider->step(1);
 	m_aaThreshSlider->value(m_nSupersampleThreshold);
 	m_aaThreshSlider->align(FL_ALIGN_RIGHT);
@@ -673,13 +702,15 @@ GraphicalUI::GraphicalUI() : refreshInterval(10) {
 	m_ssCheckButton->value(m_smoothshade);
 
 	// set up shadows checkbox
-	m_shCheckButton = new Fl_Check_Button(160, 400, 100, 20, "Shadows");
-	m_shCheckButton->user_data((void*)(this));
-	m_shCheckButton->callback(cb_shCheckButton);
-	m_shCheckButton->value(m_shadows);
+	// m_shCheckButton = new Fl_Check_Button(160, 400, 100, 20, "Shadows");
+	// m_shCheckButton->user_data((void*)(this));
+	// m_shCheckButton->callback(cb_shCheckButton);
+	// m_shCheckButton->value(m_shadows);
+	// m_shCheckButton->deactivate();
+	// m_shCheckButton->hide();
 
 	// set up Backface Cull checkbox
-	m_bfCheckButton = new Fl_Check_Button(270, 400, 140, 20, "Backface Cull");
+	m_bfCheckButton = new Fl_Check_Button(160, 400, 140, 20, "Backface Cull");
 	m_bfCheckButton->user_data((void*)(this));
 	m_bfCheckButton->callback(cb_bfCheckButton);
 	m_bfCheckButton->value(m_bfCulling);
