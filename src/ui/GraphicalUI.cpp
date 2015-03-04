@@ -352,8 +352,8 @@ void GraphicalUI::antiAliasRenderThread(int threadNo, int width, int height, int
 {
 	int start = threadNo*noOfCols;
 	int end = start + noOfCols;
-	int count = 0;
-	int antialiased = 0;
+	// int count = 0;
+	// int antialiased = 0;
 	for (int y = 0; y < height; y++)
 	{
 		for (int x = start; x < end; x++)
@@ -362,15 +362,15 @@ void GraphicalUI::antiAliasRenderThread(int threadNo, int width, int height, int
 			if(pUI->raytracer->filteredBuf[(x*width + y)] == 255)
 			{
 				pUI->raytracer->tracePixelAntiAlias(y, x);
-				antialiased++;
+				// antialiased++;
 			}
 			if (stopTrace) break;
 			rayTracer->tracePixel(x, y);
-			count++;
+			// count++;
 		}
 		if (stopTrace) break;
 	}
-	printf("End %d : %d : %d\n",threadNo, count, antialiased);
+	// printf("End %d : %d : %d\n",threadNo, count, antialiased);
 }
 
 void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
@@ -401,19 +401,19 @@ void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
 	{
 		aaThreads.push_back(std::thread(antiAliasRenderThread, i, width, height, noOfCols, pUI->getRayTracer()));
 	}
-	int count = 0;
-	int antialiased = 0;
+	// int count = 0;
+	// int antialiased = 0;
 	// Do edge detection on filteredBuf
 	for (int y = 0; y < height; y++)
 	{
 		for (int x = 0; x < noOfCols; x++)
 		{
-			count++;
+			// count++;
 			if (stopTrace) break;
 			if(pUI->raytracer->filteredBuf[(y*width + x)] == 255)
 			{
 				pUI->raytracer->tracePixelAntiAlias(x, y);
-				antialiased++;
+				// antialiased++;
 				now = clock();
 				if ((now - prev)/CLOCKS_PER_SEC * 1000 >= intervalMS)
 			  	{
@@ -427,7 +427,7 @@ void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
 		}
 		if (stopTrace) break;
 	}
-	printf("End 0 : %d : %d\n",count, antialiased);
+	// printf("End 0 : %d : %d\n",count, antialiased);
 	for (int i = 0; i < pUI->m_nThreads - 1; i++)
 	{
 		aaThreads[i].join();
@@ -437,7 +437,7 @@ void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
 	sprintf(buffer, "ANTI ALIASING DONE %s ", old_label);
 	pUI->m_traceGlWindow->label(buffer);
 	pUI->m_traceGlWindow->refresh();
-	printf("Anti aliasing done\n");
+	// printf("Anti aliasing done\n");
 }
 
 void GraphicalUI::applyFilter( const unsigned char* sourceBuffer,

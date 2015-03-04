@@ -18,14 +18,15 @@ public:
 
 	Vec3d tracePixel(int i, int j);
     Vec3d tracePixelAntiAlias(int i, int j);
+    Vec3d tracePixelAntiAliasWhite(int i, int j);
 	Vec3d trace(double x, double y);
 	Vec3d traceRay(ray& r, int depth);
 
 	void getBuffer(unsigned char *&buf, int &w, int &h);
-    void setBuffer();
 	double aspectRatio();
 
 	void traceSetup( int w, int h );
+    void antiAliasSetup();
 
 	bool loadScene(char* fn);
 	bool sceneLoaded() { return scene != 0; }
@@ -49,6 +50,7 @@ public:
 public:
         unsigned char *buffer;
         unsigned char *filteredBuf;
+        unsigned char *rayCountBuf;
         int buffer_width, buffer_height;
         int bufferSize;
         Scene* scene;

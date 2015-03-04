@@ -4,6 +4,102 @@
 		"selected_items":
 		[
 			[
+				"col",
+				"color"
+			],
+			[
+				"pixe",
+				"pixelIntensity"
+			],
+			[
+				"cou",
+				"count"
+			],
+			[
+				"pix",
+				"pixelIntensities"
+			],
+			[
+				"pi",
+				"pixelIntensity"
+			],
+			[
+				"del",
+				"deltaY"
+			],
+			[
+				"sub",
+				"subSampleRow"
+			],
+			[
+				"cur",
+				"currPixelY"
+			],
+			[
+				"curr",
+				"currPixelX"
+			],
+			[
+				"pixel",
+				"pixelX"
+			],
+			[
+				"thr",
+				"threadNo"
+			],
+			[
+				"noOf",
+				"noOfCols"
+			],
+			[
+				"set",
+				"setSmoothShading"
+			],
+			[
+				"noo",
+				"noOfCols"
+			],
+			[
+				"nof",
+				"noOfRows"
+			],
+			[
+				"thre",
+				"threadNo"
+			],
+			[
+				"threa",
+				"threadNo"
+			],
+			[
+				"go",
+				"goingIn"
+			],
+			[
+				"cosT",
+				"cosThetaI"
+			],
+			[
+				"cos",
+				"cosThetaT"
+			],
+			[
+				"sqr",
+				"sqrtTerm"
+			],
+			[
+				"refra",
+				"refractedDirection"
+			],
+			[
+				"sq",
+				"sqrtTerm"
+			],
+			[
+				"tra",
+				"TraceUI"
+			],
+			[
 				"fa",
 				"FALL_RATE"
 			],
@@ -48,10 +144,6 @@
 				"bgSize"
 			],
 			[
-				"set",
-				"setBackFaceCulling"
-			],
-			[
 				"get",
 				"getScene"
 			],
@@ -72,10 +164,6 @@
 				"buffer_width"
 			],
 			[
-				"thre",
-				"threads"
-			],
-			[
 				"obj",
 				"objectID"
 			],
@@ -86,14 +174,6 @@
 			[
 				"lef",
 				"left"
-			],
-			[
-				"cur",
-				"currNode"
-			],
-			[
-				"curr",
-				"currElem"
 			],
 			[
 				"Tra",
@@ -140,10 +220,6 @@
 				"currentCost"
 			],
 			[
-				"nof",
-				"noLeftObjects"
-			],
-			[
 				"firs",
 				"first"
 			],
@@ -166,10 +242,6 @@
 			[
 				"de",
 				"deltaY"
-			],
-			[
-				"del",
-				"deltaX"
 			],
 			[
 				"trac",
@@ -442,104 +514,24 @@
 			[
 				"bui",
 				"buildMainKdTree"
-			],
-			[
-				"in",
-				"intersects"
-			],
-			[
-				"co",
-				"cost"
-			],
-			[
-				"box",
-				"boxVolume"
-			],
-			[
-				"pl",
-				"planeBB"
-			],
-			[
-				"bM",
-				"bMax"
-			],
-			[
-				"boun",
-				"boundedobjects"
-			],
-			[
-				"thr",
-				"threadNo"
-			],
-			[
-				"nor",
-				"normal"
-			],
-			[
-				"cos",
-				"cosVector"
-			],
-			[
-				"refr",
-				"refractedDirection"
-			],
-			[
-				"norm",
-				"normalIntersect"
-			],
-			[
-				"en",
-				"endl"
-			],
-			[
-				"di",
-				"distance"
-			],
-			[
-				"li",
-				"lightDistance"
-			],
-			[
-				"sh",
-				"shadowRay"
-			],
-			[
-				"sho",
-				"shadowDirection"
-			],
-			[
-				"s",
-				"size"
-			],
-			[
-				"ha",
-				"have_one"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/scene/light.cpp",
-			"settings":
-			{
-				"buffer_size": 3370,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/scene/material.cpp",
-			"settings":
-			{
-				"buffer_size": 4912,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "src/RayTracer.cpp",
 			"settings":
 			{
-				"buffer_size": 7870,
+				"buffer_size": 8451,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/ui/GraphicalUI.cpp",
+			"settings":
+			{
+				"buffer_size": 23261,
 				"line_ending": "Unix"
 			}
 		},
@@ -547,16 +539,41 @@
 			"file": "src/SceneObjects/trimesh.cpp",
 			"settings":
 			{
-				"buffer_size": 6245,
+				"buffer_size": 6775,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/ui/GraphicalUI.cpp",
+			"file": "src/scene/scene.cpp",
 			"settings":
 			{
-				"buffer_size": 21568,
+				"buffer_size": 18459,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/u/kwadia/Downloads/raytracepixel.cpp",
+			"settings":
+			{
+				"buffer_size": 1664,
+				"line_ending": "Unix",
+				"name": "Vec3d RayTracer::tracePixel_AA(int i, int j)"
+			}
+		},
+		{
+			"file": "src/ui/GraphicalUI.h",
+			"settings":
+			{
+				"buffer_size": 3717,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/RayTracer.h",
+			"settings":
+			{
+				"buffer_size": 1339,
+				"line_ending": "Windows"
 			}
 		},
 		{
@@ -568,18 +585,26 @@
 			}
 		},
 		{
-			"file": "src/RayTracer.h",
-			"settings":
-			{
-				"buffer_size": 1257,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "src/ui/TraceUI.h",
 			"settings":
 			{
 				"buffer_size": 2905,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/scene/scene.h",
+			"settings":
+			{
+				"buffer_size": 11902,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/vecmath/vec.h",
+			"settings":
+			{
+				"buffer_size": 23608,
 				"line_ending": "Unix"
 			}
 		}
@@ -608,34 +633,35 @@
 	},
 	"file_history":
 	[
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/ray.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/trimesh.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/material.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/light.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/cubeMap.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/GraphicalUI.h",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/debuggingView.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/GraphicalUI.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/parser/Tokenizer.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/parser/Token.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/parser/Parser.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/parser/Parser.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/parser/Token.h",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/trimesh.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/glObjects.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/TraceUI.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/scene.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/RayTracer.h",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/GraphicalUI.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/cubeMap.cpp",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/light.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/scene.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 1/impressionist/impressionistDoc.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/RayTracer.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/RayTracer/src/RayTracer.cpp",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/cubeMap.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/Makefile",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/CubeMapChooser.cxx",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/light.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/SceneObjects/trimesh.h",
 		"/u/kwadia/Downloads/light.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/scenes/simple/spot_light_test.ray",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/material.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/camera.cpp",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/ray.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 1/impressionist/impressionistUI.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/fileio/bitmap.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 1/impressionist/impressionistUI.h",
@@ -663,7 +689,6 @@
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/Makefile.campus",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/backup/GraphicalUI.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/Makefile new",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/debuggingView.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/debuggingView.h",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/RayTracer-master/src/ui/GraphicalUI.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/RayTracer-master/src/ui/TraceUI.h",
@@ -743,7 +768,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 93.0,
 		"where_history":
 		[
 			""
@@ -754,6 +779,22 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"pj",
+			"pi",
+			"pj",
+			"pi",
+			"pixelCol",
+			"pixelRow",
+			"pixelY",
+			"pixelX",
+			"setUseKdTree",
+			"y",
+			"x",
+			"pixelColumn",
+			"pixelRow",
+			"COL",
+			"setRa",
+			"REFRACTION",
 			"PointLight",
 			"cb_ffi",
 			"DirectionalLight",
@@ -839,79 +880,23 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/scene/light.cpp",
-					"settings":
-					{
-						"buffer_size": 3370,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2393,
-								2393
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1658.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/scene/material.cpp",
-					"settings":
-					{
-						"buffer_size": 4912,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1147,
-								1147
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 459.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
 					"file": "src/RayTracer.cpp",
 					"settings":
 					{
-						"buffer_size": 7870,
+						"buffer_size": 8451,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7090,
-								7090
+								2857,
+								2857
 							]
 						],
 						"settings":
@@ -920,25 +905,52 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4335.0,
+						"translation.y": 777.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "src/SceneObjects/trimesh.cpp",
+					"buffer": 1,
+					"file": "src/ui/GraphicalUI.cpp",
 					"settings":
 					{
-						"buffer_size": 6245,
+						"buffer_size": 23261,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1900,
-								1900
+								11604,
+								11604
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 6498.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/SceneObjects/trimesh.cpp",
+					"settings":
+					{
+						"buffer_size": 6775,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5363,
+								5363
 							]
 						],
 						"settings":
@@ -948,25 +960,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1173.0,
+						"translation.y": 2703.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "src/ui/GraphicalUI.cpp",
+					"buffer": 3,
+					"file": "src/scene/scene.cpp",
 					"settings":
 					{
-						"buffer_size": 21568,
+						"buffer_size": 18459,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								12500,
-								12500
+								1476,
+								1476
 							]
 						],
 						"settings":
@@ -975,7 +987,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 7826.0,
+						"translation.y": 551.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -983,11 +995,95 @@
 			]
 		},
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
+					"buffer": 4,
+					"file": "/u/kwadia/Downloads/raytracepixel.cpp",
+					"settings":
+					{
+						"buffer_size": 1664,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								636,
+								636
+							]
+						],
+						"settings":
+						{
+							"auto_name": "Vec3d RayTracer::tracePixel_AA(int i, int j)",
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
 					"buffer": 5,
+					"file": "src/ui/GraphicalUI.h",
+					"settings":
+					{
+						"buffer_size": 3717,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2221,
+								2221
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1224.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/RayTracer.h",
+					"settings":
+					{
+						"buffer_size": 1339,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1165,
+								1165
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 102.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
 					"file": "src/scene/light.h",
 					"settings":
 					{
@@ -998,8 +1094,8 @@
 						"selection":
 						[
 							[
-								1150,
-								1150
+								1088,
+								1088
 							]
 						],
 						"settings":
@@ -1014,35 +1110,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "src/RayTracer.h",
-					"settings":
-					{
-						"buffer_size": 1257,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								765,
-								765
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 255.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "src/ui/TraceUI.h",
 					"settings":
 					{
@@ -1053,8 +1121,63 @@
 						"selection":
 						[
 							[
-								447,
-								447
+								759,
+								759
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 4.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/scene/scene.h",
+					"settings":
+					{
+						"buffer_size": 11902,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8687,
+								8687
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5316.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/vecmath/vec.h",
+					"settings":
+					{
+						"buffer_size": 23608,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8347,
+								8347
 							]
 						],
 						"settings":
@@ -1063,7 +1186,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 204.0,
+						"translation.y": 4437.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1099,7 +1222,7 @@
 		"cols":
 		[
 			0.0,
-			0.505532628061,
+			0.560275473185,
 			1.0
 		],
 		"rows":
@@ -1124,12 +1247,32 @@
 		"selected_items":
 		[
 			[
-				"gra",
-				"src/ui/GraphicalUI.cpp"
+				"vec",
+				"src/vecmath/vec.h"
+			],
+			[
+				"sce",
+				"src/scene/scene.cpp"
+			],
+			[
+				"trim",
+				"src/SceneObjects/trimesh.cpp"
+			],
+			[
+				"cub",
+				"src/scene/cubeMap.h"
 			],
 			[
 				"tri",
 				"src/SceneObjects/trimesh.cpp"
+			],
+			[
+				"ray",
+				"src/scene/ray.h"
+			],
+			[
+				"gra",
+				"src/ui/GraphicalUI.cpp"
 			],
 			[
 				"tok",
@@ -1156,10 +1299,6 @@
 				"src/RayTracer.cpp"
 			],
 			[
-				"trim",
-				"src/SceneObjects/trimesh.cpp"
-			],
-			[
 				"pars",
 				"src/parser/Parser.h"
 			],
@@ -1184,16 +1323,8 @@
 				"src/scene/cubeMap.cpp"
 			],
 			[
-				"cub",
-				"src/ui/CubeMapChooser.cxx"
-			],
-			[
 				"toke",
 				"src/parser/Token.h"
-			],
-			[
-				"ray",
-				"src/scene/ray.h"
 			],
 			[
 				"camer",
@@ -1206,10 +1337,6 @@
 			[
 				"mater",
 				"src/scene/material.cpp"
-			],
-			[
-				"sce",
-				"src/scene/scene.h"
 			],
 			[
 				"cube",
@@ -1250,10 +1377,6 @@
 			[
 				"bbo",
 				"src/scene/bbox.h"
-			],
-			[
-				"vec",
-				"src/vecmath/vec.h"
 			],
 			[
 				"sph",
