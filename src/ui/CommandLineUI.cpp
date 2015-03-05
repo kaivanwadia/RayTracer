@@ -111,7 +111,7 @@ int CommandLineUI::run()
 		double t=(double)(end-start)/CLOCKS_PER_SEC;
 //		int totalRays = TraceUI::resetCount();
 //		std::cout << "total time = " << t << " seconds, rays traced = " << totalRays << std::endl;
-		std::cout << "total time = " << t << std::endl;
+		// std::cout << "total time = " << t << std::endl;
 		return 0;
 	}
 	else

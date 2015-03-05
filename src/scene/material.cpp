@@ -49,7 +49,7 @@ Vec3d Material::shade(Scene *scene, const ray& r, const isect& i) const
   {
     if (kd(i).iszero() && ks(i).iszero())
     {
-      return intensity;
+      continue;
     }
     Light* pLight = *litr;
     // Diffuse Term

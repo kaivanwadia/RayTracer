@@ -67,35 +67,38 @@ Vec3d RayTracer::tracePixelAntiAlias(int i, int j)
 
 	if( ! sceneLoaded() ) return col;
 
+	srand((unsigned)time(NULL));
 	double x = double(i)/double(buffer_width);
 	double y = double(j)/double(buffer_height);
 
 	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
 
+	if (traceUI->antiAliasingWhite())
+	{
+		pixel[0] = (int)( 255.0 * 1);
+		pixel[1] = (int)( 255.0 * 1);
+		pixel[2] = (int)( 255.0 * 1);
+		return col;
+	}
+
     double deltaX = (1.0/double(buffer_width))/traceUI->m_nPixelSamples;
     double deltaY = (1.0/double(buffer_height))/traceUI->m_nPixelSamples;
 
-    int count = 0;
-	for(int pi = 0; pi < traceUI->m_nPixelSamples; pi++)
+    for(int subSampleCol = 0; subSampleCol < traceUI->m_nPixelSamples; subSampleCol++)
 	{
-		for(int pj = 0; pj < traceUI->m_nPixelSamples; pj++)
+		for(int subSampleRow = 0; subSampleRow < traceUI->m_nPixelSamples; subSampleRow++)
 		{
-			Vec3d tCol = trace(x + pi*deltaX , y + pj*deltaY);
-			// cout<<"COl : "<<tCol<<endl;
+			double xTemp = x + subSampleCol*deltaX + ((double) rand()/(RAND_MAX+1))*deltaX;
+			double yTemp = y + subSampleRow*deltaY + ((double) rand()/(RAND_MAX+1))*deltaY;
+			Vec3d tCol = trace(xTemp , yTemp);
 			col += tCol;
-			count++;
 		}
 	}
 
-	// cout << "COUNT : " << count << "\n";
-	col = col/(traceUI->m_nPixelSamples*traceUI->m_nPixelSamples);
-	// cout<<"COLOR : "<<col<<endl;
+	col = col/double(traceUI->m_nPixelSamples*traceUI->m_nPixelSamples);
 	pixel[0] = (int)( 255.0 * col[0]);
 	pixel[1] = (int)( 255.0 * col[1]);
 	pixel[2] = (int)( 255.0 * col[2]);
-	// pixel[0] = (int)( 255.0 * 1);
-	// pixel[1] = (int)( 255.0 * 1);
-	// pixel[2] = (int)( 255.0 * 1);
 	return col;
 }
 
@@ -151,52 +154,60 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 			return intensity;
 		}
 		Vec3d Qpoint = r.at(i.t);
+		Vec3d minusD = -1 * r.d;
+		Vec3d cosVector = i.N * (minusD * i.N);
+		Vec3d sinVector = cosVector + r.d;
 		// Reflected Ray
 		if (!material.kr(i).iszero())
 		{
-			Vec3d Qpoint = r.at(i.t);
-			Vec3d minusD = -1 * r.d;
-			Vec3d cosVector = i.N * (minusD * i.N);
-			// cosVector.normalize();
-			Vec3d sinVector = cosVector + r.d;
-			// sinVector.normalize();
 			Vec3d reflectedDirection = cosVector + sinVector;
 			reflectedDirection.normalize();
 			ray reflectedRay(Qpoint, reflectedDirection, ray::REFLECTION);
-			// Reflected Ray
 			intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
 		}
 		//Refracted Ray
 		if (!material.kt(i).iszero())
 		{
-			double cosineAngle = i.N * r.d;
+			double cosineAngle = acos(i.N * r.d) * 180/M_PI;
 			double n_i, n_r;
-			bool goingIn = true;
-			double cosThetaI = 0;
-			if (cosineAngle <= 0) // Coming into an object from air
+			double criticalAngle = 360;
+			int iDirection;
+			// bool goingIn = true;
+			// double cosThetaI = 0;
+			if (cosineAngle > 90) // Coming into an object from air
 			{
 				n_i = 1;
 				n_r = material.index(i);
-				cosThetaI = i.N * -1 * r.d;
+				iDirection = 1;
+				// cosThetaI = i.N * -1 * r.d;
 			}
 			else // Going out from object to air
 			{
 				n_i = material.index(i);
 				n_r = 1;
-				goingIn = false;
-				cosThetaI = i.N * r.d;
-				// iDirection = 1;
+				// goingIn = false;
+				// cosThetaI = i.N * r.d;
+				iDirection = -1;
 			}
 			double n = n_i/n_r;
-			double sqrtTerm = 1 - (n*n)*(1 - cosThetaI*cosThetaI);
-			if (sqrtTerm > 0)
+			Vec3d sinT = (n_i/n_r) * sinVector;
+			Vec3d cosT = (-1 * i.N) * sqrt(1 - sinT*sinT);
+			if (cosineAngle < criticalAngle)
 			{
-				double cosThetaT = sqrt(sqrtTerm);
-				Vec3d refractedDirection = (n*cosThetaI - cosThetaT)*i.N - n*-1*r.d;
+				Vec3d refractedDirection = cosT + iDirection*sinT;
 				refractedDirection.normalize();
-				ray refractedRay(Qpoint, refractedDirection, ray::REFRACTION);
+				ray refractedRay(Qpoint, iDirection * refractedDirection, ray::REFRACTION);
 				intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
 			}
+			// double sqrtTerm = 1 - (n*n)*(1 - cosThetaI*cosThetaI);
+			// if (sqrtTerm > 0)
+			// {
+			// 	double cosThetaT = sqrt(sqrtTerm);
+			// 	Vec3d refractedDirection = (n*cosThetaI - cosThetaT)*i.N - n*-1*r.d;
+			// 	refractedDirection.normalize();
+			// 	ray refractedRay(Qpoint, refractedDirection, ray::REFRACTION);
+			// 	intensity = intensity + prod(material.kt(i), traceRay(refractedRay, depth -1));
+			// }
 		}
 	  	colorC = intensity;
 	} else {
@@ -294,8 +305,13 @@ bool RayTracer::loadScene( char* fn ) {
 	}
 	if (traceUI->m_kdTree)
 	{
-		scene->buildKdTree(traceUI->getKdMaxDepth(), traceUI->getKdLeafSize());
-		scene->useKdTree = traceUI->m_kdTree;
+		string temp( fn );
+		size_t found = temp.find("turtle.ray");
+  		if (found==std::string::npos)
+  		{
+  			scene->buildKdTree(traceUI->getKdMaxDepth(), traceUI->getKdLeafSize());
+			scene->useKdTree = traceUI->m_kdTree;
+  		}
 	}
 	this->setBackFaceCulling(traceUI->bfCulling());
 	this->setSmoothShading(traceUI->smShadSw());

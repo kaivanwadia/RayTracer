@@ -168,6 +168,12 @@ void GraphicalUI::cb_aaCheckButton(Fl_Widget* o, void* v)
 	}
 }
 
+void GraphicalUI::cb_aaWhiteCheckButton(Fl_Widget* o, void* v)
+{
+	pUI=(GraphicalUI*)(o->user_data());
+	pUI->m_antiAliasWhite = (((Fl_Check_Button*)o)->value() == 1);
+}
+
 void GraphicalUI::cb_aaSamplesSlides(Fl_Widget* o, void* v)
 {
 	((GraphicalUI*)(o->user_data()))->m_nPixelSamples=int( ((Fl_Slider *)o)->value() );
@@ -336,29 +342,33 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v) {
 		{
 			threads[i].join();
 		}
-		pUI->m_traceGlWindow->refresh();
-		if(pUI->m_antiAlias)
-		{
-			doAntiAliasing(pUI);
-		}
 		end = std::chrono::system_clock::now();
 		std::chrono::duration<double> elapsed_seconds = end-start;
 		sprintf(buffer, "%f MS To RENDER ", elapsed_seconds.count() * 1000);
 		pUI->m_traceGlWindow->label(buffer);
 		pUI->m_traceGlWindow->refresh();
+		if(pUI->m_antiAlias)
+		{
+			doAntiAliasing(pUI);
+		}
 	  }
 }
 
-void GraphicalUI::antiAliasRenderThread(int threadNo, int width, int height, int noOfRows, RayTracer* rayTracer)
+void GraphicalUI::antiAliasRenderThread(int threadNo, int width, int height, int noOfCols, RayTracer* rayTracer)
 {
-	int start = threadNo*noOfRows;
-	int end = start + noOfRows;
-	for (int y = start; y < end; y++)
+	int start = threadNo*noOfCols;
+	int end = start + noOfCols;
+	for (int y = 0; y < height; y++)
 	{
-		for (int x = 0; x < width; x++)
+		for (int x = start; x < end; x++)
 		{
 			if (stopTrace) break;
-			rayTracer->tracePixel(x, y);
+			if(pUI->raytracer->filteredBuf[(y*width + x)] == 255)
+			{
+				// cout<<"Here"<<endl;
+				pUI->raytracer->tracePixelAntiAlias(x, y);
+			}
+			if (stopTrace) break;
 		}
 		if (stopTrace) break;
 	}
@@ -367,11 +377,17 @@ void GraphicalUI::antiAliasRenderThread(int threadNo, int width, int height, int
 void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
 {
 	clock_t now, prev;
-	clock_t tEnd, tStart = clock();
 	now = prev = clock();
 	clock_t intervalMS = pUI->refreshInterval * 100;
 	doneTrace = stopTrace = false;
 	unsigned char* buf;
+
+	char buffer[256];
+	const char *old_label = pUI->m_traceGlWindow->label();
+	sprintf(buffer, "ANTI ALIASING START %s ", old_label);
+	pUI->m_traceGlWindow->label(buffer);
+	pUI->m_traceGlWindow->refresh();
+
 
 	int width, height;
 
@@ -379,36 +395,43 @@ void GraphicalUI::doAntiAliasing(GraphicalUI* pUI)
 	pUI->raytracer->filteredBuf = new unsigned char[width * height];
 	applyFilter(buf, width, height, pUI->raytracer->filteredBuf, pUI->m_nSupersampleThreshold);
 
-	std::vector<std::thread> threads;
-	int noOfRows = ceil((double)height/(double)pUI->m_nThreads);
-	// for (int i = 1; i < pUI->m_nThreads; i++)
-	// {
-	// 	threads.push_back(std::thread(antiAliasRenderThread, i, width, height, noOfRows, pUI->getRayTracer()));
-	// }
-	// Do edge detection on filteredBuf
-	for (int x = 0; x < height; x++)
+	std::vector<std::thread> aaThreads;
+	int noOfCols = ceil((double)width/(double)pUI->m_nThreads);
+	for (int i = 1; i < pUI->m_nThreads; i++)
 	{
-		for (int y = 0; y < width; y++)
+		aaThreads.push_back(std::thread(antiAliasRenderThread, i, width, height, noOfCols, pUI->getRayTracer()));
+	}
+	// Do edge detection on filteredBuf
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < noOfCols; x++)
 		{
-			if(pUI->raytracer->filteredBuf[(x*width + y)] == 255)
+			if (stopTrace) break;
+			if(pUI->raytracer->filteredBuf[(y*width + x)] == 255)
 			{
-				if (stopTrace) break;
-				pUI->raytracer->tracePixelAntiAlias(y, x);
+				pUI->raytracer->tracePixelAntiAlias(x, y);
 				now = clock();
-			if ((now - prev)/CLOCKS_PER_SEC * 1000 >= intervalMS)
-			  {
-			    prev = now;
-			    pUI->m_traceGlWindow->refresh();
-			    Fl::check();
-			    if (Fl::damage()) { Fl::flush(); }
-			  }
+				if ((now - prev)/CLOCKS_PER_SEC * 1000 >= intervalMS)
+			  	{
+				    prev = now;
+				    pUI->m_traceGlWindow->refresh();
+				    Fl::check();
+				    if (Fl::damage()) { Fl::flush(); }
+			  	}
 			}
 
 		}
 		if (stopTrace) break;
 	}
+	for (int i = 0; i < pUI->m_nThreads - 1; i++)
+	{
+		aaThreads[i].join();
+	}
 	doneTrace = true;
 	stopTrace = false;
+	sprintf(buffer, "ANTI ALIASING DONE %s ", old_label);
+	pUI->m_traceGlWindow->label(buffer);
+	pUI->m_traceGlWindow->refresh();
 }
 
 void GraphicalUI::applyFilter( const unsigned char* sourceBuffer,
@@ -448,7 +471,7 @@ void GraphicalUI::applyFilter( const unsigned char* sourceBuffer,
 					sum = sum + filterKernel[knlWidth * filterRow + filterColumn] * grayImage[(tempPixelRow*srcBufferWidth + tempPixelColumn)];
 				}
 			}
-			sum = sum / 1 + offset;
+			// sum = sum / 1 + offset;
 			if (sum > cutOff)
 			{
 				sum = 255;
@@ -614,6 +637,12 @@ GraphicalUI::GraphicalUI() : refreshInterval(10) {
 	m_aaCheckButton->user_data((void*)(this));
 	m_aaCheckButton->callback(cb_aaCheckButton);
 	m_aaCheckButton->value(m_antiAlias);
+
+	// set up antialias checkbox
+	m_aaWhiteCheckButton = new Fl_Check_Button(10, 250, 100, 20, "AA Edges");
+	m_aaWhiteCheckButton->user_data((void*)(this));
+	m_aaWhiteCheckButton->callback(cb_aaWhiteCheckButton);
+	m_aaWhiteCheckButton->value(m_antiAliasWhite);
 
 	// install Pixel Samples slider
 	m_aaSamplesSlider = new Fl_Value_Slider(110, 210, 180, 20, "Pixel Samples Width");

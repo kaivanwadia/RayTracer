@@ -97,10 +97,6 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
         {
             double cosineAngle = normal * r.d;
             // double cosineAngle = acos(normal * r.d) * 180/M_PI;
-            if (TraceUI::m_debug)
-            {
-                cout<<"Culling for Non Refraction : "<<r.type()<<endl;
-            }
             if (cosineAngle > 0) // Coming into an object from air
             {
                 return false;

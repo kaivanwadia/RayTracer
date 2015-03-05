@@ -132,7 +132,7 @@ void Scene::intersectKdTree(ray& r, isect& i, KdTree<Geometry>* currentNode, boo
 // intersection through the reference parameter.
 bool Scene::intersect(ray& r, isect& i) const {
 	bool have_one = false;
-	if (this->useKdTree)
+	if (this->useKdTree && this->kdtreeRoot != nullptr)
 	{
 		double tMin,tMax;
 		tMin = tMax = 0.0;
