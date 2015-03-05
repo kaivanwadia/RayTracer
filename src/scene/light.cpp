@@ -80,7 +80,8 @@ Vec3d PointLight::shadowAttenuation(const ray& r, const Vec3d& p) const
     double distanceSq = (Qpoint - p).length2();
     if (distanceSq < lightDistance)
     {
-      return Vec3d(0,0,0);
+      const Material& material = i.getMaterial();
+      return prod(material.kt(i), color);
     }
   }
   return color;
