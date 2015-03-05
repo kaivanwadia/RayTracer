@@ -379,7 +379,7 @@ public:
 
   void buildKdTree(int depth, int leafSize);
   void buildTrimeshKdTree(Geometry* triMesh, int depth, int leafSize);
-  void buildMainKdTree(KdTree<Geometry>* kdtree, int depth, int leafSize, std::vector<std::vector<Geometry*>> orderedPlanes);
+  void buildMainKdTree(KdTree<Geometry>* kdtree, int depth, int leafSize, std::vector<std::vector<std::pair<Geometry*, int>>> orderedPlanes);
   void printKdTree(KdTree<Geometry>* root);
 
  private:

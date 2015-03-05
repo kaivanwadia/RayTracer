@@ -93,7 +93,7 @@ Vec3d CubeMap::getColor(ray r) const {
 
 	int filterwidth = traceUI->getFilterWidth();
 	// r.type() != ray::VISIBILITY || 
-	// if (filterwidth == 1) return tMap[front]->getMappedValue(Vec2d(u, v));
+//	if (filterwidth == 1) return tMap[front]->getMappedValue(Vec2d(u, v));
 	int fw = (filterwidth + 1)/2 - 1;
 	int rm = filterwidth - fw;
 	int width = tMap[front]->getWidth();

@@ -202,32 +202,128 @@ void Scene::printKdTree(KdTree<Geometry>* root) {
 	}
 }
 
-bool yzPlaneCompareFunction(Geometry* first, Geometry* second)
+bool yzPlaneCompareFunction(pair<Geometry*, int> first, pair<Geometry*, int> second)
 {
-	BoundingBox firstBB = first->getBoundingBox();
-	BoundingBox secondBB = second->getBoundingBox();
+	BoundingBox firstBB = first.first->getBoundingBox();
+	BoundingBox secondBB = second.first->getBoundingBox();
 	double firstX = firstBB.getMin()[0];
 	double secondX = secondBB.getMin()[0];
+	if (first.second == 1)
+	{
+		firstX = firstBB.getMax()[0];
+	}
+	if (second.second == 1)
+	{
+		secondX = secondBB.getMax()[0];
+	}
+	if (firstX == secondX)
+	{
+		if (first.second < second.second)
+		{
+			return true;
+		}
+		else if (first.second > second.second)
+		{
+			return false;
+		}
+		else
+		{
+			true;
+		}
+	}
 	return (firstX < secondX);
 }
 
-bool xzPlaneCompareFunction(Geometry* first, Geometry* second)
+bool xzPlaneCompareFunction(pair<Geometry*, int> first, pair<Geometry*, int> second)
 {
-	BoundingBox firstBB = first->getBoundingBox();
-	BoundingBox secondBB = second->getBoundingBox();
+	BoundingBox firstBB = first.first->getBoundingBox();
+	BoundingBox secondBB = second.first->getBoundingBox();
 	double firstY = firstBB.getMin()[1];
 	double secondY = secondBB.getMin()[1];
+	if (first.second == 1)
+	{
+		firstY = firstBB.getMax()[1];
+	}
+	if (second.second == 1)
+	{
+		secondY = secondBB.getMax()[1];
+	}
+	if (firstY == secondY)
+	{
+		if (first.second < second.second)
+		{
+			return true;
+		}
+		else if (first.second > second.second)
+		{
+			return false;
+		}
+		else
+		{
+			true;
+		}
+	}
 	return (firstY < secondY);
 }
 
-bool xyPlaneCompareFunction(Geometry* first, Geometry* second)
+bool xyPlaneCompareFunction(pair<Geometry*, int> first, pair<Geometry*, int> second)
 {
-	BoundingBox firstBB = first->getBoundingBox();
-	BoundingBox secondBB = second->getBoundingBox();
+	BoundingBox firstBB = first.first->getBoundingBox();
+	BoundingBox secondBB = second.first->getBoundingBox();
 	double firstZ = firstBB.getMin()[2];
 	double secondZ = secondBB.getMin()[2];
+	if (first.second == 1)
+	{
+		firstZ = firstBB.getMax()[2];
+	}
+	if (second.second == 1)
+	{
+		secondZ = secondBB.getMax()[2];
+	}
+	if (firstZ == secondZ)
+	{
+		if (first.second < second.second)
+		{
+			return true;
+		}
+		else if (first.second > second.second)
+		{
+			return false;
+		}
+		else
+		{
+			true;
+		}
+	}
 	return (firstZ < secondZ);
 }
+
+// bool yzPlaneCompareFunction(Geometry* first, Geometry* second)
+// {
+// 	BoundingBox firstBB = first->getBoundingBox();
+// 	BoundingBox secondBB = second->getBoundingBox();
+// 	double firstX = firstBB.getMin()[0];
+// 	double secondX = secondBB.getMin()[0];
+// 	return (firstX < secondX);
+// }
+
+// bool xzPlaneCompareFunction(Geometry* first, Geometry* second)
+// {
+// 	BoundingBox firstBB = first->getBoundingBox();
+// 	BoundingBox secondBB = second->getBoundingBox();
+// 	double firstY = firstBB.getMin()[1];
+// 	double secondY = secondBB.getMin()[1];
+// 	return (firstY < secondY);
+// }
+
+// bool xyPlaneCompareFunction(Geometry* first, Geometry* second)
+// {
+// 	BoundingBox firstBB = first->getBoundingBox();
+// 	BoundingBox secondBB = second->getBoundingBox();
+// 	double firstZ = firstBB.getMin()[2];
+// 	double secondZ = secondBB.getMin()[2];
+// 	return (firstZ < secondZ);
+// }
 
 void Scene::buildKdTree(int depth, int leafSize) {
 	this->kdTreeDepth = depth;
@@ -251,19 +347,19 @@ void Scene::buildKdTree(int depth, int leafSize) {
 	}
 	// cout<<"Number of Objects: "<<kdtreeRoot->noOfObjects()<<endl;
 	kdtreeRoot->bb = this->bounds();
-    std::vector<Geometry*> yzPlaneOrder;
-    std::vector<Geometry*> xzPlaneOrder;
-    std::vector<Geometry*> xyPlaneOrder;
+    std::vector<pair<Geometry*, int>> yzPlaneOrder;
+    std::vector<pair<Geometry*, int>> xzPlaneOrder;
+    std::vector<pair<Geometry*, int>> xyPlaneOrder;
     for(int i = 0; i < kdtreeRoot->noOfObjects(); i++) {
-        yzPlaneOrder.push_back(kdtreeRoot->objectsVector[i]);
-        xzPlaneOrder.push_back(kdtreeRoot->objectsVector[i]);
-        xyPlaneOrder.push_back(kdtreeRoot->objectsVector[i]);
+        yzPlaneOrder.push_back(pair<Geometry*, int>(kdtreeRoot->objectsVector[i], 0));
+        yzPlaneOrder.push_back(pair<Geometry*, int>(kdtreeRoot->objectsVector[i], 1));
+        xzPlaneOrder.push_back(pair<Geometry*, int>(kdtreeRoot->objectsVector[i], 0));
+        xzPlaneOrder.push_back(pair<Geometry*, int>(kdtreeRoot->objectsVector[i], 1));
+        xyPlaneOrder.push_back(pair<Geometry*, int>(kdtreeRoot->objectsVector[i], 0));
+		xyPlaneOrder.push_back(pair<Geometry*, int>(kdtreeRoot->objectsVector[i], 1));
     }
-    // sort(yzPlaneOrder.begin(), yzPlaneOrder.end(), yzPlaneCompareFunction);
-    // sort(xzPlaneOrder.begin(), xzPlaneOrder.end(), xzPlaneCompareFunction);
-    // sort(xyPlaneOrder.begin(), xyPlaneOrder.end(), xyPlaneCompareFunction);
 
-    vector<vector<Geometry*>> orderedPlanes;
+    vector<vector<pair<Geometry*, int>>> orderedPlanes;
     orderedPlanes.push_back(yzPlaneOrder);
     orderedPlanes.push_back(xzPlaneOrder);
     orderedPlanes.push_back(xyPlaneOrder);
@@ -286,11 +382,11 @@ void Scene::buildKdTree(int depth, int leafSize) {
     // cout<<"Scene BB : "<<this->kdtreeRoot->bb.getMin() << "||" << this->kdtreeRoot->bb.getMax()<<endl;
 	buildMainKdTree(kdtreeRoot, depth, leafSize, orderedPlanes);
 	// cout<<"MAIN KD TREE"<<endl;
-	printKdTree(this->kdtreeRoot);
+	// printKdTree(this->kdtreeRoot);
 	// cout<<"END MAIN KD TREE"<<endl;
 }
 
-void Scene::buildMainKdTree(KdTree<Geometry>* kdNode, int depth, int leafSize, vector<vector<Geometry*>> orderedPlanes)
+void Scene::buildMainKdTree(KdTree<Geometry>* kdNode, int depth, int leafSize, vector<vector<pair<Geometry*,int>>> orderedPlanes)
 {
 	sort(orderedPlanes[0].begin(), orderedPlanes[0].end(), yzPlaneCompareFunction);
 	sort(orderedPlanes[1].begin(), orderedPlanes[1].end(), xzPlaneCompareFunction);
@@ -317,93 +413,49 @@ void Scene::buildMainKdTree(KdTree<Geometry>* kdNode, int depth, int leafSize, v
 	// cout<<"SIZE Y: "<<orderedPlanes[1].size()<<endl;
 	// cout<<"SIZE Z: "<<orderedPlanes[2].size()<<endl;
 	double finalCost = numeric_limits<double>::max();
-	BoundingBox finalBB;
+	double tTime = 15;
+	double iTime = 80 * tTime;
+	double totalArea = kdNode->bb.area();
 	int finalDimension;
 	Vec3d finalPoint;
-	Geometry* finalObject;
-	bool finalMinMax;
 	for (int dimen = 0; dimen < 3; dimen++)
 	{
-		for (vector<Geometry*>::const_iterator ii = orderedPlanes[dimen].begin(); ii != orderedPlanes[dimen].end(); ii++)
+		double rightArea = 0;
+		double rightObjects = 0;
+		double leftArea = 0;
+		double leftObjects = 0;
+		for (vector<pair<Geometry*,int>>::const_iterator ii = orderedPlanes[dimen].begin(); ii != orderedPlanes[dimen].end(); ii++)
 		{
-			BoundingBox iBoundingBox = (*ii)->getBoundingBox();
-			// cout<<"Box : "<<iBoundingBox.getMin() <<"||"<<iBoundingBox.getMax()<<endl;
-			double minValue = iBoundingBox.getMin()[dimen];
-			double maxValue = iBoundingBox.getMax()[dimen];
-			double minLeftArea = 0;
-			double minRightArea = 0;
-			double minLeftObjects = 0;
-			double minRightObjects = 0;
-			double maxLeftArea = 0;
-			double maxRightArea = 0;
-			double maxLeftObjects = 0;
-			double maxRightObjects = 0;
-			for (vector<Geometry*>::const_iterator jj = orderedPlanes[dimen].begin(); jj != orderedPlanes[dimen].end(); jj++)
+			BoundingBox iBoundingBox = (*ii).first->getBoundingBox();
+			if ((*ii).second == 0)
 			{
-				// If object is same add to minimum plane and maximum plane calculation
-				if (*ii == *jj)
-				{
-					minRightArea = minRightArea + iBoundingBox.area();
-					minRightObjects++;
-					maxLeftArea = maxLeftArea + iBoundingBox.area();
-					maxLeftObjects++;
-					continue;
-				}
-				BoundingBox jBoundingBox = (*jj)->getBoundingBox();
-				// Calculations for the minimum plane of the object ii
-				if (jBoundingBox.getMin()[dimen] < minValue && jBoundingBox.getMax()[dimen] <= minValue)
-				{
-					minLeftArea = minLeftArea + jBoundingBox.area();
-					minLeftObjects++;
-				}
-				else if (jBoundingBox.getMin()[dimen] >= minValue)
-				{
-					minRightArea = minRightArea + jBoundingBox.area();
-					minRightObjects++;
-				}
-				else
-				{
-					minLeftArea = minLeftArea + jBoundingBox.area();
-					minLeftObjects++;
-					minRightArea = minRightArea + jBoundingBox.area();
-					minRightObjects++;
-				}
-				// Calculations for the maximum plane of the object ii
-				if (jBoundingBox.getMin()[dimen] < maxValue && jBoundingBox.getMax()[dimen] <= maxValue)
-				{
-					maxLeftArea = maxLeftArea + jBoundingBox.area();
-					maxLeftObjects++;
-				}
-				else if (jBoundingBox.getMin()[dimen] >= maxValue)
-				{
-					maxRightArea = maxRightArea + jBoundingBox.area();
-					maxRightObjects++;
-				}
-				else
-				{
-					maxLeftArea = maxLeftArea + jBoundingBox.area();
-					maxLeftObjects++;
-					maxRightArea = maxRightArea + jBoundingBox.area();
-					maxRightObjects++;
-				}
+				rightArea  = rightArea + iBoundingBox.area();
+				rightObjects++;
 			}
-			double minPlaneCost = 1 + (minLeftArea)*minLeftObjects*80 + (minRightArea)*minRightObjects*80;
-			double maxPlaneCost = 1 + (maxLeftArea)*maxLeftObjects*80 + (maxRightArea)*maxRightObjects*80;
-			if (minPlaneCost < finalCost)
+		}
+		for (vector<pair<Geometry*,int>>::const_iterator ii = orderedPlanes[dimen].begin(); ii != orderedPlanes[dimen].end(); ii++)
+		{
+			BoundingBox iBoundingBox = (*ii).first->getBoundingBox();
+			if ((*ii).second == 0)
 			{
-				finalCost = minPlaneCost;
+				leftObjects++;
+				leftArea  = leftArea + iBoundingBox.area();
+			}
+			else if ((*ii).second == 1)
+			{
+				rightObjects--;
+				rightArea = rightArea - iBoundingBox.area();
+			}
+			double currCost = tTime + (leftArea/totalArea)*leftObjects*iTime + (rightArea/totalArea)*rightObjects*iTime;
+			if (currCost < finalCost)
+			{
+				finalCost = currCost;
 				finalDimension = dimen;
 				finalPoint = iBoundingBox.getMin();
-				finalObject = *ii;
-				finalMinMax = false;
-			}
-			if (maxPlaneCost < finalCost)
-			{
-				finalCost = maxPlaneCost;
-				finalDimension = dimen;
-				finalPoint = iBoundingBox.getMax();
-				finalObject = *ii;
-				finalMinMax = true;
+				if ((*ii).second == 1)
+				{
+					finalPoint = iBoundingBox.getMax();
+				}
 			}
 		}
 	}
@@ -412,61 +464,47 @@ void Scene::buildMainKdTree(KdTree<Geometry>* kdNode, int depth, int leafSize, v
 	// cout << "Final Point : "<<finalPoint<<"\n";
 	KdTree<Geometry>* leftChild = new KdTree<Geometry>();
 	KdTree<Geometry>* rightChild = new KdTree<Geometry>();
-	vector<vector<Geometry*>> leftOrderedPlanes(3);
-	vector<vector<Geometry*>> rightOrderedPlanes(3);
-	leftOrderedPlanes.push_back(vector<Geometry*>());
-	leftOrderedPlanes.push_back(vector<Geometry*>());
-	leftOrderedPlanes.push_back(vector<Geometry*>());
-	rightOrderedPlanes.push_back(vector<Geometry*>());
-	rightOrderedPlanes.push_back(vector<Geometry*>());
-	rightOrderedPlanes.push_back(vector<Geometry*>());
+	vector<vector<pair<Geometry*, int>>> leftOrderedPlanes(3);
+	vector<vector<pair<Geometry*, int>>> rightOrderedPlanes(3);
+	leftOrderedPlanes.push_back(vector<pair<Geometry*, int>>());
+	leftOrderedPlanes.push_back(vector<pair<Geometry*, int>>());
+	leftOrderedPlanes.push_back(vector<pair<Geometry*, int>>());
+	rightOrderedPlanes.push_back(vector<pair<Geometry*, int>>());
+	rightOrderedPlanes.push_back(vector<pair<Geometry*, int>>());
+	rightOrderedPlanes.push_back(vector<pair<Geometry*, int>>());
 
 	kdNode->splittingPlane[finalDimension] = finalPoint[finalDimension];
 	kdNode->dimension = finalDimension;
-	// Vec3d minPoint = kdNode->bb.getMin();
-	// Vec3d maxPoint = kdNode->bb.getMin();
 	Vec3d minPoint = Vec3d(-1.0e308, -1.0e308, -1.0e308);
 	Vec3d maxPoint = Vec3d(1.0e308, 1.0e308, 1.0e308);
 	minPoint[finalDimension] = finalPoint[finalDimension];
 	maxPoint[finalDimension] = finalPoint[finalDimension];
 	kdNode->splittingBB = BoundingBox(minPoint, maxPoint);
-	// for (int dimen = 0; dimen < 1; dimen++)
-	// {
+
 	for (vector<Geometry*>::const_iterator ii = kdNode->objectsVector.begin(); ii != kdNode->objectsVector.end(); ii++)
 	{
 		BoundingBox iBoundingBox = (*ii)->getBoundingBox();
-		// if (*ii == finalObject)
-		// {
-		// 	if (!finalMinMax)
-		// 	{
-		// 		leftChild->objectsVector.push_back(*ii);
-		// 		leftChild->bb.merge(iBoundingBox);
-		// 		leftOrderedPlanes[dimen].push_back(*ii);
-		// 	}
-		// 	else
-		// 	{
-		// 		rightChild->objectsVector.push_back(*ii);
-		// 		rightChild->bb.merge(iBoundingBox);
-		// 		rightOrderedPlanes[dimen].push_back(*ii);
-		// 	}
-		// 	cout<<"Here\n";
-		// 	continue;
-		// }
 		if (iBoundingBox.getMin()[finalDimension] < finalPoint[finalDimension] && iBoundingBox.getMax()[finalDimension] < finalPoint[finalDimension])
 		{
 			leftChild->objectsVector.push_back(*ii);
 			leftChild->bb.merge(iBoundingBox);
-			leftOrderedPlanes[0].push_back(*ii);
-			leftOrderedPlanes[1].push_back(*ii);
-			leftOrderedPlanes[2].push_back(*ii);
+			leftOrderedPlanes[0].push_back(pair<Geometry*, int>(*ii, 0));
+			leftOrderedPlanes[0].push_back(pair<Geometry*, int>(*ii, 1));
+			leftOrderedPlanes[1].push_back(pair<Geometry*, int>(*ii, 0));
+			leftOrderedPlanes[1].push_back(pair<Geometry*, int>(*ii, 1));
+			leftOrderedPlanes[2].push_back(pair<Geometry*, int>(*ii, 0));
+			leftOrderedPlanes[2].push_back(pair<Geometry*, int>(*ii, 1));
 		}
 		else if (iBoundingBox.getMin()[finalDimension] > finalPoint[finalDimension])
 		{
 			rightChild->objectsVector.push_back(*ii);
 			rightChild->bb.merge(iBoundingBox);
-			rightOrderedPlanes[0].push_back(*ii);
-			rightOrderedPlanes[1].push_back(*ii);
-			rightOrderedPlanes[2].push_back(*ii);
+			rightOrderedPlanes[0].push_back(pair<Geometry*, int>(*ii,0));
+			rightOrderedPlanes[0].push_back(pair<Geometry*, int>(*ii,1));
+			rightOrderedPlanes[1].push_back(pair<Geometry*, int>(*ii,0));
+			rightOrderedPlanes[1].push_back(pair<Geometry*, int>(*ii,1));
+			rightOrderedPlanes[2].push_back(pair<Geometry*, int>(*ii,0));
+			rightOrderedPlanes[2].push_back(pair<Geometry*, int>(*ii,1));
 		}
 		else
 		{
@@ -474,12 +512,18 @@ void Scene::buildMainKdTree(KdTree<Geometry>* kdNode, int depth, int leafSize, v
 			leftChild->bb.merge(iBoundingBox);
 			rightChild->objectsVector.push_back(*ii);
 			rightChild->bb.merge(iBoundingBox);
-			leftOrderedPlanes[0].push_back(*ii);
-			leftOrderedPlanes[1].push_back(*ii);
-			leftOrderedPlanes[2].push_back(*ii);
-			rightOrderedPlanes[0].push_back(*ii);
-			rightOrderedPlanes[1].push_back(*ii);
-			rightOrderedPlanes[2].push_back(*ii);
+			leftOrderedPlanes[0].push_back(pair<Geometry*, int>(*ii, 0));
+			leftOrderedPlanes[0].push_back(pair<Geometry*, int>(*ii, 1));
+			leftOrderedPlanes[1].push_back(pair<Geometry*, int>(*ii, 0));
+			leftOrderedPlanes[1].push_back(pair<Geometry*, int>(*ii, 1));
+			leftOrderedPlanes[2].push_back(pair<Geometry*, int>(*ii, 0));
+			leftOrderedPlanes[2].push_back(pair<Geometry*, int>(*ii, 1));
+			rightOrderedPlanes[0].push_back(pair<Geometry*, int>(*ii,0));
+			rightOrderedPlanes[0].push_back(pair<Geometry*, int>(*ii,1));
+			rightOrderedPlanes[1].push_back(pair<Geometry*, int>(*ii,0));
+			rightOrderedPlanes[1].push_back(pair<Geometry*, int>(*ii,1));
+			rightOrderedPlanes[2].push_back(pair<Geometry*, int>(*ii,0));
+			rightOrderedPlanes[2].push_back(pair<Geometry*, int>(*ii,1));
 		}
 	}
 	kdNode->setLeft(leftChild);
@@ -532,24 +576,27 @@ void Scene::buildTrimeshKdTree(Geometry* triM, int depth, int leafSize)
 	}
 	// cout<<"Number of Objects: "<<kdtreeRoot->noOfObjects()<<endl;
 	triMesh->kdtreeRoot->bb = triMesh->getBoundingBox();
-    std::vector<Geometry*> yzPlaneOrder;
-    std::vector<Geometry*> xzPlaneOrder;
-    std::vector<Geometry*> xyPlaneOrder;
+    std::vector<pair<Geometry*, int>> yzPlaneOrder;
+    std::vector<pair<Geometry*, int>> xzPlaneOrder;
+    std::vector<pair<Geometry*, int>> xyPlaneOrder;
     for(int i = 0; i < triMesh->kdtreeRoot->noOfObjects(); i++) {
-        yzPlaneOrder.push_back(triMesh->kdtreeRoot->objectsVector[i]);
-        xzPlaneOrder.push_back(triMesh->kdtreeRoot->objectsVector[i]);
-        xyPlaneOrder.push_back(triMesh->kdtreeRoot->objectsVector[i]);
+        yzPlaneOrder.push_back(pair<Geometry*, int>(triMesh->kdtreeRoot->objectsVector[i], 0));
+        yzPlaneOrder.push_back(pair<Geometry*, int>(triMesh->kdtreeRoot->objectsVector[i], 1));
+        xzPlaneOrder.push_back(pair<Geometry*, int>(triMesh->kdtreeRoot->objectsVector[i], 0));
+        xzPlaneOrder.push_back(pair<Geometry*, int>(triMesh->kdtreeRoot->objectsVector[i], 1));
+        xyPlaneOrder.push_back(pair<Geometry*, int>(triMesh->kdtreeRoot->objectsVector[i], 0));
+        xyPlaneOrder.push_back(pair<Geometry*, int>(triMesh->kdtreeRoot->objectsVector[i], 1));
     }
     sort(yzPlaneOrder.begin(), yzPlaneOrder.end(), yzPlaneCompareFunction);
     sort(xzPlaneOrder.begin(), xzPlaneOrder.end(), xzPlaneCompareFunction);
     sort(xyPlaneOrder.begin(), xyPlaneOrder.end(), xyPlaneCompareFunction);
 
-    vector<vector<Geometry*>> orderedPlanes;
+    vector<vector<pair<Geometry*, int>>> orderedPlanes;
     orderedPlanes.push_back(yzPlaneOrder);
     orderedPlanes.push_back(xzPlaneOrder);
     orderedPlanes.push_back(xyPlaneOrder);
 	buildMainKdTree(triMesh->kdtreeRoot, depth, leafSize, orderedPlanes);
-	cout<<"START TRIMESH TREE"<<endl;
-	printKdTree(triMesh->kdtreeRoot);
-	cout<<"END TRIMESH TREE"<<endl;
+	// cout<<"START TRIMESH TREE"<<endl;
+	// printKdTree(triMesh->kdtreeRoot);
+	// cout<<"END TRIMESH TREE"<<endl;
 }

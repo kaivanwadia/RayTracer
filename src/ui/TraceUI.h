@@ -24,7 +24,7 @@ public:
                     m_nThreads(8), m_bfCulling(true), m_antiAlias(false),
                     m_kdTree(true), m_usingCubeMap(false), m_gotCubeMap(false),
                     m_nMaxDepth(15), m_nLeafSize(10), m_nPixelSamples(3),
-                    m_nSupersampleThreshold(100), m_antiAliasWhite(false)
+                    m_nSupersampleThreshold(180)
                     {}
 	virtual int	run() = 0;
 
@@ -50,7 +50,6 @@ public:
 	bool	shadowSw() const { return m_shadows; }
 	bool	smShadSw() const { return m_smoothshade; }
 	bool	antiAliasing() const { return m_antiAlias; }
-	bool	antiAliasingWhite() const { return m_antiAliasWhite; }
 	bool	kdTree() const { return m_kdTree; }
 	bool	bfCulling() const { return m_bfCulling; }
 	bool	displayDebugInfo() const { return m_displayDebuggingInfo; }
@@ -75,7 +74,6 @@ protected:
 	int m_nThreshold; // Normal Threshold
 	int m_nThreads; // Number of threads
 	bool m_antiAlias; // Using anti aliasing
-	bool m_antiAliasWhite; // Using anti aliasing white
 
 	// Determines whether or not to show debugging information
 	// for individual rays.  Disabled by default for efficiency

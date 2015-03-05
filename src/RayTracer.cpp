@@ -48,9 +48,8 @@ Vec3d RayTracer::tracePixel(int i, int j)
 
 	if( ! sceneLoaded() ) return col;
 
-	srand((unsigned)time(NULL));
-	double x = double(i)/double(buffer_width) + ((double) rand()/(RAND_MAX+1))*(1.0/double(buffer_width));
-	double y = double(j)/double(buffer_height) + ((double) rand()/(RAND_MAX+1))*(1.0/double(buffer_height));
+	double x = double(i)/double(buffer_width);
+	double y = double(j)/double(buffer_height);
 
 	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
 
@@ -68,37 +67,35 @@ Vec3d RayTracer::tracePixelAntiAlias(int i, int j)
 
 	if( ! sceneLoaded() ) return col;
 
-	srand((unsigned)time(NULL));
 	double x = double(i)/double(buffer_width);
 	double y = double(j)/double(buffer_height);
 
 	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
 
-    double deltaX = (1.0/double(buffer_width))/double(traceUI->m_nPixelSamples);
-    double deltaY = (1.0/double(buffer_height))/double(traceUI->m_nPixelSamples);
+    double deltaX = (1.0/double(buffer_width))/traceUI->m_nPixelSamples;
+    double deltaY = (1.0/double(buffer_height))/traceUI->m_nPixelSamples;
 
-    if (traceUI->antiAliasingWhite())
-    {
-		pixel[0] = (int)( 255.0 );
-		pixel[1] = (int)( 255.0 );
-		pixel[2] = (int)( 255.0 );
-		return Vec3d(1.0, 1.0, 1.0);
-    }
-
-	for(int subSampleCol = 0; subSampleCol < traceUI->m_nPixelSamples; subSampleCol++)
+    int count = 0;
+	for(int pi = 0; pi < traceUI->m_nPixelSamples; pi++)
 	{
-		for(int subSampleRow = 0; subSampleRow < traceUI->m_nPixelSamples; subSampleRow++)
+		for(int pj = 0; pj < traceUI->m_nPixelSamples; pj++)
 		{
-			double xTemp = x + subSampleCol*deltaX + ((double) rand()/(RAND_MAX+1))*deltaX;
-			double yTemp = y + subSampleRow*deltaY + ((double) rand()/(RAND_MAX+1))*deltaY;
-			Vec3d tCol = trace(xTemp , yTemp);
+			Vec3d tCol = trace(x + pi*deltaX , y + pj*deltaY);
+			// cout<<"COl : "<<tCol<<endl;
 			col += tCol;
+			count++;
 		}
 	}
-	col = col/double(traceUI->m_nPixelSamples*traceUI->m_nPixelSamples);
+
+	// cout << "COUNT : " << count << "\n";
+	col = col/(traceUI->m_nPixelSamples*traceUI->m_nPixelSamples);
+	// cout<<"COLOR : "<<col<<endl;
 	pixel[0] = (int)( 255.0 * col[0]);
 	pixel[1] = (int)( 255.0 * col[1]);
 	pixel[2] = (int)( 255.0 * col[2]);
+	// pixel[0] = (int)( 255.0 * 1);
+	// pixel[1] = (int)( 255.0 * 1);
+	// pixel[2] = (int)( 255.0 * 1);
 	return col;
 }
 
@@ -230,6 +227,24 @@ void RayTracer::getBuffer( unsigned char *&buf, int &w, int &h )
 	h = buffer_height;
 }
 
+void RayTracer::setBuffer ()
+{
+	// for (int i = 0; i < 20; i++)
+	// {
+	// 	for (int j = 0; j < 20; j++)
+	// 	{
+	// 		double x = double(i)/double(buffer_width);
+	// 		double y = double(j)/double(buffer_height);
+
+	// 		unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
+
+	// 		pixel[0] = (int)( 255.0 * 1);
+	// 		pixel[1] = (int)( 255.0 * 1);
+	// 		pixel[2] = (int)( 255.0 * 1);
+	// 	}
+	// }
+}
+
 double RayTracer::aspectRatio()
 {
 	return sceneLoaded() ? scene->getCamera().getAspectRatio() : 1;
@@ -299,9 +314,3 @@ void RayTracer::traceSetup(int w, int h)
 	m_bBufferReady = true;
 }
 
-void RayTracer::antiAliasSetup()
-{
-	delete[] rayCountBuf;
-	rayCountBuf = new unsigned char[bufferSize];
-	memset(rayCountBuf, 0, buffer_width*buffer_height*3);
-}
