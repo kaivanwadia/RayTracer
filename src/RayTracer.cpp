@@ -144,24 +144,28 @@ Vec3d RayTracer::traceRay(ray& r, int depth)
 		// more steps: add in the contributions from reflected and refracted
 		// rays.
 		const Material& material = i.getMaterial();
+		// Light Ray
 		Vec3d intensity = material.shade(scene, r, i);
 		if (depth == 0)
 		{
 			return intensity;
 		}
 		Vec3d Qpoint = r.at(i.t);
-		// Light Ray
 		// Reflected Ray
-		Vec3d minusD = -1 * r.d;
-		Vec3d cosVector = i.N * (minusD * i.N);
-		// cosVector.normalize();
-		Vec3d sinVector = cosVector + r.d;
-		// sinVector.normalize();
-		Vec3d reflectedDirection = cosVector + sinVector;
-		reflectedDirection.normalize();
-		ray reflectedRay(Qpoint, reflectedDirection, ray::REFLECTION);
-		// Reflected Ray
-		intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
+		if (!material.kr(i).iszero())
+		{
+			Vec3d Qpoint = r.at(i.t);
+			Vec3d minusD = -1 * r.d;
+			Vec3d cosVector = i.N * (minusD * i.N);
+			// cosVector.normalize();
+			Vec3d sinVector = cosVector + r.d;
+			// sinVector.normalize();
+			Vec3d reflectedDirection = cosVector + sinVector;
+			reflectedDirection.normalize();
+			ray reflectedRay(Qpoint, reflectedDirection, ray::REFLECTION);
+			// Reflected Ray
+			intensity = intensity + prod(material.kr(i), traceRay(reflectedRay, depth - 1));
+		}
 		//Refracted Ray
 		if (!material.kt(i).iszero())
 		{
