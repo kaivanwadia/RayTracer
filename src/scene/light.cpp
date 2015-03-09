@@ -126,7 +126,16 @@ Vec3d SpotLight::shadowAttenuation(const ray& r, const Vec3d& p) const
     double distanceSq = (Qpoint - p).length2();
     if (distanceSq < lightDistance)
     {
-      return Vec3d(0,0,0);
+      shadowDirection = shadowDirection*-1;
+      double angle = acos(orientation*shadowDirection) * 180/M_PI;
+      if (angle > atten_angle)
+      {
+        return Vec3d(0.0, 0.0, 0.0);
+      }
+      //shadowDirection = shadowDirection*-1;
+      double fallFactor = pow(orientation * shadowDirection, fallRate);
+      const Material& material = i.getMaterial();
+      return prod((color*fallFactor), material.kt(i));
     }
   }
   shadowDirection = shadowDirection*-1;
@@ -135,7 +144,7 @@ Vec3d SpotLight::shadowAttenuation(const ray& r, const Vec3d& p) const
   {
     return Vec3d(0.0, 0.0, 0.0);
   }
-  shadowDirection = shadowDirection*-1;
+  //shadowDirection = shadowDirection*-1;
   double fallFactor = pow(orientation * shadowDirection, fallRate);
   return (color*fallFactor);
 }
