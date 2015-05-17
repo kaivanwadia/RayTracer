@@ -39,12 +39,12 @@ public:
 
 	const Scene& getScene() { return *scene; }
 
-        void setCubeMap(CubeMap* m) {
-            if (cubemap) delete cubemap;
-            cubemap = m;
-        }
-        CubeMap *getCubeMap() {return cubemap;}
-        bool haveCubeMap() { return cubemap != nullptr; }
+    void setCubeMap(CubeMap* m) {
+        if (cubemap) delete cubemap;
+        cubemap = m;
+    }
+    CubeMap *getCubeMap() {return cubemap;}
+    bool haveCubeMap() { return cubemap != nullptr; }
 
 public:
         unsigned char *buffer;

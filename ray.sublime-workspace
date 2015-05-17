@@ -528,6 +528,14 @@
 			}
 		},
 		{
+			"file": "src/RayTracer.h",
+			"settings":
+			{
+				"buffer_size": 1315,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "src/ui/CommandLineUI.h",
 			"settings":
 			{
@@ -547,7 +555,7 @@
 			"file": "src/scene/material.cpp",
 			"settings":
 			{
-				"buffer_size": 5073,
+				"buffer_size": 5072,
 				"line_ending": "Windows"
 			}
 		},
@@ -555,7 +563,7 @@
 			"file": "src/scene/light.cpp",
 			"settings":
 			{
-				"buffer_size": 3435,
+				"buffer_size": 3791,
 				"line_ending": "Windows"
 			}
 		},
@@ -568,10 +576,92 @@
 			}
 		},
 		{
+			"file": "src/ui/debuggingView.cpp",
+			"settings":
+			{
+				"buffer_size": 16590,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/ui/GraphicalUI.cpp",
+			"settings":
+			{
+				"buffer_size": 23374,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/SceneObjects/trimesh.cpp",
+			"settings":
+			{
+				"buffer_size": 6642,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/SceneObjects/trimesh.h",
+			"settings":
+			{
+				"buffer_size": 3883,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "src/vecmath/vec.h",
 			"settings":
 			{
 				"buffer_size": 23608,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/scene/cubeMap.cpp",
+			"settings":
+			{
+				"buffer_size": 4435,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/scene/cubeMap.h",
+			"settings":
+			{
+				"buffer_size": 1041,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/ui/CubeMapChooser.cxx",
+			"settings":
+			{
+				"buffer_size": 5978,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 71 files for \"setRayTracer\" (regex, case sensitive)\n\n/u/kwadia/CS384G-ComputerGraphics/Project 2/ray/ray.sublime-workspace:\n  828  			\"START TRIMESH\",\n  829  			\"setCaller\",\n  830: 			\"setRayTracer\",\n  831  			\"raytracer\",\n  832  			\"Here\",\n  833: 			\"setRayTracer\",\n  834  			\"useKdTree\",\n  835  			\"is_tr\\nis_t\",\n\n/u/kwadia/CS384G-ComputerGraphics/Project 2/ray/src/main.cpp:\n   34  	theRayTracer=new RayTracer();\n   35  \n   36: 	traceUI->setRayTracer(theRayTracer);\n   37  	return traceUI->run();\n   38  }\n\n/u/kwadia/CS384G-ComputerGraphics/Project 2/ray/src/ui/GraphicalUI.cpp:\n  506  }\n  507  \n  508: void GraphicalUI::setRayTracer(RayTracer *tracer)\n  509  {\n  510: 	// printf(\"In setRayTracer()\\n\");\n  511: 	TraceUI::setRayTracer(tracer);\n  512  	this->raytracer = tracer;\n  513  	// std::cout<<this->raytracer<<std::endl;\n  514: 	m_traceGlWindow->setRayTracer(tracer);\n  515: 	m_debuggingWindow->m_debuggingView->setRayTracer(tracer);\n  516  }\n  517  \n\n/u/kwadia/CS384G-ComputerGraphics/Project 2/ray/src/ui/GraphicalUI.h:\n   66  \n   67  	// member functions\n   68: 	void setRayTracer(RayTracer *tracer);\n   69  	RayTracer* getRayTracer() { return raytracer; }\n   70  	clock_t getRefreshInterval() {return refreshInterval; }\n\n/u/kwadia/CS384G-ComputerGraphics/Project 2/ray/src/ui/TraceGLWindow.cpp:\n  124  }\n  125  \n  126: void TraceGLWindow::setRayTracer(RayTracer *tracer)\n  127  {\n  128  	raytracer = tracer;\n\n/u/kwadia/CS384G-ComputerGraphics/Project 2/ray/src/ui/TraceGLWindow.h:\n   30  	void saveImage(char *iname);\n   31  \n   32: 	void setRayTracer(RayTracer *tracer);\n   33  \n   34  private:\n\n/u/kwadia/CS384G-ComputerGraphics/Project 2/ray/src/ui/TraceUI.h:\n   33  \n   34  	// settersCubeMap\n   35: 	virtual void setRayTracer( RayTracer* r ) { raytracer = r; }\n   36  	void setCubeMap(bool b) { m_gotCubeMap = b; }\n   37  	void useCubeMap(bool b) { m_usingCubeMap = b; }\n\n/u/kwadia/CS384G-ComputerGraphics/Project 2/ray/src/ui/debuggingView.cpp:\n  275  }\n  276  \n  277: void DebuggingView::setRayTracer(RayTracer *tracer)\n  278  {\n  279  	raytracer = tracer;\n\n/u/kwadia/CS384G-ComputerGraphics/Project 2/ray/src/ui/debuggingView.h:\n   44      ModelerCamera *m_camera;\n   45  \n   46: 	void setRayTracer(RayTracer *tracer);\n   47  \n   48  	void setShadingMode( ShadingMode mode )		{ m_shadingMode = mode; }\n\n14 matches across 9 files\n",
+			"settings":
+			{
+				"buffer_size": 2360,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "src/main.cpp",
+			"settings":
+			{
+				"buffer_size": 831,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Makefile",
+			"settings":
+			{
+				"buffer_size": 1189,
 				"line_ending": "Unix"
 			}
 		}
@@ -600,6 +690,9 @@
 	},
 	"file_history":
 	[
+		"/u/kwadia/cs312/a11_clean/makefile",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/debuggingView.cpp",
+		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/ray.sublime-project",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/material.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/ray.h",
 		"/u/kwadia/cs312/a4_clean/RockPaperScissors.java",
@@ -624,7 +717,6 @@
 		"/u/kwadia/Downloads/raytracepixel.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/light.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/scene/cubeMap.h",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/ui/debuggingView.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/parser/Tokenizer.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/parser/Token.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/src/parser/Parser.cpp",
@@ -672,7 +764,6 @@
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/backup/material.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/backup/trimesh.cpp",
 		"/u/kwadia/CS384G - Computer Graphics/Project 2/backup/RayTracer.cpp",
-		"/u/kwadia/CS384G - Computer Graphics/Project 2/ray/ray.sublime-project",
 		"/u/kwadia/Downloads/Mark/light.cpp",
 		"/u/kwadia/Downloads/Mark/material.cpp",
 		"/u/kwadia/Downloads/Mark/trimesh.cpp",
@@ -726,8 +817,7 @@
 		"/u/kwadia/CS394n/Project/workspace/MovieData/Movie.txt",
 		"/u/kwadia/CS394n/Project/Data/EachMovie/EachMovie1460.txt",
 		"/u/kwadia/CS394n/Project/Data/EachMovie/original/Movie.txt",
-		"/u/kwadia/PhysicalSimCS395T/VCMilestone1/VirtualCatwalkMilestone1/resources/square.obj",
-		"/u/kwadia/untitled.java"
+		"/u/kwadia/PhysicalSimCS395T/VCMilestone1/VirtualCatwalkMilestone1/resources/square.obj"
 	],
 	"find":
 	{
@@ -746,6 +836,9 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"setRayTracer",
+			"normal",
+			"glBlendFunc",
 			"m_antiAliasWhite",
 			"cb_aaWhiteCheckButton",
 			"cb_aaCheckButton",
@@ -860,7 +953,7 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 9,
 			"sheets":
 			[
 				{
@@ -875,8 +968,8 @@
 						"selection":
 						[
 							[
-								3983,
-								3983
+								831,
+								831
 							]
 						],
 						"settings":
@@ -885,13 +978,41 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2632.0,
+						"translation.y": 337.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
+					"file": "src/RayTracer.h",
+					"settings":
+					{
+						"buffer_size": 1315,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								823,
+								823
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 204.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
 					"file": "src/ui/CommandLineUI.h",
 					"settings":
 					{
@@ -917,7 +1038,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 3,
 					"file": "src/scene/scene.h",
 					"settings":
 					{
@@ -945,19 +1066,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 4,
 					"file": "src/scene/material.cpp",
 					"settings":
 					{
-						"buffer_size": 5073,
+						"buffer_size": 5072,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1535,
-								1535
+								0,
+								0
 							]
 						],
 						"settings":
@@ -973,19 +1094,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
 					"file": "src/scene/light.cpp",
 					"settings":
 					{
-						"buffer_size": 3435,
+						"buffer_size": 3791,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1537,
-								1537
+								2680,
+								2680
 							]
 						],
 						"settings":
@@ -995,13 +1116,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 765.0,
+						"translation.y": 1581.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 6,
 					"file": "src/ui/CommandLineUI.cpp",
 					"settings":
 					{
@@ -1012,8 +1133,8 @@
 						"selection":
 						[
 							[
-								1637,
-								1637
+								1412,
+								1412
 							]
 						],
 						"settings":
@@ -1026,15 +1147,119 @@
 						"zoom_level": 1.0
 					},
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
+				},
 				{
-					"buffer": 6,
+					"buffer": 7,
+					"file": "src/ui/debuggingView.cpp",
+					"settings":
+					{
+						"buffer_size": 16590,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								15041,
+								15041
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 9467.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/ui/GraphicalUI.cpp",
+					"settings":
+					{
+						"buffer_size": 23374,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10752,
+								10752
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 6375.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/SceneObjects/trimesh.cpp",
+					"settings":
+					{
+						"buffer_size": 6642,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5456,
+								5456
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2682.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/SceneObjects/trimesh.h",
+					"settings":
+					{
+						"buffer_size": 3883,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1690,
+								1690
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 867.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
 					"file": "src/vecmath/vec.h",
 					"settings":
 					{
@@ -1045,8 +1270,8 @@
 						"selection":
 						[
 							[
-								941,
-								941
+								4725,
+								4725
 							]
 						],
 						"settings":
@@ -1055,7 +1280,236 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2856.0,
+						"translation.y": 5967.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "src/scene/cubeMap.cpp",
+					"settings":
+					{
+						"buffer_size": 4435,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								403,
+								403
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "src/scene/cubeMap.h",
+					"settings":
+					{
+						"buffer_size": 1041,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								765,
+								765
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "src/ui/CubeMapChooser.cxx",
+					"settings":
+					{
+						"buffer_size": 5978,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2279,
+								2279
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1326.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"settings":
+					{
+						"buffer_size": 2360,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										195,
+										207
+									],
+									[
+										262,
+										274
+									],
+									[
+										451,
+										463
+									],
+									[
+										634,
+										646
+									],
+									[
+										697,
+										709
+									],
+									[
+										734,
+										746
+									],
+									[
+										865,
+										877
+									],
+									[
+										931,
+										943
+									],
+									[
+										1090,
+										1102
+									],
+									[
+										1362,
+										1374
+									],
+									[
+										1562,
+										1574
+									],
+									[
+										1741,
+										1753
+									],
+									[
+										2018,
+										2030
+									],
+									[
+										2217,
+										2229
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								455,
+								455
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 255.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "src/main.cpp",
+					"settings":
+					{
+						"buffer_size": 831,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								767,
+								767
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "Makefile",
+					"settings":
+					{
+						"buffer_size": 1189,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Makefile/Makefile.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1080,18 +1534,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.5,
 			1.0
 		],
 		"rows":
@@ -1116,6 +1563,34 @@
 		"selected_items":
 		[
 			[
+				"tri",
+				"src/SceneObjects/trimesh.cpp"
+			],
+			[
+				"mak",
+				"Makefile"
+			],
+			[
+				"cubema",
+				"src/ui/CubeMapChooser.cxx"
+			],
+			[
+				"cub",
+				"src/scene/cubeMap.cpp"
+			],
+			[
+				"trim",
+				"src/SceneObjects/trimesh.cpp"
+			],
+			[
+				"grap",
+				"src/ui/GraphicalUI.cpp"
+			],
+			[
+				"debug",
+				"src/ui/debuggingView.cpp"
+			],
+			[
 				"co",
 				"src/ui/CommandLineUI.cpp"
 			],
@@ -1138,10 +1613,6 @@
 			[
 				"tra",
 				"src/ui/TraceUI.h"
-			],
-			[
-				"trim",
-				"src/SceneObjects/trimesh.cpp"
 			],
 			[
 				"mat",
@@ -1182,14 +1653,6 @@
 			[
 				"sce",
 				"src/scene/scene.cpp"
-			],
-			[
-				"cub",
-				"src/scene/cubeMap.h"
-			],
-			[
-				"tri",
-				"src/SceneObjects/trimesh.cpp"
 			],
 			[
 				"tok",
@@ -1302,10 +1765,6 @@
 			[
 				"bo",
 				"src/SceneObjects/Box.cpp"
-			],
-			[
-				"grap",
-				"src/ui/GraphicalUI.cpp"
 			],
 			[
 				"ray.h",

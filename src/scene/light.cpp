@@ -20,7 +20,6 @@ Vec3d DirectionalLight::shadowAttenuation(const ray& r, const Vec3d& p) const
   ray shadowRay(p, shadowDirection, ray::SHADOW);
   if (this->getScene()->intersect(shadowRay, i))
   {
-    Vec3d Qpoint = shadowRay.at(i.t);
     return Vec3d(0,0,0);
   }
   return color;

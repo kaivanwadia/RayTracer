@@ -55,7 +55,7 @@ Vec3d Material::shade(Scene *scene, const ray& r, const isect& i) const
     // Diffuse Term
     Vec3d directionToLight = pLight->getDirection(Qpoint);
     directionToLight.normalize();
-    Vec3d lightIntensity = pLight->distanceAttenuation(Qpoint) * pLight->shadowAttenuation(r, Qpoint);;
+    Vec3d lightIntensity = pLight->distanceAttenuation(Qpoint) * pLight->shadowAttenuation(r, Qpoint);
     if (!kd(i).iszero())
     {
       intensity = intensity + prod(kd(i), lightIntensity) * max((i.N * directionToLight),0.0);
