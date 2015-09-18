@@ -10,4 +10,6 @@ Developed a ray tracer for a 3d scene using the Whitted recursive ray tracing mo
 2. KD - Trees for faster collision detection
 3. Threaded execution for faster processing
 4. Cube-mapping
-4. Anti-aliasing
+5. Anti-aliasing
+
+To build and run use the command 'make ray' followed by './ray'
